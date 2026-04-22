@@ -429,3 +429,12 @@
 > Mark as "use client". Tailwind CSS, black/orange theme.
 
 ---
+### Prompt #25
+**Fecha y hora:** 22/04/2026
+**Prompt usado:**
+> Create a file called vercel.json in the root of the project with this content:
+> {
+>   "framework": "nextjs"
+> }
+
+---
