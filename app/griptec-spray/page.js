@@ -39,7 +39,7 @@ export default function GriptecSprayPage() {
 
       <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm">
         <img
-          src="https://via.placeholder.com/800x400"
+          src="/griptec.png"
           alt="Griptec Spray 200ml"
           className="w-full object-cover"
         />

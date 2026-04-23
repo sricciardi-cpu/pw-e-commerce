@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 
-const talles = ["S", "M", "L", "XL"];
+const talles = ["S", "M", "L", "XL", "2XL", "3XL"];
 const NOMBRE = "Mystery Futbox";
 const PRECIO = 50800;
 
@@ -28,7 +28,7 @@ export default function MysteryFutboxPage() {
 
       <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm">
         <img
-          src="https://via.placeholder.com/800x400"
+          src="/mysteryfutbox.png"
           alt="Mystery Futbox"
           className="w-full object-cover"
         />
