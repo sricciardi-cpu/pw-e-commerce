@@ -74,6 +74,7 @@ export default function ProductoDetallePage({ params }) {
             src={imagenes[imagenActiva]}
             alt={producto.nombre}
             className="w-full object-cover rounded-xl"
+            loading="lazy"
           />
 
           {/* Thumbnails */}
@@ -122,13 +123,13 @@ export default function ProductoDetallePage({ params }) {
 
           {/* Selector de talle */}
           <div>
-            <p className="text-sm font-semibold text-gray-700 mb-2">Seleccioná tu talle:</p>
-            <div className="flex gap-2 flex-wrap">
+            <p className="text-sm font-semibold text-gray-700 mb-3">Seleccioná tu talle:</p>
+            <div className="flex gap-3 flex-wrap">
               {producto.talle.map((t) => (
                 <button
                   key={t}
                   onClick={() => { setTalleSeleccionado(t); setEstado("idle"); }}
-                  className={`px-4 py-1.5 rounded-lg border text-sm font-medium transition-colors ${
+                  className={`w-14 h-14 rounded-xl border-2 text-sm font-bold transition-colors active:scale-95 ${
                     talleSeleccionado === t
                       ? "bg-orange-500 text-black border-orange-500"
                       : "bg-white text-gray-700 border-gray-300 hover:border-black hover:text-black"
@@ -150,7 +151,7 @@ export default function ProductoDetallePage({ params }) {
 
           <button
             onClick={handleAgregar}
-            className="w-full bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
+            className="w-full bg-black text-white font-semibold py-4 rounded-xl hover:bg-orange-500 hover:text-black transition-colors text-base active:scale-95"
           >
             Agregar al carrito
           </button>

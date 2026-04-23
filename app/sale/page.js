@@ -21,7 +21,7 @@ export default function SalePage() {
       <h1 className="text-3xl font-extrabold mb-1">Sale 🔥</h1>
       <p className="text-gray-500 mb-8">Últimas unidades disponibles</p>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {productosSale.map((producto) => (
           <article
             key={producto.id}
@@ -33,13 +33,14 @@ export default function SalePage() {
                 src={producto.imagen}
                 alt={producto.nombre}
                 className="w-full object-cover"
+                loading="lazy"
               />
               <span className="absolute top-2 left-2 bg-orange-500 text-black text-xs font-extrabold px-2 py-1 rounded-full">
                 SALE
               </span>
             </div>
 
-            <div className="p-4 flex flex-col flex-1 gap-2">
+            <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
               <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
                 {producto.tipo === "nacion" ? "Nación" : "Club"}
               </span>
