@@ -34,6 +34,13 @@ export default function ProductoDetallePage({ params }) {
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
   const [estado, setEstado] = useState("idle");
 
+  useEffect(() => {
+    if (estado === "success") {
+      const t = setTimeout(() => setEstado("idle"), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [estado]);
+
   if (!producto) {
     return (
       <main className="max-w-5xl mx-auto px-4 py-8 text-center">
@@ -53,13 +60,6 @@ export default function ProductoDetallePage({ params }) {
     agregarAlCarrito({ id: producto.id, nombre: producto.nombre, talle: talleSeleccionado, precio: producto.precio });
     setEstado("success");
   }
-
-  useEffect(() => {
-    if (estado === "success") {
-      const t = setTimeout(() => setEstado("idle"), 1500);
-      return () => clearTimeout(t);
-    }
-  }, [estado]);
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
