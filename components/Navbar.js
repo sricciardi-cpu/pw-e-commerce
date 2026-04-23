@@ -27,7 +27,7 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 text-2xl font-bold tracking-wide hover:text-orange-400 transition-colors"
         >
-          <span>⚡</span>
+          <img src="/logo.png" alt="Camisetas Zeus" className="h-10 w-auto" />
           Camisetas Zeus
         </Link>
 

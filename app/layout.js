@@ -6,6 +6,9 @@ import { CartProvider } from "@/context/CartContext";
 export const metadata = {
   title: "Camisetas Zeus",
   description: "Las mejores camisetas de fútbol y rugby de Argentina",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {

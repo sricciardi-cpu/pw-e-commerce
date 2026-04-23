@@ -492,3 +492,27 @@
 > The cart icon 🛒 stays on the right, no active state needed for it.
 
 ---
+### Prompt #29
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Update components/Navbar.js:
+> Replace the ⚡ emoji with an <img> tag pointing to the logo:
+> <img src="/logo.png" alt="Camisetas Zeus" className="h-10 w-auto" />
+>
+> Place it to the left of the "Camisetas Zeus" text, both vertically centered using flex items-center gap-2.
+> No other changes.
+
+---
+### Prompt #30
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Update app/layout.js:
+> Add a favicon using the Zeus logo.
+> In the metadata object add:
+> icons: {
+>   icon: '/logo.png',
+> }
+>
+> No other changes.
+
+---
