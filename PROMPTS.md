@@ -683,3 +683,21 @@
 > - Import the icons from "react-icons/fa"
 > - Style the icons with text-3xl text-orange-500
 > - No other changes
+
+---
+
+### Prompt #41
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In app/mystery-futbox/page.js and app/griptec-spray/page.js:
+>
+> 1. Update the sizes array in mystery-futbox/page.js from ["S", "M", "L", "XL"] to ["S", "M", "L", "XL", "2XL", "3XL"]
+>
+> 2. Replace the placeholder images with the real product images stored in /public:
+> - mystery-futbox: src="/mysteryfutbox.png"
+> - griptec-spray: src="/griptec.png"
+>
+> 3. Reduce the image height on both pages — they are too tall and force the user to scroll too much before seeing the product details.
+> Add max-h-64 on mobile and md:max-h-80 on desktop to the image tag.
+>
+> No other changes.

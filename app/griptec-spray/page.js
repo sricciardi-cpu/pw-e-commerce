@@ -34,7 +34,7 @@ export default function GriptecSprayPage() {
     <main className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold mb-2">Griptec Spray 200ml</h1>
       <p className="text-gray-600 mb-8">
-        Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.
+        Spray de agarre instantáneo para rugby, padel, tenis y muchos deportes mas. Mejora el grip en cualquier condición climática.
       </p>
 
       <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm">
