@@ -620,3 +620,66 @@
 > No other changes.
 
 ---
+
+### Prompt #39
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Improve the mobile UI across the entire app. Make all of the following changes:
+>
+> 1. NAVBAR (components/Navbar.js):
+> - Add a smooth slide-down animation when opening/closing the mobile hamburger menu (use max-h + opacity CSS transition)
+> - Close the menu automatically when tapping outside of it (useRef + useEffect with mousedown/touchstart listeners)
+> - Close the menu automatically on route change (useEffect watching pathname)
+> - Replace ☰ emoji with FaBars/FaTimes icons from react-icons that toggle based on menu state
+> - Add icons from react-icons to each menu item (FaHome, FaTshirt, FaTag, FaBox, FaSprayCan, FaRuler, FaEnvelope)
+> - Replace 🛒 emoji with FaShoppingCart icon
+> - Hide "Camisetas Zeus" text on very small screens (hidden sm:inline) to save space
+> - Reduce navbar padding slightly on mobile (px-4 py-4 on mobile, px-8 py-6 on desktop)
+>
+> 2. CATALOG (app/catalogo/page.js):
+> - Make filters collapsible on mobile: show only a "Filtros" button with FaFilter icon and a chevron
+> - Show a badge on the button indicating how many filters are active
+> - Add a "Limpiar filtros" link when filters are active
+> - Change mobile grid from 1 column to 2 columns (grid-cols-2)
+> - Increase tap target size on filter buttons (py-2.5)
+> - Add loading="lazy" to product images
+>
+> 3. CART (app/carrito/page.js):
+> - Add a sticky bottom bar on mobile (fixed bottom-0) showing: total price + WhatsApp button + trash icon button
+> - Add pb-40 to the main content so it doesn't get hidden behind the sticky bar
+> - Replace ✕ with FaTimes icon in a rounded button
+> - Use FaWhatsapp and FaTrash icons in buttons
+> - Desktop layout keeps existing total + buttons below the list
+>
+> 4. HOME HERO (app/page.js):
+> - Change min-height to min-h-[60vh] on mobile
+> - Make CTA button bigger: px-10 py-4 text-lg font-bold with shadow-lg shadow-orange-500/30
+> - Change product grid to 2 columns on mobile (grid-cols-2)
+> - Add loading="lazy" to product images
+>
+> 5. PRODUCT DETAIL (app/catalogo/[id]/page.js):
+> - Make size selector buttons larger and square: w-14 h-14 rounded-xl border-2
+> - Increase "Agregar al carrito" button padding to py-4
+> - Add loading="lazy" to the product image
+>
+> 6. SALE PAGE (app/sale/page.js):
+> - Change mobile grid from 1 column to 2 columns (grid-cols-2), matching the catalog
+> - Add loading="lazy" to product images
+
+---
+
+### Prompt #40
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Make these two changes:
+>
+> 1. NAVBAR (components/Navbar.js):
+> - Remove the react-icons from the desktop navigation links — show only the text labels, no icons
+> - Keep the icons in the mobile dropdown menu as they are
+>
+> 2. HOME (app/page.js) — "Quiénes Somos" section:
+> - Replace the emoji spans (🏉, ⚡, 📦) with react-icons components
+> - Use FaHeart for "Pasión por el deporte", FaStar for "Calidad garantizada", FaShippingFast for "Entrega rápida"
+> - Import the icons from "react-icons/fa"
+> - Style the icons with text-3xl text-orange-500
+> - No other changes
