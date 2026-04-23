@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import productos from "@/data/productos";
+import FadeIn from "@/components/FadeIn";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -22,10 +23,10 @@ export default function SalePage() {
       <p className="text-gray-500 mb-8">Últimas unidades disponibles</p>
 
       <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {productosSale.map((producto) => (
+        {productosSale.map((producto, i) => (
+          <FadeIn key={producto.id} delay={i * 60}>
           <article
-            key={producto.id}
-            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg"
+            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col h-full transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg"
           >
             {/* Imagen con badge SALE superpuesto */}
             <div className="relative">
@@ -68,6 +69,7 @@ export default function SalePage() {
               </Link>
             </div>
           </article>
+          </FadeIn>
         ))}
       </section>
     </main>

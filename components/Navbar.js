@@ -31,7 +31,9 @@ export default function Navbar() {
   const { cantidadTotal } = useCart();
   const pathname = usePathname();
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [pop, setPop] = useState(false);
   const menuRef = useRef(null);
+  const prevCantidad = useRef(cantidadTotal);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -48,6 +50,16 @@ export default function Navbar() {
       document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [menuAbierto]);
+
+  useEffect(() => {
+    if (cantidadTotal > prevCantidad.current) {
+      setPop(true);
+      const t = setTimeout(() => setPop(false), 300);
+      prevCantidad.current = cantidadTotal;
+      return () => clearTimeout(t);
+    }
+    prevCantidad.current = cantidadTotal;
+  }, [cantidadTotal]);
 
   // Close menu on route change
   useEffect(() => {
@@ -86,7 +98,7 @@ export default function Navbar() {
           </ul>
           <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors">
             <FaShoppingCart className="text-xl" />
-            <span className="bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            <span className={`bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-150 ${pop ? "scale-150" : "scale-100"}`}>
               {cantidadTotal}
             </span>
           </Link>
@@ -96,7 +108,7 @@ export default function Navbar() {
         <div className="flex md:hidden items-center gap-4">
           <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors">
             <FaShoppingCart className="text-xl" />
-            <span className="bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+            <span className={`bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-150 ${pop ? "scale-150" : "scale-100"}`}>
               {cantidadTotal}
             </span>
           </Link>

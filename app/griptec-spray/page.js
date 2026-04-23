@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
 function formatearPrecio(precio) {
@@ -28,6 +28,13 @@ export default function GriptecSprayPage() {
     agregarAlCarrito({ id: `griptec-${pack.label}`, nombre: "Griptec Spray 200ml", talle: pack.label, precio: pack.precio });
     setEstado("success");
   }
+
+  useEffect(() => {
+    if (estado === "success") {
+      const t = setTimeout(() => setEstado("idle"), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [estado]);
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -80,15 +87,15 @@ export default function GriptecSprayPage() {
           {estado === "warning" && (
             <p className="text-red-500 text-sm">Seleccioná un pack primero.</p>
           )}
-          {estado === "success" && (
-            <p className="text-green-600 text-sm font-medium">✓ Agregado al carrito</p>
-          )}
-
           <button
             onClick={handleAgregar}
-            className="w-full text-center bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
+            className={`w-full text-center font-semibold py-3 rounded-xl transition-all duration-200 ${
+              estado === "success"
+                ? "bg-green-600 text-white scale-95"
+                : "bg-black text-white hover:bg-orange-500 hover:text-black"
+            }`}
           >
-            Agregar al carrito
+            {estado === "success" ? "✓ Agregado" : "Agregar al carrito"}
           </button>
         </div>
       </article>

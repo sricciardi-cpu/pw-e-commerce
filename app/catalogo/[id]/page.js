@@ -3,7 +3,7 @@
 // Ruta dinámica: la carpeta se llama [id], lo que le indica a Next.js que
 // cualquier segmento en esa posición (ej: /catalogo/3) se captura como params.id.
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import productos from "@/data/productos";
 import { useCart } from "@/context/CartContext";
@@ -54,6 +54,13 @@ export default function ProductoDetallePage({ params }) {
     setEstado("success");
   }
 
+  useEffect(() => {
+    if (estado === "success") {
+      const t = setTimeout(() => setEstado("idle"), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [estado]);
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
 
@@ -75,9 +82,10 @@ export default function ProductoDetallePage({ params }) {
           {/* Imagen principal con zoom */}
           <div className="rounded-xl overflow-hidden">
             <img
+              key={imagenActiva}
               src={imagenes[imagenActiva]}
               alt={producto.nombre}
-              className="w-full object-cover transition-transform duration-500 hover:scale-110"
+              className="w-full object-cover transition-transform duration-500 hover:scale-110 animate-[fadeIn_0.3s_ease-out]"
               loading="lazy"
             />
           </div>
@@ -146,15 +154,15 @@ export default function ProductoDetallePage({ params }) {
           {estado === "warning" && (
             <p className="text-red-500 text-sm">Seleccioná un talle primero.</p>
           )}
-          {estado === "success" && (
-            <p className="text-green-600 text-sm font-medium">✓ Agregado al carrito</p>
-          )}
-
           <button
             onClick={handleAgregar}
-            className="w-full bg-black text-white font-semibold py-4 rounded-xl hover:bg-orange-500 hover:text-black transition-colors text-base active:scale-95"
+            className={`w-full font-semibold py-4 rounded-xl text-base active:scale-95 transition-all duration-200 ${
+              estado === "success"
+                ? "bg-green-600 text-white scale-95"
+                : "bg-black text-white hover:bg-orange-500 hover:text-black"
+            }`}
           >
-            Agregar al carrito
+            {estado === "success" ? "✓ Agregado" : "Agregar al carrito"}
           </button>
 
           <Link href="/guia-de-talles" className="text-sm text-gray-500 hover:text-orange-500 transition-colors">

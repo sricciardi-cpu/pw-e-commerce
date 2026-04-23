@@ -109,7 +109,7 @@ export default function CatalogoPage() {
       </p>
 
       {/* Grilla de productos */}
-      <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <section key={`${tipo}-${talle}`} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-[fadeScaleIn_0.35s_ease-out]">
         {productosFiltrados.map((producto, i) => (
           <FadeIn key={producto.id} delay={i * 60}>
           <article
@@ -124,7 +124,7 @@ export default function CatalogoPage() {
               />
               {producto.masVendido && (
                 <span className="absolute top-2 left-2 bg-orange-500 text-black text-xs font-extrabold px-2 py-1 rounded-full">
-                  🔥 Más vendido
+                  Más vendido
                 </span>
               )}
             </div>
