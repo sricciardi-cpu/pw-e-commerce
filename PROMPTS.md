@@ -701,3 +701,25 @@
 > Add max-h-64 on mobile and md:max-h-80 on desktop to the image tag.
 >
 > No other changes.
+
+---
+
+### Prompt #42
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Apply a CSS lift (translateY) hover effect to all interactive cards across the site using Tailwind's `hover:-translate-y-2 transition-transform duration-300` utility classes. Also add `hover:shadow-lg` to enhance the elevation feel. Target the following elements:
+>
+> 1. app/page.js — "Quiénes Somos" section:
+>    - The outer section container: apply `hover:-translate-y-1` (subtle lift for the large block)
+>    - Each value card (FaHeart, FaStar, FaShippingFast): apply `hover:-translate-y-2 transition-transform duration-300 cursor-default`
+>
+> 2. app/page.js — Featured products grid:
+>    - Each `<article>` card: apply `hover:-translate-y-2 hover:shadow-lg transition-transform duration-300`
+>
+> 3. app/catalogo/page.js — Product grid:
+>    - Each `<article>` card: apply `hover:-translate-y-2 hover:shadow-lg transition-transform duration-300`
+>
+> 4. app/sale/page.js — Sale product grid:
+>    - Each `<article>` card: apply `hover:-translate-y-2 hover:shadow-lg transition-transform duration-300`
+>
+> No layout or content changes — only add the transition and transform utility classes to the existing card elements.
