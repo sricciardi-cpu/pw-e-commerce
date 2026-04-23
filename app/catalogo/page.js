@@ -8,25 +8,19 @@ function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
 
-// Opciones de cada filtro
-const filtrosDeporte = ["Todos", "Fútbol", "Rugby"];
-const filtrosTipo   = ["Todos", "Naciones", "Clubes"];
-const filtrosTalle  = ["Todos", "S", "M", "L", "XL"];
+// Solo productos de rugby
+const productosRugby = productos.filter((p) => p.deporte === "rugby");
 
-// Mapeo de label legible → valor en datos
-const deporteValor = { Fútbol: "futbol", Rugby: "rugby" };
-const tipoValor    = { Naciones: "nacion", Clubes: "club" };
+const filtrosTipo  = ["Todos", "Naciones", "Clubes"];
+const filtrosTalle = ["Todos", "S", "M", "L", "XL"];
 
-const badgeDeporte = {
-  futbol: "bg-black text-white",
-  rugby:  "bg-orange-500 text-black",
-};
+const tipoValor = { Naciones: "nacion", Clubes: "club" };
+
 const badgeTipo = {
   nacion: "bg-gray-800 text-white",
   club:   "bg-orange-100 text-orange-800",
 };
 
-// Botón de filtro reutilizable
 function BotonFiltro({ label, activo, onClick }) {
   return (
     <button
@@ -43,30 +37,21 @@ function BotonFiltro({ label, activo, onClick }) {
 }
 
 export default function CatalogoPage() {
-  const [deporte, setDeporte] = useState("Todos");
-  const [tipo, setTipo]       = useState("Todos");
-  const [talle, setTalle]     = useState("Todos");
+  const [tipo, setTipo]   = useState("Todos");
+  const [talle, setTalle] = useState("Todos");
 
-  // Los tres filtros se aplican en cadena, de forma independiente
-  const productosFiltrados = productos.filter((p) => {
-    const matchDeporte = deporte === "Todos" || p.deporte === deporteValor[deporte];
-    const matchTipo    = tipo    === "Todos" || p.tipo    === tipoValor[tipo];
-    const matchTalle   = talle   === "Todos" || p.talle.includes(talle);
-    return matchDeporte && matchTipo && matchTalle;
+  const productosFiltrados = productosRugby.filter((p) => {
+    const matchTipo  = tipo  === "Todos" || p.tipo  === tipoValor[tipo];
+    const matchTalle = talle === "Todos" || p.talle.includes(talle);
+    return matchTipo && matchTalle;
   });
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-6">Catálogo</h1>
+      <h1 className="text-3xl font-extrabold mb-6">Catálogo Rugby</h1>
 
       {/* Panel de filtros */}
       <section className="bg-white border border-black rounded-xl p-5 mb-8 flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm font-semibold text-gray-600 w-16">Deporte</span>
-          {filtrosDeporte.map((f) => (
-            <BotonFiltro key={f} label={f} activo={deporte === f} onClick={() => setDeporte(f)} />
-          ))}
-        </div>
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-sm font-semibold text-gray-600 w-16">Tipo</span>
           {filtrosTipo.map((f) => (
@@ -100,15 +85,9 @@ export default function CatalogoPage() {
             />
 
             <div className="p-4 flex flex-col flex-1 gap-2">
-              {/* Badges de deporte y tipo */}
-              <div className="flex gap-2 flex-wrap">
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeDeporte[producto.deporte]}`}>
-                  {producto.deporte === "futbol" ? "Fútbol" : "Rugby"}
-                </span>
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeTipo[producto.tipo]}`}>
-                  {producto.tipo === "nacion" ? "Nación" : "Club"}
-                </span>
-              </div>
+              <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
+                {producto.tipo === "nacion" ? "Nación" : "Club"}
+              </span>
 
               <h2 className="font-semibold text-gray-900">{producto.nombre}</h2>
 
@@ -125,10 +104,6 @@ export default function CatalogoPage() {
                 {formatearPrecio(producto.precio)}
               </p>
 
-              <p className={`text-xs ${producto.stock > 0 ? "text-gray-500" : "text-red-500 font-medium"}`}>
-                {producto.stock > 0 ? `Stock: ${producto.stock} unidades` : "Sin stock"}
-              </p>
-
               <Link
                 href={`/catalogo/${producto.id}`}
                 className="block text-center bg-black text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-800 transition-colors mt-1"
@@ -140,7 +115,6 @@ export default function CatalogoPage() {
         ))}
       </section>
 
-      {/* Mensaje cuando ningún filtro tiene resultados */}
       {productosFiltrados.length === 0 && (
         <p className="text-center text-gray-500 py-16">
           No hay productos que coincidan con los filtros seleccionados.

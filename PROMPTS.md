@@ -438,3 +438,34 @@
 > }
 
 ---
+### Prompt #26
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Make these changes:
+>
+> 1. UPDATE data/productos.js:
+> - Add a field liquidacion: true to all futbol products
+> - Rugby products keep liquidacion: false
+>
+> 2. UPDATE app/catalogo/page.js:
+> - Filter to show ONLY rugby products (deporte === "rugby")
+> - Remove stock display from product cards completely
+> - Update title to "Catálogo Rugby"
+> - Keep all other filters (tipo, talle) working
+>
+> 3. CREATE app/sale/page.js:
+> - Show only products where liquidacion === true (futbol products)
+> - Title: "Sale 🔥" with subtitle "Últimas unidades disponibles"
+> - Add a orange "SALE" badge on each card
+> - Remove stock display from cards
+> - Same card style as catalogo, with "Ver detalle" button
+> - No filters needed, show all sale products in a grid
+> - Mark as "use client", Tailwind CSS, black/orange theme
+>
+> 4. UPDATE components/Navbar.js:
+> - Add "Sale 🔥" link to /sale between "Catálogo" and "Mystery Futbox"
+>
+> 5. UPDATE components/Footer.js:
+> - Add "Sale" link to the links column
+
+---

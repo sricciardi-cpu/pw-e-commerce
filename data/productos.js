@@ -1,6 +1,6 @@
 // Productos: camisetas de fútbol y rugby, clubes y naciones
 const productos = [
-  // --- FÚTBOL - NACIONES ---
+  // --- FÚTBOL - NACIONES (liquidacion: true) ---
   {
     id: 1,
     nombre: "Argentina Local 2024",
@@ -11,6 +11,7 @@ const productos = [
     descripcion: "Camiseta oficial de la Selección Argentina, campeona del mundo. Tela Dri-Fit de alta performance.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 20,
+    liquidacion: true,
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const productos = [
     descripcion: "Camiseta visitante de la Canarinha. Diseño azul con detalles dorados.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 14,
+    liquidacion: true,
   },
   {
     id: 3,
@@ -33,8 +35,9 @@ const productos = [
     descripcion: "Camiseta oficial de Les Bleus. Azul profundo con escudo bordado.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 10,
+    liquidacion: true,
   },
-  // --- FÚTBOL - CLUBES ---
+  // --- FÚTBOL - CLUBES (liquidacion: true) ---
   {
     id: 4,
     nombre: "Boca Juniors Local",
@@ -45,6 +48,7 @@ const productos = [
     descripcion: "Camiseta oficial de Boca Juniors para la temporada actual. Azul y amarillo.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 25,
+    liquidacion: true,
   },
   {
     id: 5,
@@ -56,6 +60,7 @@ const productos = [
     descripcion: "Camiseta oficial de River Plate. Blanca con la histórica banda roja.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 22,
+    liquidacion: true,
   },
   {
     id: 6,
@@ -67,8 +72,9 @@ const productos = [
     descripcion: "Camiseta oficial del Real Madrid. Blanca clásica con escudo bordado.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 8,
+    liquidacion: true,
   },
-  // --- RUGBY - NACIONES ---
+  // --- RUGBY - NACIONES (liquidacion: false) ---
   {
     id: 7,
     nombre: "Pumas Local 2024",
@@ -79,6 +85,7 @@ const productos = [
     descripcion: "Camiseta oficial del seleccionado argentino de rugby. Tela transpirable de alta performance.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 12,
+    liquidacion: false,
   },
   {
     id: 8,
@@ -90,6 +97,7 @@ const productos = [
     descripcion: "Camiseta visitante de Nueva Zelanda. Negro total con el helecho plateado.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 7,
+    liquidacion: false,
   },
   {
     id: 9,
@@ -101,8 +109,9 @@ const productos = [
     descripcion: "Camiseta oficial de Sudáfrica. Verde y dorado, campeones del mundo.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 9,
+    liquidacion: false,
   },
-  // --- RUGBY - CLUBES ---
+  // --- RUGBY - CLUBES (liquidacion: false) ---
   {
     id: 10,
     nombre: "Jaguares Local",
@@ -113,6 +122,7 @@ const productos = [
     descripcion: "Camiseta oficial de los Jaguares en el Super Rugby. Negro y dorado.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 15,
+    liquidacion: false,
   },
   {
     id: 11,
@@ -124,6 +134,7 @@ const productos = [
     descripcion: "Camiseta del San Isidro Club, uno de los clubes históricos del rugby argentino.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 18,
+    liquidacion: false,
   },
   {
     id: 12,
@@ -135,6 +146,7 @@ const productos = [
     descripcion: "Camiseta del Club Atlético San Isidro. Rayas clásicas azul y blanco.",
     imagen: "https://via.placeholder.com/400x400",
     stock: 20,
+    liquidacion: false,
   },
 ];
 
