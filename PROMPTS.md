@@ -516,3 +516,107 @@
 > No other changes.
 
 ---
+### Prompt #31
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js find "Camisetas Zeus" text next to the logo.
+> Change its style to match the "ENLACES" and "SEGUINOS" headings:
+> same font size, same color (gray/muted), same font weight, uppercase, letter spacing.
+> No other changes.
+
+---
+### Prompt #32
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js the three columns are not vertically aligned at the top.
+> Add items-start to the main grid or flex container that holds the three columns.
+> Make sure all three column titles (CAMISETAS ZEUS, ENLACES, SEGUINOS) are at the same vertical height.
+> No other changes.
+
+---
+### Prompt #33
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js make these two changes:
+>
+> 1. Make "La Plata, Buenos Aires" a clickable link that opens Google Maps:
+> <a href="https://www.google.com/maps/place/La+Plata,+Buenos+Aires" target="_blank" className="hover:text-orange-400 transition-colors">La Plata, Buenos Aires</a>
+>
+> 2. In the left column, change the layout so the title "CAMISETAS ZEUS" aligns with "ENLACES" and "SEGUINOS" headings.
+> Put the logo above the title, not beside it. Structure it like:
+> - Logo image on top (small, h-10)
+> - Then "CAMISETAS ZEUS" title at the same level as the other column headings
+> - Then La Plata link and WhatsApp below
+>
+> No other changes.
+
+---
+### Prompt #34
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js fix the left column:
+> - Make the logo smaller: h-5 w-auto
+> - The logo and "CAMISETAS ZEUS" title should be in the same row side by side, like before
+> - But the whole left column should start at the same vertical position as the other columns
+> - Add self-start to the left column div so it aligns to the top of the grid
+> No other changes.
+
+---
+### Prompt #35
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Install react-icons package and update components/Footer.js to use real social media icons.
+>
+> Install: npm install react-icons
+>
+> Then in Footer.js import and use:
+> - Instagram: FaInstagram from "react-icons/fa"
+> - WhatsApp: FaWhatsapp from "react-icons/fa"
+> - TikTok: FaTiktok from "react-icons/fa6"
+>
+> Replace the emojis in the "SEGUINOS" column with these icons.
+> Size: text-xl, color: white, hover: text-orange-400
+> Keep the text next to each icon.
+> No other changes.
+
+---
+### Prompt #36
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js:
+> 1. Remove "Escribinos por WhatsApp" from the first column completely
+> 2. In the third column reorder so WhatsApp is last: Instagram, TikTok, WhatsApp
+> No other changes.
+
+---
+### Prompt #37
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In components/Footer.js add two items to the first column below "La Plata, Buenos Aires":
+>
+> Envíos a todo el país
+> Transferencia · Efectivo · Mercado Pago
+>
+> Same text style as the existing items, white/gray color.
+> No other changes.
+
+---
+### Prompt #38
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In app/contacto/page.js add a phone number field to the contact form:
+>
+> - Add a new field between email and mensaje:
+>   Label: "Teléfono"
+>   Input type: "tel"
+>   Placeholder: "Ej: 2213530494"
+>
+> - Add it to the useState validation:
+>   Must be exactly 10 digits, numbers only
+>   Error message: "Ingresá un teléfono válido de 10 dígitos (ej: 2213530494)"
+>
+> - Add it to the form reset on successful submit
+>
+> No other changes.
+
+---

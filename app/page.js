@@ -13,7 +13,7 @@ const badgeDeporte = {
 
 // Valores de la marca para la sección Quiénes Somos
 const valores = [
-  { emoji: "🏉", titulo: "Pasión por el deporte", texto: "Vivimos el fútbol y el rugby desde adentro." },
+  { emoji: "🏉", titulo: "Pasión por el deporte", texto: "Vivimos el rugby desde adentro." },
   { emoji: "⚡", titulo: "Calidad garantizada",   texto: "Solo vendemos lo que nosotros mismos usaríamos." },
   { emoji: "📦", titulo: "Entrega rápida",         texto: "Stock disponible y envíos a todo el país." },
 ];
@@ -27,7 +27,7 @@ export default function HomePage() {
       <section className="w-full bg-black text-white min-h-[500px] flex flex-col items-center justify-center text-center px-6">
         <h1 className="text-5xl font-extrabold mb-4">Camisetas Zeus</h1>
         <p className="text-xl text-orange-500 font-semibold mb-8">
-          Las mejores camisetas de fútbol y rugby de Argentina
+          Las mejores camisetas de rugby de Argentina
         </p>
         <Link
           href="/catalogo"
@@ -44,8 +44,8 @@ export default function HomePage() {
       <section className="bg-black rounded-2xl text-white p-10 mb-16">
         <h2 className="text-3xl font-extrabold mb-4">Quiénes Somos</h2>
         <p className="text-gray-300 mb-8 max-w-2xl">
-          Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de fútbol y rugby
-          a quienes realmente las viven. Somos un emprendimiento familiar que combina la pasión por el deporte
+          Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de rugby
+          a quienes realmente las viven. Somos un emprendimiento que combina la pasión por el deporte
           con el compromiso de ofrecer productos de calidad a precios accesibles.
         </p>
 

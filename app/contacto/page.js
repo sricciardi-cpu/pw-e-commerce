@@ -2,18 +2,21 @@
 
 import { useState } from "react";
 
-const camposIniciales = { nombre: "", email: "", mensaje: "" };
-const erroresIniciales = { nombre: "", email: "", mensaje: "" };
+const camposIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
+const erroresIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
 
 // Valida cada campo y devuelve un objeto con los mensajes de error
 function validar(campos) {
-  const errores = { nombre: "", email: "", mensaje: "" };
+  const errores = { nombre: "", email: "", telefono: "", mensaje: "" };
 
   if (!campos.nombre.trim()) {
     errores.nombre = "El nombre no puede estar vacío.";
   }
   if (!campos.email.includes("@") || !campos.email.includes(".")) {
     errores.email = "Ingresá un email válido (debe contener @ y punto).";
+  }
+  if (!/^\d{10}$/.test(campos.telefono)) {
+    errores.telefono = "Ingresá un teléfono válido de 10 dígitos (ej: 2213530494)";
   }
   if (campos.mensaje.trim().length < 20) {
     errores.mensaje = "El mensaje debe tener al menos 20 caracteres.";
@@ -106,6 +109,28 @@ export default function ContactoPage() {
           />
           <p id="email-error" className="text-red-500 text-xs min-h-[1rem]">
             {errores.email}
+          </p>
+        </div>
+
+        {/* Teléfono */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="telefono" className="text-sm font-medium text-gray-700">
+            Teléfono
+          </label>
+          <input
+            id="telefono"
+            name="telefono"
+            type="tel"
+            value={campos.telefono}
+            onChange={handleChange}
+            aria-describedby="telefono-error"
+            className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${
+              errores.telefono ? "border-red-400" : "border-gray-300"
+            }`}
+            placeholder="Ej: 2213530494"
+          />
+          <p id="telefono-error" className="text-red-500 text-xs min-h-[1rem]">
+            {errores.telefono}
           </p>
         </div>
 

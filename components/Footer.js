@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaTiktok } from "react-icons/fa6";
 
 const enlaces = [
   { href: "/", label: "Inicio" },
   { href: "/catalogo", label: "Catálogo" },
-  { href: "/sale", label: "Sale 🔥" },
+  { href: "/sale", label: "Sale" },
   { href: "/mystery-futbox", label: "Mystery Futbox" },
   { href: "/griptec-spray", label: "Griptec Spray" },
   { href: "/guia-de-talles", label: "Guía de Talles" },
@@ -16,22 +18,24 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto">
 
         {/* Tres columnas */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10 items-start">
 
           {/* Columna izquierda: marca */}
-          <div className="flex flex-col gap-3">
-            <p className="text-xl font-bold flex items-center gap-2">
-              <span>⚡</span> Camisetas Zeus
+          <div className="flex flex-col gap-3 self-start">
+            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+              <img src="/logo.png" alt="Camisetas Zeus" className="h-5 w-auto" />
+              Camisetas Zeus
             </p>
-            <p className="text-gray-400 text-sm">La Plata, Buenos Aires</p>
             <a
-              href="https://wa.me/5492216220145"
+              href="https://www.google.com/maps/place/La+Plata,+Buenos+Aires"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-orange-500 text-sm hover:underline"
+              className="text-gray-400 text-sm hover:text-orange-400 transition-colors"
             >
-              💬 Escribinos por WhatsApp
+              La Plata, Buenos Aires
             </a>
+            <p className="text-gray-400 text-sm">Envíos a todo el país</p>
+            <p className="text-gray-400 text-sm">Transferencia · Efectivo · Mercado Pago</p>
           </div>
 
           {/* Columna central: enlaces */}
@@ -55,17 +59,28 @@ export default function Footer() {
               href="https://instagram.com/camisetaszeus"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-300 hover:text-orange-500 transition-colors"
+              className="flex items-center gap-2 text-sm text-gray-300 hover:text-orange-400 transition-colors"
             >
-              📸 Instagram @camisetaszeus
+              <FaInstagram className="text-xl" />
+              @camisetaszeus
+            </a>
+            <a
+              href="https://tiktok.com/@camisetaszeus8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-gray-300 hover:text-orange-400 transition-colors"
+            >
+              <FaTiktok className="text-xl" />
+              @camisetaszeus
             </a>
             <a
               href="https://wa.me/5492216220145"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-300 hover:text-orange-500 transition-colors"
+              className="flex items-center gap-2 text-sm text-gray-300 hover:text-orange-400 transition-colors"
             >
-              💬 +54 9 221 622 0145
+              <FaWhatsapp className="text-xl" />
+              +54 9 221 622 0145
             </a>
           </div>
         </div>
