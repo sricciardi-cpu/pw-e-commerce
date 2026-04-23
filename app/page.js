@@ -24,9 +24,9 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero — Background ready for image or video */}
-      <section className="w-full bg-black text-white min-h-[500px] flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-5xl font-extrabold mb-4">Camisetas Zeus</h1>
-        <p className="text-xl text-orange-500 font-semibold mb-8">
+      <section className="w-full bg-black text-white min-h-[400px] md:min-h-[500px] flex flex-col items-center justify-center text-center px-6 py-12 md:py-24">
+        <h1 className="text-3xl md:text-5xl font-extrabold mb-4">Camisetas Zeus</h1>
+        <p className="text-base md:text-xl text-orange-500 font-semibold mb-8">
           Las mejores camisetas de rugby de Argentina
         </p>
         <Link
