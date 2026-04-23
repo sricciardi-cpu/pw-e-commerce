@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FadeIn from "@/components/FadeIn";
 
 const camposIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
 const erroresIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
@@ -53,10 +54,12 @@ export default function ContactoPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-2">Contacto</h1>
-      <p className="text-gray-600 mb-8">
-        ¿Tenés alguna pregunta? Completá el formulario y te respondemos a la brevedad.
-      </p>
+      <FadeIn>
+        <h1 className="text-3xl font-extrabold mb-2">Contacto</h1>
+        <p className="text-gray-600 mb-8">
+          ¿Tenés alguna pregunta? Completá el formulario y te respondemos a la brevedad.
+        </p>
+      </FadeIn>
 
       {/* Mensaje de éxito tras envío correcto */}
       {enviado && (
@@ -65,6 +68,7 @@ export default function ContactoPage() {
         </div>
       )}
 
+      <FadeIn delay={100}>
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
 
         {/* Nombre */}
@@ -163,6 +167,7 @@ export default function ContactoPage() {
           Enviar mensaje
         </button>
       </form>
+      </FadeIn>
     </main>
   );
 }

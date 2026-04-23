@@ -1,3 +1,5 @@
+import FadeIn from "@/components/FadeIn";
+
 // Clases reutilizables para las tablas
 const thClass = "px-4 py-3 text-left text-sm font-semibold text-white bg-black";
 const tdClass = "px-4 py-3 text-sm text-gray-700";
@@ -36,12 +38,15 @@ const rugby = [
 export default function GuiaDeTallesPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-2">Guía de Talles</h1>
-      <p className="text-gray-600 mb-10">
-        Todas las medidas están expresadas en centímetros. Si tenés dudas, consultanos por WhatsApp.
-      </p>
+      <FadeIn>
+        <h1 className="text-3xl font-extrabold mb-2">Guía de Talles</h1>
+        <p className="text-gray-600 mb-10">
+          Todas las medidas están expresadas en centímetros. Si tenés dudas, consultanos por WhatsApp.
+        </p>
+      </FadeIn>
 
       {/* Sección 1: Fútbol Jugador */}
+      <FadeIn delay={80}>
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
           Camisetas de Fútbol – Versión Jugador
@@ -68,7 +73,10 @@ export default function GuiaDeTallesPage() {
         </div>
       </section>
 
+      </FadeIn>
+
       {/* Sección 2: Fútbol Hincha */}
+      <FadeIn delay={160}>
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
           Camisetas de Fútbol – Versión Hincha
@@ -95,7 +103,10 @@ export default function GuiaDeTallesPage() {
         </div>
       </section>
 
+      </FadeIn>
+
       {/* Sección 3: Rugby */}
+      <FadeIn delay={240}>
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
           Camisetas de Rugby
@@ -125,6 +136,7 @@ export default function GuiaDeTallesPage() {
           </table>
         </div>
       </section>
+      </FadeIn>
     </main>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import FadeIn from "@/components/FadeIn";
 
 const talles = ["S", "M", "L", "XL", "2XL", "3XL"];
 const NOMBRE = "Mystery Futbox";
@@ -30,8 +31,11 @@ export default function MysteryFutboxPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-6">Mystery Futbox</h1>
+      <FadeIn>
+        <h1 className="text-3xl font-extrabold mb-6">Mystery Futbox</h1>
+      </FadeIn>
 
+      <FadeIn delay={100}>
       <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
         {/* Imagen — full width en mobile, mitad izquierda en desktop */}
@@ -91,6 +95,7 @@ export default function MysteryFutboxPage() {
           </button>
         </div>
       </article>
+      </FadeIn>
     </main>
   );
 }

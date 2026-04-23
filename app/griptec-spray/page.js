@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import FadeIn from "@/components/FadeIn";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -38,11 +39,14 @@ export default function GriptecSprayPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-2">Griptec Spray 200ml</h1>
-      <p className="text-gray-600 mb-6">
-        Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.
-      </p>
+      <FadeIn>
+        <h1 className="text-3xl font-extrabold mb-2">Griptec Spray 200ml</h1>
+        <p className="text-gray-600 mb-6">
+          Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.
+        </p>
+      </FadeIn>
 
+      <FadeIn delay={100}>
       <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
         {/* Imagen — full width en mobile, mitad izquierda en desktop */}
@@ -99,6 +103,7 @@ export default function GriptecSprayPage() {
           </button>
         </div>
       </article>
+      </FadeIn>
     </main>
   );
 }
