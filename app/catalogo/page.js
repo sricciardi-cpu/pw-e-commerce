@@ -12,7 +12,7 @@ function formatearPrecio(precio) {
 const productosRugby = productos.filter((p) => p.deporte === "rugby");
 
 const filtrosTipo  = ["Todos", "Naciones", "Clubes"];
-const filtrosTalle = ["Todos", "S", "M", "L", "XL"];
+const filtrosTalle = ["Todos", "S", "M", "L", "XL", "2XL", "3XL"];
 
 const tipoValor = { Naciones: "nacion", Clubes: "club" };
 

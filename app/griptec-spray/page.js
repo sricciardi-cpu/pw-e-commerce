@@ -17,7 +17,6 @@ const packs = [
 export default function GriptecSprayPage() {
   const { agregarAlCarrito } = useCart();
   const [packSeleccionado, setPackSeleccionado] = useState(null);
-  // "idle" | "warning" | "success"
   const [estado, setEstado] = useState("idle");
 
   function handleAgregar() {
@@ -33,18 +32,23 @@ export default function GriptecSprayPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold mb-2">Griptec Spray 200ml</h1>
-      <p className="text-gray-600 mb-8">
-        Spray de agarre instantáneo para rugby, padel, tenis y muchos deportes mas. Mejora el grip en cualquier condición climática.
+      <p className="text-gray-600 mb-6">
+        Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.
       </p>
 
-      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm">
-        <img
-          src="/griptec.png"
-          alt="Griptec Spray 200ml"
-          className="w-full object-cover"
-        />
+      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
-        <div className="p-6 flex flex-col gap-5">
+        {/* Imagen — full width en mobile, mitad izquierda en desktop */}
+        <div className="md:w-1/2 bg-white flex items-center justify-center p-6">
+          <img
+            src="/griptec.png"
+            alt="Griptec Spray 200ml"
+            className="w-full object-contain max-h-72 md:max-h-96"
+          />
+        </div>
+
+        {/* Contenido — derecha en desktop */}
+        <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center border-t md:border-t-0 md:border-l border-black">
           {/* Selector de pack */}
           <div>
             <p className="text-sm font-semibold text-gray-700 mb-3">Seleccioná tu pack:</p>
@@ -82,7 +86,7 @@ export default function GriptecSprayPage() {
 
           <button
             onClick={handleAgregar}
-            className="block w-full text-center bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
+            className="w-full text-center bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
           >
             Agregar al carrito
           </button>

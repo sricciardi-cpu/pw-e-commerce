@@ -10,7 +10,6 @@ const PRECIO = 50800;
 export default function MysteryFutboxPage() {
   const { agregarAlCarrito } = useCart();
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
-  // "idle" | "warning" | "success"
   const [estado, setEstado] = useState("idle");
 
   function handleAgregar() {
@@ -26,14 +25,19 @@ export default function MysteryFutboxPage() {
     <main className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-extrabold mb-6">Mystery Futbox</h1>
 
-      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm">
-        <img
-          src="/mysteryfutbox.png"
-          alt="Mystery Futbox"
-          className="w-full object-cover"
-        />
+      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
-        <div className="p-6 flex flex-col gap-5">
+        {/* Imagen — full width en mobile, mitad izquierda en desktop */}
+        <div className="md:w-1/2 bg-black flex items-center justify-center">
+          <img
+            src="/mysteryfutbox.png"
+            alt="Mystery Futbox"
+            className="w-full object-contain max-h-72 md:max-h-full md:h-full"
+          />
+        </div>
+
+        {/* Contenido — derecha en desktop */}
+        <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center">
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-gray-400 line-through text-lg">$69.980</span>
             <span className="bg-black text-white text-xs font-bold px-2 py-1 rounded-full">27% OFF</span>
@@ -53,7 +57,7 @@ export default function MysteryFutboxPage() {
                 <button
                   key={t}
                   onClick={() => { setTalleSeleccionado(t); setEstado("idle"); }}
-                  className={`px-4 py-1.5 rounded-lg border text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
                     talleSeleccionado === t
                       ? "bg-orange-500 text-black border-orange-500"
                       : "bg-white text-gray-700 border-gray-300 hover:border-black hover:text-black"
@@ -74,7 +78,7 @@ export default function MysteryFutboxPage() {
 
           <button
             onClick={handleAgregar}
-            className="block w-full text-center bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
+            className="w-full text-center bg-black text-white font-semibold py-3 rounded-xl hover:bg-orange-500 hover:text-black transition-colors"
           >
             Agregar al carrito
           </button>
