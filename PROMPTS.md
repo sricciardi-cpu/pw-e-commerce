@@ -723,3 +723,69 @@
 >    - Each `<article>` card: apply `hover:-translate-y-2 hover:shadow-lg transition-transform duration-300`
 >
 > No layout or content changes — only add the transition and transform utility classes to the existing card elements.
+
+---
+
+### Prompt #43
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Apply the following dynamic and visual improvements across the app. All features are in trial mode:
+>
+> DYNAMIC FEATURES — implement all of the following:
+>
+> 1. Scroll fade-in animation (components/FadeIn.js):
+>    - Create a FadeIn wrapper component using IntersectionObserver with threshold: 0.1
+>    - Animate from opacity-0 + translateY(2rem) to opacity-100 + translateY(0) over 700ms
+>    - Accept a `delay` prop (ms) for staggered animations
+>    - Apply to all major sections in app/page.js and product cards in app/catalogo/page.js
+>
+> 2. Animated stat counters in app/page.js (below the hero):
+>    - Show only 2 stats: "500+ Camisetas vendidas" and "12 Modelos disponibles"
+>    - Use IntersectionObserver to trigger counting animation when section enters viewport
+>    - Count from 0 to target over 1500ms using setInterval (60 steps)
+>    - Layout: 2-column grid, orange numbers, gray labels
+>
+> 3. Navigation progress bar (components/ProgressBar.js):
+>    - Thin orange bar (h-0.5) fixed at the very top of the page (z-index 100), above the navbar
+>    - Triggered on every pathname change using usePathname
+>    - Animate: 0% → 75% in 50ms, then → 100% in 350ms, then hide at 650ms
+>
+> 4. Image zoom on hover in app/catalogo/[id]/page.js:
+>    - Wrap the main product image in overflow-hidden div
+>    - Apply hover:scale-110 transition-transform duration-500 to the img tag
+>
+> 5. Breadcrumb navigation in app/catalogo/[id]/page.js:
+>    - Replace the "← Volver al catálogo" link with: Inicio › Catálogo › [product name]
+>    - Use FaChevronRight icons between segments
+>    - Each segment links to its route, product name is truncated with max-w-[180px]
+>
+> 6. "Más vendido" badge:
+>    - Add masVendido: true to only ONE product in data/productos.js (Pumas Local 2024, id: 7)
+>    - Show a "🔥 Más vendido" orange badge on that product card in the catalog and product detail
+>
+> VISUAL FEATURES:
+>
+> 7. Swipeable carousel in app/page.js replacing the static featured products grid:
+>    - Render TWO carousels side by side on desktop (grid-cols-2), each with 3 products
+>    - Implement real touch/mouse drag: track touchstart/mousedown clientX, update translateX in real-time during drag, snap on release
+>    - Use a cloned-first-slide approach for seamless circular loop always going right:
+>      extItems = [...items, items[0]] — when idx reaches items.length, wait 500ms then reset to 0 with no transition
+>    - Auto-advance every 3 seconds, always to the right, pauses while dragging
+>    - Transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) for natural feel, disabled during drag
+>    - Add prev/next arrow buttons and dot indicators (dots based on idx % total)
+>    - cursor: grab / grabbing, pointer-events: none on images to prevent drag ghost
+>    - Prevent Link navigation if drag offset > 5px
+>    - Product images: object-contain with max-h-64 md:max-h-80 bg-white
+>
+> 8. Add 3 real products with actual photos to data/productos.js (ids 13, 14, 15):
+>    - All Blacks Visitante 2025: imagen: "/allblackvisitante.png"
+>    - Toulouse 25/26 Titular: imagen: "/toulouse2526titular.png"
+>    - Highlanders 26 Titular: imagen: "/highlanders26titular.png"
+>    - All rugby, sizes S through 3XL, liquidacion: false
+>    - Featured in carousel: carousel shows ids [13,14,15] first, then 3 more from catalog
+>
+> 9. Add @keyframes slideInFromRight, slideInFromLeft, fadeIn to app/globals.css
+>
+> DO NOT implement: toast notifications, testimonials section, skeleton loading.
+> Remove "✓ Agregado al carrito" static text — keep it as is (do not replace with toast).
+> Restore "✓ Agregado al carrito" text in catalogo/[id]/page.js, mystery-futbox/page.js, griptec-spray/page.js.

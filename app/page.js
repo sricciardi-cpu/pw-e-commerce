@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import productos from "@/data/productos";
-import { FaHeart, FaStar, FaShippingFast } from "react-icons/fa";
+import FadeIn from "@/components/FadeIn";
+import { FaHeart, FaStar, FaShippingFast, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -17,8 +21,172 @@ const valores = [
   { icon: FaShippingFast, titulo: "Entrega rápida",        texto: "Stock disponible y envíos a todo el país." },
 ];
 
+// Contador animado
+function AnimatedCounter({ target, suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const duration = 1500;
+        const steps = 60;
+        const increment = target / steps;
+        let current = 0;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            setCount(target);
+            clearInterval(timer);
+          } else {
+            setCount(Math.floor(current));
+          }
+        }, duration / steps);
+      }
+    }, { threshold: 0.3 });
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return <span ref={ref}>{count.toLocaleString("es-AR")}{suffix}</span>;
+}
+
+// Carrusel con swipe real y loop circular hacia la derecha
+function Carousel({ items }) {
+  const total     = items.length;
+  // Clonamos el primer item al final para el loop circular sin salto visual
+  const extItems  = [...items, items[0]];
+  const extTotal  = extItems.length;
+
+  const [idx, setIdx]           = useState(0);
+  const [offset, setOffset]     = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [animated, setAnimated] = useState(true);
+  const startX = useRef(0);
+
+  // Cuando llegamos al clon (índice === total), esperamos que termine
+  // la transición y saltamos al índice 0 sin animación
+  useEffect(() => {
+    if (idx === total) {
+      const t = setTimeout(() => {
+        setAnimated(false);
+        setIdx(0);
+      }, 500);
+      return () => clearTimeout(t);
+    } else {
+      // Reactivamos la animación en el siguiente frame
+      const t = setTimeout(() => setAnimated(true), 20);
+      return () => clearTimeout(t);
+    }
+  }, [idx, total]);
+
+  // Auto-play cada 3 segundos, siempre hacia la derecha
+  useEffect(() => {
+    if (dragging) return;
+    const t = setInterval(() => {
+      setAnimated(true);
+      setIdx((i) => i + 1);
+    }, 3000);
+    return () => clearInterval(t);
+  }, [dragging]);
+
+  const onDragStart = (clientX) => {
+    startX.current = clientX;
+    setDragging(true);
+  };
+  const onDragMove = (clientX) => {
+    if (!dragging) return;
+    setOffset(clientX - startX.current);
+  };
+  const onDragEnd = () => {
+    const threshold = 60;
+    setAnimated(true);
+    if (offset < -threshold)      setIdx((i) => i + 1);           // siguiente (puede ir al clon)
+    else if (offset > threshold)  setIdx((i) => Math.max(i - 1, 0));
+    setOffset(0);
+    setDragging(false);
+  };
+
+  const dotIdx = idx % total; // el punto activo, el clon muestra el dot 0
+
+  return (
+    <div
+      className="relative overflow-hidden rounded-2xl border border-black bg-white shadow-sm select-none cursor-grab active:cursor-grabbing"
+      onMouseDown={(e) => onDragStart(e.clientX)}
+      onMouseMove={(e) => onDragMove(e.clientX)}
+      onMouseUp={onDragEnd}
+      onMouseLeave={onDragEnd}
+      onTouchStart={(e) => onDragStart(e.touches[0].clientX)}
+      onTouchMove={(e) => { e.preventDefault(); onDragMove(e.touches[0].clientX); }}
+      onTouchEnd={onDragEnd}
+    >
+      {/* Track */}
+      <div
+        className="flex"
+        style={{
+          width: `${extTotal * 100}%`,
+          transform: `translateX(calc(${-idx * (100 / extTotal)}% + ${offset / extTotal}px))`,
+          transition: dragging ? "none" : animated ? "transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)" : "none",
+        }}
+      >
+        {extItems.map((producto, i) => (
+          <div key={i} style={{ width: `${100 / extTotal}%` }} className="shrink-0">
+            <img
+              src={producto.imagen}
+              alt={producto.nombre}
+              className="w-full object-contain max-h-64 md:max-h-80 bg-white pointer-events-none"
+              loading="lazy"
+            />
+            <div className="p-4 md:p-6 flex flex-col gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${badgeDeporte[producto.deporte]}`}>
+                  {producto.deporte === "futbol" ? "Fútbol" : "Rugby"}
+                </span>
+                {producto.masVendido && (
+                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-500 text-black">🔥 Más vendido</span>
+                )}
+              </div>
+              <h3 className="font-bold text-gray-900 text-lg leading-tight">{producto.nombre}</h3>
+              <p className="text-orange-500 font-extrabold text-xl">{formatearPrecio(producto.precio)}</p>
+              <Link
+                href={`/catalogo/${producto.id}`}
+                className="mt-2 inline-block text-center bg-black text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors"
+                onClick={(e) => { if (Math.abs(offset) > 5) e.preventDefault(); }}
+              >
+                Ver detalle
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Flechas */}
+      <button onClick={() => { setAnimated(true); setIdx((i) => Math.max(i - 1, 0)); }} className="absolute top-1/3 left-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10">
+        <FaChevronLeft />
+      </button>
+      <button onClick={() => { setAnimated(true); setIdx((i) => i + 1); }} className="absolute top-1/3 right-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10">
+        <FaChevronRight />
+      </button>
+
+      {/* Dots */}
+      <div className="flex justify-center gap-2 pb-4">
+        {items.map((_, i) => (
+          <button key={i} onClick={() => { setAnimated(true); setIdx(i); }} className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-gray-300"}`} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
-  const destacados = productos.slice(0, 4);
+  // Los 3 primeros son los productos con foto real, luego 3 más del catálogo
+  const destacados = [
+    ...productos.filter((p) => [13, 14, 15].includes(p.id)),
+    ...productos.filter((p) => ![13, 14, 15].includes(p.id)).slice(0, 3),
+  ];
 
   return (
     <main>
@@ -36,68 +204,66 @@ export default function HomePage() {
         </Link>
       </section>
 
-      {/* Contenido */}
+      {/* Estadísticas animadas */}
+      <FadeIn>
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
+            <div>
+              <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
+                <AnimatedCounter target={500} suffix="+" />
+              </p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">Camisetas vendidas</p>
+            </div>
+            <div>
+              <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
+                <AnimatedCounter target={12} />
+              </p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">Modelos disponibles</p>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+
       <div className="max-w-5xl mx-auto px-4 py-10 md:py-12">
 
         {/* Quiénes Somos */}
-        <section className="bg-black rounded-2xl text-white p-6 md:p-10 mb-12 md:mb-16">
-          <h2 className="text-2xl md:text-3xl font-extrabold mb-4">Quiénes Somos</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl text-sm md:text-base leading-relaxed">
-            Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de rugby
-            a quienes realmente las viven. Somos un emprendimiento que combina la pasión por el deporte
-            con el compromiso de ofrecer productos de calidad a precios accesibles.
-          </p>
+        <FadeIn>
+          <section className="bg-black rounded-2xl text-white p-6 md:p-10 mb-12 md:mb-16 transition-transform duration-300 hover:-translate-y-1">
+            <h2 className="text-2xl md:text-3xl font-extrabold mb-4">Quiénes Somos</h2>
+            <p className="text-gray-300 mb-8 max-w-2xl text-sm md:text-base leading-relaxed">
+              Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de rugby
+              a quienes realmente las viven. Somos un emprendimiento que combina la pasión por el deporte
+              con el compromiso de ofrecer productos de calidad a precios accesibles.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+              {valores.map(({ icon: Icon, titulo, texto }, i) => (
+                <FadeIn key={titulo} delay={i * 100}>
+                  <div className="border border-gray-700 rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 cursor-default h-full">
+                    <Icon className="text-3xl text-orange-500" />
+                    <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{titulo}</h3>
+                    <p className="text-gray-400 text-sm">{texto}</p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </section>
+        </FadeIn>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-            {valores.map(({ icon: Icon, titulo, texto }) => (
-              <div key={titulo} className="border border-gray-700 rounded-xl p-5">
-                <Icon className="text-3xl text-orange-500" />
-                <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{titulo}</h3>
-                <p className="text-gray-400 text-sm">{texto}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Productos destacados */}
-        <section className="mb-12 md:mb-16">
-          <h2 className="text-2xl font-bold mb-6">Productos destacados</h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {destacados.map((producto) => (
-              <article
-                key={producto.id}
-                className="bg-white rounded-xl shadow-sm border border-black overflow-hidden flex flex-col"
-              >
-                <img
-                  src={producto.imagen}
-                  alt={producto.nombre}
-                  className="w-full object-cover"
-                  loading="lazy"
-                />
-
-                <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
-                  <span className={`text-xs font-medium px-2 py-1 rounded-full self-start capitalize ${badgeDeporte[producto.deporte]}`}>
-                    {producto.deporte === "futbol" ? "Fútbol" : "Rugby"}
-                  </span>
-
-                  <h3 className="font-semibold text-gray-900 text-sm md:text-base leading-tight">{producto.nombre}</h3>
-
-                  <p className="text-orange-500 font-bold mt-auto text-sm md:text-base">
-                    {formatearPrecio(producto.precio)}
-                  </p>
-
-                  <Link
-                    href="/catalogo"
-                    className="block text-center bg-black text-white text-sm font-medium py-2.5 rounded-lg hover:bg-gray-800 transition-colors mt-1 active:scale-95"
-                  >
-                    Ver en catálogo
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        {/* Carrusel de productos destacados */}
+        <FadeIn>
+          <section className="mb-12 md:mb-16">
+            <h2 className="text-2xl font-bold mb-6">Productos destacados</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Carousel items={destacados.slice(0, 3)} />
+              <Carousel items={destacados.slice(3, 6)} />
+            </div>
+            <div className="mt-6 text-center">
+              <Link href="/catalogo" className="inline-block bg-black text-white font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black transition-colors">
+                Ver catálogo completo
+              </Link>
+            </div>
+          </section>
+        </FadeIn>
 
       </div>
     </main>

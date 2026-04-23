@@ -1,5 +1,42 @@
 // Productos: camisetas de fútbol y rugby, clubes y naciones
 const productos = [
+  // --- RUGBY - DESTACADOS CON FOTO REAL ---
+  {
+    id: 13,
+    nombre: "All Blacks Visitante 2025",
+    precio: 68000,
+    deporte: "rugby",
+    tipo: "nacion",
+    talle: ["S", "M", "L", "XL", "2XL", "3XL"],
+    descripcion: "Camiseta visitante de Nueva Zelanda temporada 2025. Diseño renovado con el icónico helecho plateado.",
+    imagen: "/allblackvisitante.png",
+    stock: 10,
+    liquidacion: false,
+  },
+  {
+    id: 14,
+    nombre: "Toulouse 25/26 Titular",
+    precio: 62000,
+    deporte: "rugby",
+    tipo: "club",
+    talle: ["S", "M", "L", "XL", "2XL", "3XL"],
+    descripcion: "Camiseta titular del Stade Toulousain para la temporada 25/26. Campeones de Europa.",
+    imagen: "/toulouse2526titular.png",
+    stock: 8,
+    liquidacion: false,
+  },
+  {
+    id: 15,
+    nombre: "Highlanders 26 Titular",
+    precio: 59000,
+    deporte: "rugby",
+    tipo: "club",
+    talle: ["S", "M", "L", "XL", "2XL", "3XL"],
+    descripcion: "Camiseta titular de los Highlanders para el Super Rugby 2026. Azul y dorado.",
+    imagen: "/highlanders26titular.png",
+    stock: 12,
+    liquidacion: false,
+  },
   // --- FÚTBOL - NACIONES (liquidacion: true) ---
   {
     id: 1,
@@ -86,6 +123,7 @@ const productos = [
     imagen: "https://via.placeholder.com/400x400",
     stock: 12,
     liquidacion: false,
+    masVendido: true,
   },
   {
     id: 8,

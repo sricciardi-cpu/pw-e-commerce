@@ -7,6 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import productos from "@/data/productos";
 import { useCart } from "@/context/CartContext";
+import { FaChevronRight } from "react-icons/fa";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -25,15 +26,12 @@ export default function ProductoDetallePage({ params }) {
   const producto = productos.find((p) => p.id === Number(params.id));
   const { agregarAlCarrito } = useCart();
 
-  // Galería: imagen principal + thumbnails
   const imagenes = [
     producto?.imagen,
     "https://via.placeholder.com/400x400?text=Vista+Trasera",
   ];
   const [imagenActiva, setImagenActiva] = useState(0);
-
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
-  // "idle" | "warning" | "success"
   const [estado, setEstado] = useState("idle");
 
   if (!producto) {
@@ -59,9 +57,14 @@ export default function ProductoDetallePage({ params }) {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
 
-      <Link href="/catalogo" className="inline-flex items-center gap-1 text-sm text-orange-500 hover:underline mb-8">
-        ← Volver al catálogo
-      </Link>
+      {/* Breadcrumbs */}
+      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6">
+        <Link href="/" className="hover:text-orange-500 transition-colors">Inicio</Link>
+        <FaChevronRight className="text-xs" />
+        <Link href="/catalogo" className="hover:text-orange-500 transition-colors">Catálogo</Link>
+        <FaChevronRight className="text-xs" />
+        <span className="text-gray-900 font-medium truncate max-w-[180px]">{producto.nombre}</span>
+      </nav>
 
       {/* Layout: columnas en desktop, apilado en mobile */}
       <div className="flex flex-col md:flex-row gap-10">
@@ -69,13 +72,15 @@ export default function ProductoDetallePage({ params }) {
         {/* COLUMNA IZQUIERDA — 40% — galería */}
         <div className="w-full md:w-2/5 flex flex-col gap-3">
 
-          {/* Imagen principal */}
-          <img
-            src={imagenes[imagenActiva]}
-            alt={producto.nombre}
-            className="w-full object-cover rounded-xl"
-            loading="lazy"
-          />
+          {/* Imagen principal con zoom */}
+          <div className="rounded-xl overflow-hidden">
+            <img
+              src={imagenes[imagenActiva]}
+              alt={producto.nombre}
+              className="w-full object-cover transition-transform duration-500 hover:scale-110"
+              loading="lazy"
+            />
+          </div>
 
           {/* Thumbnails */}
           <div className="flex gap-3">
@@ -87,11 +92,7 @@ export default function ProductoDetallePage({ params }) {
                   imagenActiva === i ? "border-orange-500" : "border-transparent hover:border-gray-300"
                 }`}
               >
-                <img
-                  src={src}
-                  alt={`Vista ${i + 1}`}
-                  className="w-full object-cover"
-                />
+                <img src={src} alt={`Vista ${i + 1}`} className="w-full object-cover" />
               </button>
             ))}
           </div>
@@ -109,6 +110,11 @@ export default function ProductoDetallePage({ params }) {
             <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeTipo[producto.tipo]}`}>
               {producto.tipo === "nacion" ? "Nación" : "Club"}
             </span>
+            {producto.masVendido && (
+              <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-500 text-black">
+                🔥 Más vendido
+              </span>
+            )}
           </div>
 
           <h1 className="text-3xl font-extrabold text-gray-900">{producto.nombre}</h1>
@@ -116,10 +122,6 @@ export default function ProductoDetallePage({ params }) {
           <p className="text-orange-500 text-3xl font-bold">{formatearPrecio(producto.precio)}</p>
 
           <p className="text-gray-600 text-sm leading-relaxed">{producto.descripcion}</p>
-
-          <p className={`text-sm font-medium ${producto.stock > 0 ? "text-gray-500" : "text-red-500"}`}>
-            {producto.stock > 0 ? `Stock disponible: ${producto.stock} unidades` : "Sin stock"}
-          </p>
 
           {/* Selector de talle */}
           <div>
@@ -141,7 +143,6 @@ export default function ProductoDetallePage({ params }) {
             </div>
           </div>
 
-          {/* Mensajes de validación y confirmación */}
           {estado === "warning" && (
             <p className="text-red-500 text-sm">Seleccioná un talle primero.</p>
           )}

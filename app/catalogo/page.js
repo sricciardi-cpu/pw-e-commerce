@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import productos from "@/data/productos";
+import FadeIn from "@/components/FadeIn";
 import { FaChevronDown, FaChevronUp, FaFilter } from "react-icons/fa";
 
 function formatearPrecio(precio) {
@@ -109,17 +110,24 @@ export default function CatalogoPage() {
 
       {/* Grilla de productos */}
       <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {productosFiltrados.map((producto) => (
+        {productosFiltrados.map((producto, i) => (
+          <FadeIn key={producto.id} delay={i * 60}>
           <article
-            key={producto.id}
-            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col"
+            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full"
           >
-            <img
-              src={producto.imagen}
-              alt={producto.nombre}
-              className="w-full object-cover"
-              loading="lazy"
-            />
+            <div className="relative">
+              <img
+                src={producto.imagen}
+                alt={producto.nombre}
+                className="w-full object-cover"
+                loading="lazy"
+              />
+              {producto.masVendido && (
+                <span className="absolute top-2 left-2 bg-orange-500 text-black text-xs font-extrabold px-2 py-1 rounded-full">
+                  🔥 Más vendido
+                </span>
+              )}
+            </div>
 
             <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
               <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
@@ -148,6 +156,7 @@ export default function CatalogoPage() {
               </Link>
             </div>
           </article>
+          </FadeIn>
         ))}
       </section>
 

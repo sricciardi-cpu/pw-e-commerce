@@ -25,7 +25,7 @@ export default function SalePage() {
         {productosSale.map((producto) => (
           <article
             key={producto.id}
-            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col"
+            className="bg-white rounded-xl border border-black shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg"
           >
             {/* Imagen con badge SALE superpuesto */}
             <div className="relative">
