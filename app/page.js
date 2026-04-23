@@ -1,5 +1,6 @@
 import Link from "next/link";
 import productos from "@/data/productos";
+import { FaHeart, FaStar, FaShippingFast } from "react-icons/fa";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -11,9 +12,9 @@ const badgeDeporte = {
 };
 
 const valores = [
-  { emoji: "🏉", titulo: "Pasión por el deporte", texto: "Vivimos el rugby desde adentro." },
-  { emoji: "⚡", titulo: "Calidad garantizada",   texto: "Solo vendemos lo que nosotros mismos usaríamos." },
-  { emoji: "📦", titulo: "Entrega rápida",         texto: "Stock disponible y envíos a todo el país." },
+  { icon: FaHeart,        titulo: "Pasión por el deporte", texto: "Vivimos el rugby desde adentro." },
+  { icon: FaStar,         titulo: "Calidad garantizada",   texto: "Solo vendemos lo que nosotros mismos usaríamos." },
+  { icon: FaShippingFast, titulo: "Entrega rápida",        texto: "Stock disponible y envíos a todo el país." },
 ];
 
 export default function HomePage() {
@@ -48,11 +49,11 @@ export default function HomePage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-            {valores.map((v) => (
-              <div key={v.titulo} className="border border-gray-700 rounded-xl p-5">
-                <span className="text-3xl">{v.emoji}</span>
-                <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{v.titulo}</h3>
-                <p className="text-gray-400 text-sm">{v.texto}</p>
+            {valores.map(({ icon: Icon, titulo, texto }) => (
+              <div key={titulo} className="border border-gray-700 rounded-xl p-5">
+                <Icon className="text-3xl text-orange-500" />
+                <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{titulo}</h3>
+                <p className="text-gray-400 text-sm">{texto}</p>
               </div>
             ))}
           </div>

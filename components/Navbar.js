@@ -73,13 +73,12 @@ export default function Navbar() {
               <li key={href}>
                 <Link
                   href={href}
-                  className={`flex items-center gap-1.5 text-lg transition-colors ${
+                  className={`text-lg transition-colors ${
                     pathname === href
                       ? "text-orange-500 font-semibold"
                       : "text-white hover:text-orange-400"
                   }`}
                 >
-                  <Icon className="text-base" />
                   {label}
                 </Link>
               </li>
