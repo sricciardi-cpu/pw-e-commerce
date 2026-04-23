@@ -469,3 +469,26 @@
 > - Add "Sale" link to the links column
 
 ---
+### Prompt #27
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> [Duplicate of Prompt #26 — all changes were already applied. Navbar "Sale 🔥" emoji was removed by external edit, label is currently "Sale".]
+
+---
+### Prompt #28
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Update components/Navbar.js with these two changes:
+>
+> 1. Make navbar taller: change padding to py-6 on the nav element
+> Make all text bigger: logo text-2xl font-bold, links text-lg
+>
+> 2. Import usePathname from "next/navigation" at the top
+> Add "use client" at the top of the file
+> For each Link, compare href with pathname:
+> - If it matches: add className text-orange-500 font-semibold
+> - If it does not match: add className text-white hover:text-orange-400
+>
+> The cart icon 🛒 stays on the right, no active state needed for it.
+
+---
