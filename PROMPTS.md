@@ -789,3 +789,102 @@
 > DO NOT implement: toast notifications, testimonials section, skeleton loading.
 > Remove "✓ Agregado al carrito" static text — keep it as is (do not replace with toast).
 > Restore "✓ Agregado al carrito" text in catalogo/[id]/page.js, mystery-futbox/page.js, griptec-spray/page.js.
+
+---
+
+### Prompt #44
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> In `app/sale/page.js`, apply the same scroll fade-in animation that exists in `app/catalogo/page.js`:
+>
+> 1. Import the `FadeIn` component from `@/components/FadeIn`
+>
+> 2. Wrap each `<article>` card inside a `<FadeIn>` with a staggered `delay` prop:
+> ```jsx
+> {productosSale.map((producto, i) => (
+>   <FadeIn key={producto.id} delay={i * 60}>
+>     <article className="... h-full">
+>       ...
+>     </article>
+>   </FadeIn>
+> ))}
+> ```
+>
+> 3. Add `h-full` to the `<article>` className so the card fills the FadeIn wrapper height correctly.
+>
+> No other changes — keep all existing styles, grid layout and SALE badge exactly as they are.
+
+---
+
+### Prompt #45
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Apply the following 7 interactive and dynamic improvements across the app. Implement all of them in a single pass:
+>
+> 1. Filter animation in app/catalogo/page.js
+> Add a key prop to the products <section> that changes when tipo or talle state changes, so the grid remounts and triggers a fade+scale animation on filter change.
+> Add to app/globals.css: @keyframes fadeScaleIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+>
+> 2. Smooth image transition in app/catalogo/[id]/page.js
+> Add key={imagenActiva} to the main product <img> so it remounts with a fade animation when the active thumbnail changes.
+>
+> 3. "Agregar al carrito" button with visual feedback in app/catalogo/[id]/page.js, app/mystery-futbox/page.js and app/griptec-spray/page.js:
+> - Add a useEffect that resets estado to "idle" automatically 1500ms after it becomes "success"
+> - idle: existing black/orange style, label "Agregar al carrito"
+> - success: bg-green-600 text-white scale-95, label "✓ Agregado"
+> - Add transition-all duration-200 to the button className always
+> - Remove the separate <p> tag that currently shows "✓ Agregado al carrito" below the button
+>
+> 4. Navbar that changes on scroll in components/Navbar.js
+> Add a scrolled boolean state driven by a window scroll listener. Update the <nav> className: scrolled → "bg-black shadow-lg shadow-black/30", not scrolled → "bg-black/80 backdrop-blur-sm"
+>
+> 5. Cart badge "pop" animation in components/Navbar.js
+> Track when cantidadTotal increases and briefly scale the badge to scale-150 for 300ms. Apply to both desktop and mobile badge spans.
+>
+> 6. Hover overlay on product cards in app/catalogo/page.js
+> Wrap each card's <img> in a relative group overflow-hidden div with a dark overlay that fades in on hover with "Ver detalle →" text. Add z-10 to the masVendido badge.
+>
+> 7. Page fade transition — create components/PageTransition.js using usePathname, fade opacity from 0 to 100 over 300ms on route change. Wrap <main>{children}</main> in app/layout.js with it.
+
+---
+
+### Prompt #46
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> 1. Navbar scroll effect — components/Navbar.js
+> Remove the scrolled state and its useEffect with the window scroll listener.
+> Restore the <nav> className to the original static value: "bg-black text-white sticky top-0 z-50"
+>
+> 2. Hover overlay on catalog cards — app/catalogo/page.js
+> Remove the relative group overflow-hidden wrapper div around the product image.
+> Remove the dark overlay <div> with group-hover:opacity-100 and the "Ver detalle →" text.
+> Remove group-hover:scale-105 from the <img> className.
+> Remove z-10 from the masVendido badge <span>.
+> Restore the image to its original structure: just <img className="w-full object-cover" loading="lazy" />
+>
+> 3. Page fade transition — app/layout.js and components/PageTransition.js
+> In app/layout.js: remove the PageTransition import and unwrap <main>{children}</main>.
+> Delete the file components/PageTransition.js entirely.
+> No other changes.
+
+---
+
+### Prompt #47
+**Fecha y hora:** 23/04/2026
+**Prompt usado:**
+> Create a reusable component components/FadeIn.js that:
+> - Uses useEffect and useState to detect when the element enters the viewport
+> - Uses IntersectionObserver to trigger the animation
+> - When element is not visible: opacity-0 translate-y-4
+> - When element enters viewport: opacity-100 translate-y-0
+> - Transition: transition-all duration-700 ease-out
+> - Wrap children in a div with these classes
+>
+> Then wrap the main content sections in these pages with <FadeIn>:
+> - app/mystery-futbox/page.js
+> - app/griptec-spray/page.js
+> - app/guia-de-talles/page.js
+> - app/contacto/page.js
+>
+> Each page should have 2-3 FadeIn wrappers on different sections so they appear one after another as you scroll.
+> Mark FadeIn as "use client".
