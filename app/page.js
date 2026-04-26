@@ -174,17 +174,23 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero */}
-      <section className="w-full bg-black text-white min-h-[60vh] md:min-h-[500px] flex flex-col items-center justify-center text-center px-6 py-16 md:py-24">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Camisetas Zeus</h1>
-        <p className="text-lg md:text-xl text-orange-500 font-semibold mb-10 max-w-xs md:max-w-none">
-          Las mejores camisetas de rugby de Argentina
-        </p>
-        <Link
-          href="/catalogo"
-          className="inline-block bg-orange-500 text-black font-bold px-10 py-4 rounded-full text-lg hover:bg-orange-400 transition-colors active:scale-95 shadow-lg shadow-orange-500/30"
-        >
-          Ver catálogo
-        </Link>
+      <section
+        className="relative w-full text-white -mt-16 md:-mt-20 min-h-[300px] md:min-h-[500px] flex flex-col items-center justify-center text-center px-6"
+        style={{ backgroundImage: "url('/fondo_inicio.png')", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 flex flex-col items-center pt-24 md:pt-32 pb-16 md:pb-24">
+          <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">Camisetas Zeus</h1>
+          <p className="text-sm md:text-xl text-orange-500 font-semibold mb-10 max-w-xs md:max-w-none">
+            Las mejores camisetas de rugby de Argentina
+          </p>
+          <Link
+            href="/catalogo"
+            className="inline-block bg-orange-500 text-black font-bold px-6 md:px-8 py-3 rounded-full text-sm md:text-base hover:bg-orange-400 transition-colors active:scale-95 shadow-lg shadow-orange-500/30"
+          >
+            Ver catálogo
+          </Link>
+        </div>
       </section>
 
       {/* Estadísticas animadas */}

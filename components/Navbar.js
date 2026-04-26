@@ -30,8 +30,17 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [pop, setPop] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef(null);
   const prevCantidad = useRef(cantidadTotal);
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrolled(window.scrollY > 0);
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -65,7 +74,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className="bg-black text-white sticky top-0 z-50" ref={menuRef}>
+    <nav className={`text-white sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto ? "bg-black" : "bg-transparent"}`} ref={menuRef}>
       <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
         {/* Logo */}
         <Link
