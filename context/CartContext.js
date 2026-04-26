@@ -8,17 +8,17 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
   // Agrega un item; si ya existe el mismo id+talle incrementa cantidad
-  function agregarAlCarrito({ id, nombre, talle, precio }) {
+  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1 }) {
     setItems((prev) => {
       const existe = prev.find((i) => i.id === id && i.talle === talle);
       if (existe) {
         return prev.map((i) =>
           i.id === id && i.talle === talle
-            ? { ...i, cantidad: i.cantidad + 1 }
+            ? { ...i, cantidad: i.cantidad + cantidad }
             : i
         );
       }
-      return [...prev, { id, nombre, talle, precio, cantidad: 1 }];
+      return [...prev, { id, nombre, talle, precio, cantidad }];
     });
   }
 

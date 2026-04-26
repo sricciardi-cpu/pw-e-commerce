@@ -40,16 +40,16 @@ export default function GriptecSprayPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2">Griptec Spray 200ml</h1>
-        <p className="text-gray-600 mb-6">
+        <h1 className="text-3xl font-extrabold mb-2 text-white">Griptec Spray 200ml</h1>
+        <p className="text-gray-300 mb-6">
           Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.
         </p>
       </FadeIn>
 
       <FadeIn delay={100}>
-      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+      <article className="bg-zinc-900 border border-zinc-700 rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
-        {/* Imagen — full width en mobile, mitad izquierda en desktop */}
+        {/* Imagen */}
         <div className="md:w-1/2 bg-white flex items-center justify-center p-6">
           <img
             src="/griptec.png"
@@ -58,11 +58,11 @@ export default function GriptecSprayPage() {
           />
         </div>
 
-        {/* Contenido — derecha en desktop */}
-        <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center border-t md:border-t-0 md:border-l border-black">
+        {/* Contenido */}
+        <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center border-t md:border-t-0 md:border-l border-zinc-700">
           {/* Selector de pack */}
           <div>
-            <p className="text-sm font-semibold text-gray-700 mb-3">Seleccioná tu pack:</p>
+            <p className="text-sm font-semibold text-gray-300 mb-3">Seleccioná tu pack:</p>
             <div className="grid grid-cols-2 gap-3">
               {packs.map((pack) => (
                 <button
@@ -71,13 +71,13 @@ export default function GriptecSprayPage() {
                   className={`flex flex-col items-start p-4 rounded-xl border text-left transition-colors ${
                     packSeleccionado === pack.label
                       ? "bg-orange-500 text-black border-orange-500"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-black"
+                      : "bg-zinc-800 text-gray-200 border-zinc-600 hover:border-white"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-semibold text-sm">{pack.label}</span>
                     {pack.descuento && (
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-black text-white">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-orange-500 text-black">
                         {pack.descuento}
                       </span>
                     )}
@@ -89,14 +89,14 @@ export default function GriptecSprayPage() {
           </div>
 
           {estado === "warning" && (
-            <p className="text-red-500 text-sm">Seleccioná un pack primero.</p>
+            <p className="text-red-400 text-sm">Seleccioná un pack primero.</p>
           )}
           <button
             onClick={handleAgregar}
             className={`w-full text-center font-semibold py-3 rounded-xl transition-all duration-200 ${
               estado === "success"
                 ? "bg-green-600 text-white scale-95"
-                : "bg-black text-white hover:bg-orange-500 hover:text-black"
+                : "bg-orange-500 text-black hover:bg-orange-400"
             }`}
           >
             {estado === "success" ? "✓ Agregado" : "Agregar al carrito"}

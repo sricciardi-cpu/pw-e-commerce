@@ -5,7 +5,6 @@ import { FaTiktok } from "react-icons/fa6";
 const enlaces = [
   { href: "/", label: "Inicio" },
   { href: "/catalogo", label: "Catálogo" },
-  { href: "/sale", label: "Sale" },
   { href: "/mystery-futbox", label: "Mystery Futbox" },
   { href: "/griptec-spray", label: "Griptec Spray" },
   { href: "/guia-de-talles", label: "Guía de Talles" },

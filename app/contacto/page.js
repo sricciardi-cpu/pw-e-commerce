@@ -6,7 +6,6 @@ import FadeIn from "@/components/FadeIn";
 const camposIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
 const erroresIniciales = { nombre: "", email: "", telefono: "", mensaje: "" };
 
-// Valida cada campo y devuelve un objeto con los mensajes de error
 function validar(campos) {
   const errores = { nombre: "", email: "", telefono: "", mensaje: "" };
 
@@ -46,7 +45,6 @@ export default function ContactoPage() {
 
     if (hayErrores(nuevosErrores)) return;
 
-    // Formulario válido: mostrar mensaje de éxito y resetear
     setEnviado(true);
     setCampos(camposIniciales);
     setErrores(erroresIniciales);
@@ -55,15 +53,14 @@ export default function ContactoPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2">Contacto</h1>
-        <p className="text-gray-600 mb-8">
+        <h1 className="text-3xl font-extrabold mb-2 text-white">Contacto</h1>
+        <p className="text-gray-300 mb-8">
           ¿Tenés alguna pregunta? Completá el formulario y te respondemos a la brevedad.
         </p>
       </FadeIn>
 
-      {/* Mensaje de éxito tras envío correcto */}
       {enviado && (
-        <div className="bg-orange-50 border border-orange-400 text-orange-800 rounded-xl px-5 py-4 mb-6">
+        <div className="bg-orange-900/30 border border-orange-500 text-orange-300 rounded-xl px-5 py-4 mb-6">
           ¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.
         </div>
       )}
@@ -73,7 +70,7 @@ export default function ContactoPage() {
 
         {/* Nombre */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="nombre" className="text-sm font-medium text-gray-700">
+          <label htmlFor="nombre" className="text-sm font-medium text-gray-300">
             Nombre
           </label>
           <input
@@ -83,20 +80,19 @@ export default function ContactoPage() {
             value={campos.nombre}
             onChange={handleChange}
             aria-describedby="nombre-error"
-            className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${
-              errores.nombre ? "border-red-400" : "border-gray-300"
+            className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              errores.nombre ? "border-red-400" : "border-zinc-600"
             }`}
             placeholder="Tu nombre completo"
           />
-          {/* Mensaje de error accesible via aria-describedby */}
-          <p id="nombre-error" className="text-red-500 text-xs min-h-[1rem]">
+          <p id="nombre-error" className="text-red-400 text-xs min-h-[1rem]">
             {errores.nombre}
           </p>
         </div>
 
         {/* Email */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="email" className="text-sm font-medium text-gray-700">
+          <label htmlFor="email" className="text-sm font-medium text-gray-300">
             Email
           </label>
           <input
@@ -106,19 +102,19 @@ export default function ContactoPage() {
             value={campos.email}
             onChange={handleChange}
             aria-describedby="email-error"
-            className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${
-              errores.email ? "border-red-400" : "border-gray-300"
+            className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              errores.email ? "border-red-400" : "border-zinc-600"
             }`}
             placeholder="tu@email.com"
           />
-          <p id="email-error" className="text-red-500 text-xs min-h-[1rem]">
+          <p id="email-error" className="text-red-400 text-xs min-h-[1rem]">
             {errores.email}
           </p>
         </div>
 
         {/* Teléfono */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="telefono" className="text-sm font-medium text-gray-700">
+          <label htmlFor="telefono" className="text-sm font-medium text-gray-300">
             Teléfono
           </label>
           <input
@@ -128,19 +124,19 @@ export default function ContactoPage() {
             value={campos.telefono}
             onChange={handleChange}
             aria-describedby="telefono-error"
-            className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black ${
-              errores.telefono ? "border-red-400" : "border-gray-300"
+            className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+              errores.telefono ? "border-red-400" : "border-zinc-600"
             }`}
             placeholder="Ej: 2213530494"
           />
-          <p id="telefono-error" className="text-red-500 text-xs min-h-[1rem]">
+          <p id="telefono-error" className="text-red-400 text-xs min-h-[1rem]">
             {errores.telefono}
           </p>
         </div>
 
         {/* Mensaje */}
         <div className="flex flex-col gap-1">
-          <label htmlFor="mensaje" className="text-sm font-medium text-gray-700">
+          <label htmlFor="mensaje" className="text-sm font-medium text-gray-300">
             Mensaje
           </label>
           <textarea
@@ -150,12 +146,12 @@ export default function ContactoPage() {
             value={campos.mensaje}
             onChange={handleChange}
             aria-describedby="mensaje-error"
-            className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black resize-none ${
-              errores.mensaje ? "border-red-400" : "border-gray-300"
+            className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none ${
+              errores.mensaje ? "border-red-400" : "border-zinc-600"
             }`}
             placeholder="Escribí tu consulta (mínimo 20 caracteres)"
           />
-          <p id="mensaje-error" className="text-red-500 text-xs min-h-[1rem]">
+          <p id="mensaje-error" className="text-red-400 text-xs min-h-[1rem]">
             {errores.mensaje}
           </p>
         </div>

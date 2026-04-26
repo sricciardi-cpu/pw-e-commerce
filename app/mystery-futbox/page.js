@@ -32,13 +32,13 @@ export default function MysteryFutboxPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-6">Mystery Futbox</h1>
+        <h1 className="text-3xl font-extrabold mb-6 text-white">Mystery Futbox</h1>
       </FadeIn>
 
       <FadeIn delay={100}>
-      <article className="bg-white border border-black rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+      <article className="bg-zinc-900 border border-zinc-700 rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
 
-        {/* Imagen — full width en mobile, mitad izquierda en desktop */}
+        {/* Imagen */}
         <div className="md:w-1/2 bg-black flex items-center justify-center">
           <img
             src="/mysteryfutbox.png"
@@ -47,22 +47,22 @@ export default function MysteryFutboxPage() {
           />
         </div>
 
-        {/* Contenido — derecha en desktop */}
+        {/* Contenido */}
         <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center">
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-gray-400 line-through text-lg">$69.980</span>
-            <span className="bg-black text-white text-xs font-bold px-2 py-1 rounded-full">27% OFF</span>
+            <span className="bg-orange-500 text-black text-xs font-bold px-2 py-1 rounded-full">27% OFF</span>
           </div>
           <p className="text-orange-500 text-3xl font-extrabold -mt-3">$50.800</p>
 
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-300 text-sm">
             Una caja sorpresa con una camiseta de fútbol o rugby a elección del equipo.
             Indicanos por WhatsApp el parche/estampado que querés.
           </p>
 
           {/* Selector de talle */}
           <div>
-            <p className="text-sm font-semibold text-gray-700 mb-2">Seleccioná tu talle:</p>
+            <p className="text-sm font-semibold text-gray-300 mb-2">Seleccioná tu talle:</p>
             <div className="flex gap-2 flex-wrap">
               {talles.map((t) => (
                 <button
@@ -71,7 +71,7 @@ export default function MysteryFutboxPage() {
                   className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
                     talleSeleccionado === t
                       ? "bg-orange-500 text-black border-orange-500"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-black hover:text-black"
+                      : "bg-zinc-800 text-gray-200 border-zinc-600 hover:border-white hover:text-white"
                   }`}
                 >
                   {t}
@@ -81,14 +81,14 @@ export default function MysteryFutboxPage() {
           </div>
 
           {estado === "warning" && (
-            <p className="text-red-500 text-sm">Seleccioná un talle primero.</p>
+            <p className="text-red-400 text-sm">Seleccioná un talle primero.</p>
           )}
           <button
             onClick={handleAgregar}
             className={`w-full text-center font-semibold py-3 rounded-xl transition-all duration-200 ${
               estado === "success"
                 ? "bg-green-600 text-white scale-95"
-                : "bg-black text-white hover:bg-orange-500 hover:text-black"
+                : "bg-orange-500 text-black hover:bg-orange-400"
             }`}
           >
             {estado === "success" ? "✓ Agregado" : "Agregar al carrito"}

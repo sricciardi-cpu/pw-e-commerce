@@ -1,10 +1,9 @@
 import FadeIn from "@/components/FadeIn";
 
-// Clases reutilizables para las tablas
-const thClass = "px-4 py-3 text-left text-sm font-semibold text-white bg-black";
-const tdClass = "px-4 py-3 text-sm text-gray-700";
-const trEven  = "bg-white";
-const trOdd   = "bg-orange-50";
+const thClass = "px-4 py-3 text-left text-sm font-semibold text-white bg-zinc-800";
+const tdClass = "px-4 py-3 text-sm text-gray-300";
+const trEven  = "bg-zinc-900";
+const trOdd   = "bg-zinc-800/50";
 
 const futbolJugador = [
   { talle: "S",   pecho: 48, largo: 69 },
@@ -39,8 +38,8 @@ export default function GuiaDeTallesPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2">Guía de Talles</h1>
-        <p className="text-gray-600 mb-10">
+        <h1 className="text-3xl font-extrabold mb-2 text-white">Guía de Talles</h1>
+        <p className="text-gray-300 mb-10">
           Todas las medidas están expresadas en centímetros. Si tenés dudas, consultanos por WhatsApp.
         </p>
       </FadeIn>
@@ -48,10 +47,10 @@ export default function GuiaDeTallesPage() {
       {/* Sección 1: Fútbol Jugador */}
       <FadeIn delay={80}>
       <section className="mb-12">
-        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
+        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-white">
           Camisetas de Fútbol – Versión Jugador
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-black">
+        <div className="overflow-x-auto rounded-xl border border-zinc-700">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -63,7 +62,7 @@ export default function GuiaDeTallesPage() {
             <tbody>
               {futbolJugador.map((row, i) => (
                 <tr key={row.talle} className={i % 2 === 0 ? trEven : trOdd}>
-                  <td className={`${tdClass} font-semibold text-black`}>{row.talle}</td>
+                  <td className={`${tdClass} font-semibold text-white`}>{row.talle}</td>
                   <td className={tdClass}>{row.pecho}</td>
                   <td className={tdClass}>{row.largo}</td>
                 </tr>
@@ -72,16 +71,15 @@ export default function GuiaDeTallesPage() {
           </table>
         </div>
       </section>
-
       </FadeIn>
 
       {/* Sección 2: Fútbol Hincha */}
       <FadeIn delay={160}>
       <section className="mb-12">
-        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
+        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-white">
           Camisetas de Fútbol – Versión Hincha
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-black">
+        <div className="overflow-x-auto rounded-xl border border-zinc-700">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -93,7 +91,7 @@ export default function GuiaDeTallesPage() {
             <tbody>
               {futbolHincha.map((row, i) => (
                 <tr key={row.talle} className={i % 2 === 0 ? trEven : trOdd}>
-                  <td className={`${tdClass} font-semibold text-black`}>{row.talle}</td>
+                  <td className={`${tdClass} font-semibold text-white`}>{row.talle}</td>
                   <td className={tdClass}>{row.pecho}</td>
                   <td className={tdClass}>{row.largo}</td>
                 </tr>
@@ -102,16 +100,15 @@ export default function GuiaDeTallesPage() {
           </table>
         </div>
       </section>
-
       </FadeIn>
 
       {/* Sección 3: Rugby */}
       <FadeIn delay={240}>
       <section className="mb-12">
-        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3">
+        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-white">
           Camisetas de Rugby
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-black">
+        <div className="overflow-x-auto rounded-xl border border-zinc-700">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -125,7 +122,7 @@ export default function GuiaDeTallesPage() {
             <tbody>
               {rugby.map((row, i) => (
                 <tr key={row.talle} className={i % 2 === 0 ? trEven : trOdd}>
-                  <td className={`${tdClass} font-semibold text-black`}>{row.talle}</td>
+                  <td className={`${tdClass} font-semibold text-white`}>{row.talle}</td>
                   <td className={tdClass}>{row.hombros}</td>
                   <td className={tdClass}>{row.pecho}</td>
                   <td className={tdClass}>{row.largo}</td>

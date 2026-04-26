@@ -7,7 +7,6 @@ import { useCart } from "@/context/CartContext";
 import {
   FaHome,
   FaTshirt,
-  FaTag,
   FaBox,
   FaSprayCan,
   FaRuler,
@@ -20,7 +19,6 @@ import {
 const links = [
   { href: "/",               label: "Inicio",          icon: FaHome },
   { href: "/catalogo",       label: "Catálogo",        icon: FaTshirt },
-  { href: "/sale",           label: "Sale",            icon: FaTag },
   { href: "/mystery-futbox", label: "Mystery Futbox",  icon: FaBox },
   { href: "/griptec-spray",  label: "Griptec Spray",   icon: FaSprayCan },
   { href: "/guia-de-talles", label: "Guía de Talles",  icon: FaRuler },

@@ -10,11 +10,6 @@ function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
 
-const badgeDeporte = {
-  futbol: "bg-black text-white",
-  rugby:  "bg-orange-500 text-black",
-};
-
 const valores = [
   { icon: FaHeart,        titulo: "Pasión por el deporte", texto: "Vivimos el rugby desde adentro." },
   { icon: FaStar,         titulo: "Calidad garantizada",   texto: "Solo vendemos lo que nosotros mismos usaríamos." },
@@ -57,7 +52,6 @@ function AnimatedCounter({ target, suffix = "" }) {
 // Carrusel con swipe real y loop circular hacia la derecha
 function Carousel({ items }) {
   const total     = items.length;
-  // Clonamos el primer item al final para el loop circular sin salto visual
   const extItems  = [...items, items[0]];
   const extTotal  = extItems.length;
 
@@ -67,8 +61,6 @@ function Carousel({ items }) {
   const [animated, setAnimated] = useState(true);
   const startX = useRef(0);
 
-  // Cuando llegamos al clon (índice === total), esperamos que termine
-  // la transición y saltamos al índice 0 sin animación
   useEffect(() => {
     if (idx === total) {
       const t = setTimeout(() => {
@@ -77,13 +69,11 @@ function Carousel({ items }) {
       }, 500);
       return () => clearTimeout(t);
     } else {
-      // Reactivamos la animación en el siguiente frame
       const t = setTimeout(() => setAnimated(true), 20);
       return () => clearTimeout(t);
     }
   }, [idx, total]);
 
-  // Auto-play cada 3 segundos, siempre hacia la derecha
   useEffect(() => {
     if (dragging) return;
     const t = setInterval(() => {
@@ -104,17 +94,17 @@ function Carousel({ items }) {
   const onDragEnd = () => {
     const threshold = 60;
     setAnimated(true);
-    if (offset < -threshold)      setIdx((i) => i + 1);           // siguiente (puede ir al clon)
+    if (offset < -threshold)      setIdx((i) => i + 1);
     else if (offset > threshold)  setIdx((i) => Math.max(i - 1, 0));
     setOffset(0);
     setDragging(false);
   };
 
-  const dotIdx = idx % total; // el punto activo, el clon muestra el dot 0
+  const dotIdx = idx % total;
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-black bg-white shadow-sm select-none cursor-grab active:cursor-grabbing"
+      className="relative overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900 shadow-sm select-none cursor-grab active:cursor-grabbing"
       onMouseDown={(e) => onDragStart(e.clientX)}
       onMouseMove={(e) => onDragMove(e.clientX)}
       onMouseUp={onDragEnd}
@@ -142,18 +132,15 @@ function Carousel({ items }) {
             />
             <div className="p-4 md:p-6 flex flex-col gap-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${badgeDeporte[producto.deporte]}`}>
-                  {producto.deporte === "futbol" ? "Fútbol" : "Rugby"}
+                <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize">
+                  Rugby
                 </span>
-                {producto.masVendido && (
-                  <span className="text-xs font-bold px-2 py-1 rounded-full bg-orange-500 text-black">🔥 Más vendido</span>
-                )}
               </div>
-              <h3 className="font-bold text-gray-900 text-lg leading-tight">{producto.nombre}</h3>
+              <h3 className="font-bold text-white text-lg leading-tight">{producto.nombre}</h3>
               <p className="text-orange-500 font-extrabold text-xl">{formatearPrecio(producto.precio)}</p>
               <Link
                 href={`/catalogo/${producto.id}`}
-                className="mt-2 inline-block text-center bg-black text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors"
+                className="mt-2 inline-block text-center bg-black text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors border border-zinc-600"
                 onClick={(e) => { if (Math.abs(offset) > 5) e.preventDefault(); }}
               >
                 Ver detalle
@@ -174,7 +161,7 @@ function Carousel({ items }) {
       {/* Dots */}
       <div className="flex justify-center gap-2 pb-4">
         {items.map((_, i) => (
-          <button key={i} onClick={() => { setAnimated(true); setIdx(i); }} className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-gray-300"}`} />
+          <button key={i} onClick={() => { setAnimated(true); setIdx(i); }} className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-zinc-600"}`} />
         ))}
       </div>
     </div>
@@ -182,11 +169,7 @@ function Carousel({ items }) {
 }
 
 export default function HomePage() {
-  // Los 3 primeros son los productos con foto real, luego 3 más del catálogo
-  const destacados = [
-    ...productos.filter((p) => [13, 14, 15].includes(p.id)),
-    ...productos.filter((p) => ![13, 14, 15].includes(p.id)).slice(0, 3),
-  ];
+  const destacados = productos.slice(0, 4);
 
   return (
     <main>
@@ -206,19 +189,19 @@ export default function HomePage() {
 
       {/* Estadísticas animadas */}
       <FadeIn>
-        <div className="bg-white border-b border-gray-100">
+        <div className="bg-zinc-900 border-b border-zinc-800">
           <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
             <div>
               <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
                 <AnimatedCounter target={500} suffix="+" />
               </p>
-              <p className="text-xs md:text-sm text-gray-500 mt-1">Camisetas vendidas</p>
+              <p className="text-xs md:text-sm text-gray-400 mt-1">Camisetas vendidas</p>
             </div>
             <div>
               <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
-                <AnimatedCounter target={12} />
+                <AnimatedCounter target={19} />
               </p>
-              <p className="text-xs md:text-sm text-gray-500 mt-1">Modelos disponibles</p>
+              <p className="text-xs md:text-sm text-gray-400 mt-1">Modelos disponibles</p>
             </div>
           </div>
         </div>
@@ -228,7 +211,7 @@ export default function HomePage() {
 
         {/* Quiénes Somos */}
         <FadeIn>
-          <section className="bg-black rounded-2xl text-white p-6 md:p-10 mb-12 md:mb-16 transition-transform duration-300 hover:-translate-y-1">
+          <section className="bg-zinc-900 rounded-2xl text-white p-6 md:p-10 mb-12 md:mb-16 transition-transform duration-300 hover:-translate-y-1 border border-zinc-700">
             <h2 className="text-2xl md:text-3xl font-extrabold mb-4">Quiénes Somos</h2>
             <p className="text-gray-300 mb-8 max-w-2xl text-sm md:text-base leading-relaxed">
               Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de rugby
@@ -238,7 +221,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
               {valores.map(({ icon: Icon, titulo, texto }, i) => (
                 <FadeIn key={titulo} delay={i * 100}>
-                  <div className="border border-gray-700 rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 cursor-default h-full">
+                  <div className="border border-zinc-700 rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 cursor-default h-full">
                     <Icon className="text-3xl text-orange-500" />
                     <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{titulo}</h3>
                     <p className="text-gray-400 text-sm">{texto}</p>
@@ -252,13 +235,13 @@ export default function HomePage() {
         {/* Carrusel de productos destacados */}
         <FadeIn>
           <section className="mb-12 md:mb-16">
-            <h2 className="text-2xl font-bold mb-6">Productos destacados</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white">Productos destacados</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Carousel items={destacados.slice(0, 3)} />
-              <Carousel items={destacados.slice(3, 6)} />
+              <Carousel items={destacados.slice(0, 2)} />
+              <Carousel items={destacados.slice(2, 4)} />
             </div>
             <div className="mt-6 text-center">
-              <Link href="/catalogo" className="inline-block bg-black text-white font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black transition-colors">
+              <Link href="/catalogo" className="inline-block bg-zinc-900 text-white border border-zinc-600 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
                 Ver catálogo completo
               </Link>
             </div>

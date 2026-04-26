@@ -15,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className="bg-gray-50 text-gray-900 antialiased">
+      <body className="bg-black text-white antialiased">
         <CartProvider>
           <ProgressBar />
           <Navbar />
