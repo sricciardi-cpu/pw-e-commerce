@@ -888,3 +888,64 @@
 >
 > Each page should have 2-3 FadeIn wrappers on different sections so they appear one after another as you scroll.
 > Mark FadeIn as "use client".
+
+---
+
+### Prompt #48
+**Fecha y hora:** 26/04/2026
+**Prompt usado:**
+> In app/page.js update the hero section:
+> - Add background image: /fondo_inicio.png
+> - Use inline style: backgroundImage: "url('/fondo_inicio.png')", backgroundSize: "cover", backgroundPosition: "center"
+> - Add a dark overlay on top so the text stays readable: add a div with className="absolute inset-0 bg-black/60"
+> - Make the hero section position: relative and the content inside position: relative z-10
+> - Keep all existing text and button exactly as they are
+
+---
+
+### Prompt #49
+**Fecha y hora:** 26/04/2026
+**Prompt usado:**
+> Make these two changes:
+>
+> 1. In app/page.js fix hero for mobile:
+> - Hero min-height: min-h-[300px] md:min-h-[500px]
+> - Title responsive: text-3xl md:text-5xl
+> - Subtitle responsive: text-sm md:text-xl
+> - Button responsive: text-sm md:text-base px-6 md:px-8
+> - Background image stays centered and covers on all screen sizes
+>
+> 2. In components/Navbar.js make it transparent over the hero then solid on scroll:
+> - Add "use client" if not already there
+> - Use useEffect + useState to track scroll position
+> - When scrollTop === 0: navbar background is bg-transparent
+> - When scrollTop > 0: navbar background is bg-black
+> - Add transition-all duration-300 for smooth change
+> - Text and links stay white always
+> - On mobile the hamburger menu background should always be bg-black when open
+
+---
+
+### Prompt #50
+**Fecha y hora:** 26/04/2026
+**Prompt usado:**
+> In app/page.js:
+> - Make the hero section start from the very top of the page, behind the navbar
+> - Add padding-top to the hero content so the text doesn't hide behind the navbar: pt-24 md:pt-32
+> - The background image should start from the top of the screen, not from below the navbar
+>
+> In app/page.js find the "camisetas vendidas" stats section or any section with counters/numbers below the hero:
+> - Change its background to bg-black
+> - Make sure all text in that section is white or light colored
+
+---
+
+### Prompt #51
+**Fecha y hora:** 27/04/2026
+**Prompt usado:**
+> In app/page.js:
+> - Extend the hero background image to also cover the stats section (500+ camisetas vendidas, 19 modelos)
+> - Merge both sections into one continuous hero with the same background image
+> - The stats section should NOT have its own background color, it should be transparent so the image shows through
+> - Keep the dark overlay (bg-black/60) covering both sections
+> - Stats text stays white/orange as is
