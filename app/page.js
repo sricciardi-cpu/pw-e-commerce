@@ -173,13 +173,15 @@ export default function HomePage() {
 
   return (
     <main>
-      {/* Hero */}
+      {/* Hero + Stats */}
       <section
-        className="relative w-full text-white -mt-16 md:-mt-20 min-h-[300px] md:min-h-[500px] flex flex-col items-center justify-center text-center px-6"
+        className="relative w-full text-white -mt-16 md:-mt-20 flex flex-col items-center text-center px-6"
         style={{ backgroundImage: "url('/fondo_inicio.png')", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 flex flex-col items-center pt-24 md:pt-32 pb-16 md:pb-24">
+
+        {/* Hero content */}
+        <div className="relative z-10 flex flex-col items-center pt-24 md:pt-32 pb-10 md:pb-16 min-h-[300px] md:min-h-[400px] justify-center w-full">
           <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">Camisetas Zeus</h1>
           <p className="text-sm md:text-xl text-orange-500 font-semibold mb-10 max-w-xs md:max-w-none">
             Las mejores camisetas de rugby de Argentina
@@ -191,27 +193,27 @@ export default function HomePage() {
             Ver catálogo
           </Link>
         </div>
-      </section>
 
-      {/* Estadísticas animadas */}
-      <FadeIn>
-        <div className="bg-zinc-900 border-b border-zinc-800">
-          <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
-            <div>
-              <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
-                <AnimatedCounter target={500} suffix="+" />
-              </p>
-              <p className="text-xs md:text-sm text-gray-400 mt-1">Camisetas vendidas</p>
-            </div>
-            <div>
-              <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
-                <AnimatedCounter target={19} />
-              </p>
-              <p className="text-xs md:text-sm text-gray-400 mt-1">Modelos disponibles</p>
+        {/* Stats */}
+        <FadeIn>
+          <div className="relative z-10 w-full border-t border-white/20">
+            <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
+              <div>
+                <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
+                  <AnimatedCounter target={500} suffix="+" />
+                </p>
+                <p className="text-xs md:text-sm text-gray-300 mt-1">Camisetas vendidas</p>
+              </div>
+              <div>
+                <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
+                  <AnimatedCounter target={19} />
+                </p>
+                <p className="text-xs md:text-sm text-gray-300 mt-1">Modelos disponibles</p>
+              </div>
             </div>
           </div>
-        </div>
-      </FadeIn>
+        </FadeIn>
+      </section>
 
       <div className="max-w-5xl mx-auto px-4 py-10 md:py-12">
 
