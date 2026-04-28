@@ -66,8 +66,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              @camisetaszeus
               <FaInstagram className="text-xl shrink-0" />
+              @camisetaszeus
             </a>
             <a
               href="https://tiktok.com/@camisetaszeus8"
@@ -75,8 +75,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              @camisetaszeus
               <FaTiktok className="text-xl shrink-0" />
+              @camisetaszeus
             </a>
             <a
               href="https://wa.me/5492216220145"
@@ -84,8 +84,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              +54 9 221 622 0145
               <FaWhatsapp className="text-xl shrink-0" />
+              +54 9 221 622 0145
             </a>
           </div>
 
