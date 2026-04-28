@@ -32,7 +32,7 @@ function BotonFiltro({ label, activo, onClick }) {
   );
 }
 
-export default function CatalogoPage() {
+export default function StockPage() {
   const [productos, setProductos] = useState([]);
   const [cargando,  setCargando]  = useState(true);
   const [tipo,      setTipo]      = useState("Todos");
@@ -42,7 +42,7 @@ export default function CatalogoPage() {
 
   useEffect(() => {
     supabase
-      .from("productos_catalogo")
+      .from("productos_stock")
       .select("*")
       .order("creado_at", { ascending: false })
       .then(({ data }) => {
@@ -66,14 +66,17 @@ export default function CatalogoPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-6 text-white">Catálogo Rugby</h1>
+      <div className="flex items-center gap-3 mb-2">
+        <h1 className="text-3xl font-extrabold text-white">Stock disponible</h1>
+        <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">En stock</span>
+      </div>
+      <p className="text-gray-400 text-sm mb-6">Productos disponibles para envío inmediato.</p>
 
       {/* Filtros */}
       <section className="bg-zinc-900 border border-zinc-700 rounded-xl mb-8 overflow-hidden">
         <button
           className="w-full flex items-center justify-between px-5 py-4 md:hidden"
           onClick={() => setFiltrosAbiertos(!filtrosAbiertos)}
-          aria-expanded={filtrosAbiertos}
         >
           <span className="flex items-center gap-2 font-semibold text-white">
             <FaFilter className="text-orange-500" />
@@ -118,16 +121,16 @@ export default function CatalogoPage() {
             {productosFiltrados.length} producto{productosFiltrados.length !== 1 ? "s" : ""} encontrado{productosFiltrados.length !== 1 ? "s" : ""}
           </p>
 
-          <section
-            key={`${tipo}-${categoria}-${talle}`}
-            className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-[fadeScaleIn_0.35s_ease-out]"
-          >
+          <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {productosFiltrados.map((producto, i) => (
               <FadeIn key={producto.id} delay={i * 60}>
-                <Link href={`/catalogo/${producto.id}`} className="block h-full">
+                <Link href={`/stock/${producto.id}`} className="block h-full">
                   <article className="bg-zinc-900 rounded-xl border border-zinc-700 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
-                    <div className="h-52 bg-white flex items-center justify-center">
+                    <div className="relative h-52 bg-white flex items-center justify-center">
                       <img src={producto.imagen} alt={producto.nombre} className="h-full w-full object-contain" loading="lazy" />
+                      <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        Stock: {producto.stock}
+                      </span>
                     </div>
                     <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
@@ -151,7 +154,7 @@ export default function CatalogoPage() {
           </section>
 
           {productosFiltrados.length === 0 && (
-            <p className="text-center text-gray-400 py-16">No hay productos que coincidan con los filtros seleccionados.</p>
+            <p className="text-center text-gray-400 py-16">No hay productos que coincidan con los filtros.</p>
           )}
         </>
       )}

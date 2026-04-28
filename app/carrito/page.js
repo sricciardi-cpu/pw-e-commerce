@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FaWhatsapp, FaTrash, FaTimes } from "react-icons/fa";
+import { FaWhatsapp, FaTrash, FaTimes, FaLock } from "react-icons/fa";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -44,6 +44,18 @@ export default function CarritoPage() {
             key={`${item.id}-${item.talle}`}
             className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 flex items-center gap-4"
           >
+            {/* Imagen miniatura */}
+            {item.imagen && (
+              <div className="shrink-0 w-16 h-16 rounded-lg bg-white overflow-hidden">
+                <img
+                  src={item.imagen}
+                  alt={item.nombre}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            )}
+
+            {/* Detalles */}
             <div className="flex flex-col gap-1 flex-1 min-w-0">
               <p className="font-semibold text-white truncate">{item.nombre}</p>
               <p className="text-sm text-gray-400">
@@ -73,11 +85,19 @@ export default function CarritoPage() {
         </div>
 
         <div className="flex flex-col gap-3 max-w-sm">
+          <Link
+            href="/checkout"
+            className="flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors"
+          >
+            <FaLock />
+            Proceder al pago
+          </Link>
+
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors"
+            className="flex items-center justify-center gap-2 border border-zinc-600 text-gray-200 font-medium py-3 rounded-xl hover:bg-white hover:text-black transition-colors"
           >
             <FaWhatsapp className="text-xl" />
             Consultar por WhatsApp
@@ -107,15 +127,13 @@ export default function CarritoPage() {
           >
             <FaTrash />
           </button>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/checkout"
             className="flex-1 flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors active:scale-95"
           >
-            <FaWhatsapp className="text-xl" />
-            Consultar por WhatsApp
-          </a>
+            <FaLock />
+            Proceder al pago
+          </Link>
         </div>
       </div>
     </main>
