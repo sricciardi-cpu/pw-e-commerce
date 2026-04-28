@@ -17,10 +17,10 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto">
 
         {/* Tres columnas */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10 items-start text-center sm:text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 mb-10 items-start text-center">
 
           {/* Columna izquierda: marca */}
-          <div className="flex flex-col gap-3 self-start items-center sm:items-start">
+          <div className="flex flex-col gap-3 self-start items-center">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
               <img src="/logo.png" alt="Camisetas Zeus" className="h-5 w-auto" />
               Camisetas Zeus
@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
 
           {/* Columna central: enlaces */}
-          <div className="flex flex-col gap-3 items-center sm:items-start">
+          <div className="flex flex-col gap-3 items-center">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Enlaces</p>
             <ul className="flex flex-col gap-2">
               {enlaces.map((e) => (
@@ -52,7 +52,7 @@ export default function Footer() {
           </div>
 
           {/* Columna derecha: redes */}
-          <div className="flex flex-col gap-3 items-center sm:items-start">
+          <div className="flex flex-col gap-3 items-center">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Seguinos</p>
             <a
               href="https://instagram.com/camisetaszeus"

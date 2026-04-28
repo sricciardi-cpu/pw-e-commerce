@@ -90,7 +90,7 @@ export default function StockPage() {
           {filtrosAbiertos ? <FaChevronUp className="text-gray-400" /> : <FaChevronDown className="text-gray-400" />}
         </button>
 
-        <div className={`flex flex-col gap-4 transition-all duration-300 overflow-hidden md:px-5 md:pb-5 md:pt-5 md:max-h-none md:overflow-visible ${filtrosAbiertos ? "max-h-72 px-5 pb-5" : "max-h-0"}`}>
+        <div className={`flex flex-col gap-4 transition-all duration-300 overflow-hidden md:px-5 md:pb-5 md:pt-5 md:max-h-none md:overflow-visible ${filtrosAbiertos ? "max-h-[500px] px-5 pb-5" : "max-h-0"}`}>
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-gray-400 w-20">Tipo</span>
             {filtrosTipo.map((f) => <BotonFiltro key={f} label={f} activo={tipo === f} onClick={() => setTipo(f)} />)}

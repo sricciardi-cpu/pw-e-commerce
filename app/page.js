@@ -49,58 +49,75 @@ function AnimatedCounter({ target, suffix = "" }) {
   return <span ref={ref}>{count.toLocaleString("es-AR")}{suffix}</span>;
 }
 
-// Carrusel con swipe real y loop circular hacia la derecha
+// Carrusel con loop bidireccional (prepend último + append primero)
 function Carousel({ items }) {
-  const total     = items.length;
-  const extItems  = [...items, items[0]];
-  const extTotal  = extItems.length;
+  const total    = items.length;
+  // [último, ...todos, primero] — arrancamos en idx=1 (el real primer item)
+  const extItems = [items[total - 1], ...items, items[0]];
+  const extTotal = extItems.length;
 
-  const [idx, setIdx]           = useState(0);
-  const [offset, setOffset]     = useState(0);
+  const [idx,      setIdx]      = useState(1);
+  const [offset,   setOffset]   = useState(0);
   const [dragging, setDragging] = useState(false);
   const [animated, setAnimated] = useState(true);
-  const startX = useRef(0);
+  const jumping = useRef(false);
+  const startX  = useRef(0);
 
+  // Cuando llegamos al clon del extremo, saltamos sin animación al real
   useEffect(() => {
-    if (idx === total) {
+    if (jumping.current) return;
+    if (idx === 0) {
+      jumping.current = true;
       const t = setTimeout(() => {
         setAnimated(false);
-        setIdx(0);
+        setIdx(total);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setAnimated(true);
+            jumping.current = false;
+          });
+        });
       }, 500);
       return () => clearTimeout(t);
-    } else {
-      const t = setTimeout(() => setAnimated(true), 20);
+    }
+    if (idx === total + 1) {
+      jumping.current = true;
+      const t = setTimeout(() => {
+        setAnimated(false);
+        setIdx(1);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setAnimated(true);
+            jumping.current = false;
+          });
+        });
+      }, 500);
       return () => clearTimeout(t);
     }
   }, [idx, total]);
 
+  // Autoplay
   useEffect(() => {
     if (dragging) return;
     const t = setInterval(() => {
-      setAnimated(true);
-      setIdx((i) => i + 1);
+      if (!jumping.current) { setAnimated(true); setIdx((i) => i + 1); }
     }, 3000);
     return () => clearInterval(t);
   }, [dragging]);
 
-  const onDragStart = (clientX) => {
-    startX.current = clientX;
-    setDragging(true);
-  };
-  const onDragMove = (clientX) => {
-    if (!dragging) return;
-    setOffset(clientX - startX.current);
-  };
-  const onDragEnd = () => {
+  const onDragStart = (clientX) => { startX.current = clientX; setDragging(true); };
+  const onDragMove  = (clientX) => { if (!dragging) return; setOffset(clientX - startX.current); };
+  const onDragEnd   = () => {
     const threshold = 60;
     setAnimated(true);
-    if (offset < -threshold)      setIdx((i) => i + 1);
-    else if (offset > threshold)  setIdx((i) => Math.max(i - 1, 0));
+    if      (offset < -threshold) setIdx((i) => i + 1);
+    else if (offset > threshold)  setIdx((i) => i - 1);
     setOffset(0);
     setDragging(false);
   };
 
-  const dotIdx = idx % total;
+  // dot activo: idx 1..total mapea a 0..total-1
+  const dotIdx = ((idx - 1) % total + total) % total;
 
   return (
     <div
@@ -119,7 +136,7 @@ function Carousel({ items }) {
         style={{
           width: `${extTotal * 100}%`,
           transform: `translateX(calc(${-idx * (100 / extTotal)}% + ${offset / extTotal}px))`,
-          transition: dragging ? "none" : animated ? "transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)" : "none",
+          transition: dragging ? "none" : animated ? "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)" : "none",
         }}
       >
         {extItems.map((producto, i) => (
@@ -131,11 +148,9 @@ function Carousel({ items }) {
               loading="lazy"
             />
             <div className="p-4 md:p-6 flex flex-col gap-2">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize">
-                  Rugby
-                </span>
-              </div>
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize self-start">
+                Rugby
+              </span>
               <h3 className="font-bold text-white text-lg leading-tight">{producto.nombre}</h3>
               <p className="text-orange-500 font-extrabold text-xl">{formatearPrecio(producto.precio)}</p>
               <Link
@@ -151,17 +166,27 @@ function Carousel({ items }) {
       </div>
 
       {/* Flechas */}
-      <button onClick={() => { setAnimated(true); setIdx((i) => Math.max(i - 1, 0)); }} className="absolute top-1/3 left-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10">
+      <button
+        onClick={() => { if (!jumping.current) { setAnimated(true); setIdx((i) => i - 1); } }}
+        className="absolute top-1/3 left-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10"
+      >
         <FaChevronLeft />
       </button>
-      <button onClick={() => { setAnimated(true); setIdx((i) => i + 1); }} className="absolute top-1/3 right-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10">
+      <button
+        onClick={() => { if (!jumping.current) { setAnimated(true); setIdx((i) => i + 1); } }}
+        className="absolute top-1/3 right-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10"
+      >
         <FaChevronRight />
       </button>
 
       {/* Dots */}
       <div className="flex justify-center gap-2 pb-4">
         {items.map((_, i) => (
-          <button key={i} onClick={() => { setAnimated(true); setIdx(i); }} className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-zinc-600"}`} />
+          <button
+            key={i}
+            onClick={() => { if (!jumping.current) { setAnimated(true); setIdx(i + 1); } }}
+            className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-zinc-600"}`}
+          />
         ))}
       </div>
     </div>
