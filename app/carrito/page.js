@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FaWhatsapp, FaTrash, FaTimes, FaLock } from "react-icons/fa";
+import { FaWhatsapp, FaTrash, FaTimes, FaArrowRight } from "react-icons/fa";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -89,7 +89,7 @@ export default function CarritoPage() {
             href="/checkout"
             className="flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors"
           >
-            <FaLock />
+            <FaArrowRight />
             Proceder al pago
           </Link>
 
@@ -131,7 +131,7 @@ export default function CarritoPage() {
             href="/checkout"
             className="flex-1 flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors active:scale-95"
           >
-            <FaLock />
+            <FaArrowRight />
             Proceder al pago
           </Link>
         </div>

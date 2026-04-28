@@ -1,6 +1,6 @@
 import MercadoPago, { Preference } from "mercadopago";
 
-const ENVIO_FIJO = 9000;
+const ENVIO_FIJO = 9;
 
 export async function POST(request) {
   if (!process.env.MP_ACCESS_TOKEN) {

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FaChevronRight, FaLock } from "react-icons/fa";
+import { FaChevronRight, FaArrowRight } from "react-icons/fa";
 
-const ENVIO_FIJO = 9000;
+const ENVIO_FIJO = 9;
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -231,7 +231,7 @@ export default function CheckoutPage() {
             disabled={cargando}
             className="w-full flex items-center justify-center gap-2 bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
           >
-            <FaLock className="text-base" />
+            <FaArrowRight className="text-base" />
             {cargando ? "Procesando..." : "Ir a pagar con MercadoPago"}
           </button>
         </form>
