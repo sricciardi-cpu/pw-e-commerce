@@ -27,6 +27,7 @@ export async function POST(request) {
             quantity: item.cantidad,
             unit_price: item.precio,
             currency_id: "ARS",
+            ...(item.imagen ? { picture_url: item.imagen } : {}),
           })),
           {
             id: "envio",
