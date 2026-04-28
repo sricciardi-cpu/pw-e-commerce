@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
 
           {/* Columna central: enlaces */}
-          <div className="flex flex-col gap-3 items-center">
+          <div className="flex flex-col gap-3 items-center sm:items-start">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Enlaces</p>
             <ul className="flex flex-col gap-2">
               {enlaces.map((e) => (
@@ -52,7 +52,7 @@ export default function Footer() {
           </div>
 
           {/* Columna derecha: redes */}
-          <div className="flex flex-col gap-3 items-center">
+          <div className="flex flex-col gap-3 items-center sm:items-start">
             <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Seguinos</p>
             <a
               href="https://instagram.com/camisetaszeus"
