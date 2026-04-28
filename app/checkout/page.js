@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { FaChevronRight, FaLock } from "react-icons/fa";
 
-const ENVIO_FIJO = 9000;
+const ENVIO_FIJO = 9;
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");

@@ -89,7 +89,7 @@ export default function CarritoPage() {
             href="/checkout"
             className="flex items-center justify-center gap-2 bg-orange-500 text-black font-semibold py-3 rounded-xl hover:bg-orange-400 transition-colors"
           >
-            <FaLock />
+            
             Proceder al pago
           </Link>
 
