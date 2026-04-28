@@ -8,7 +8,7 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
   // Agrega un item; si ya existe el mismo id+talle incrementa cantidad
-  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1 }) {
+  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null }) {
     setItems((prev) => {
       const existe = prev.find((i) => i.id === id && i.talle === talle);
       if (existe) {
@@ -18,7 +18,7 @@ export function CartProvider({ children }) {
             : i
         );
       }
-      return [...prev, { id, nombre, talle, precio, cantidad }];
+      return [...prev, { id, nombre, talle, precio, cantidad, imagen }];
     });
   }
 

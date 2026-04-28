@@ -12,7 +12,7 @@ function formatearPrecio(precio) {
 
 const badgeTipo = { nacion: "bg-zinc-700 text-white", club: "bg-orange-500/20 text-orange-400" };
 
-export default function ProductoDetallePage({ params }) {
+export default function StockDetallePage({ params }) {
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
   const { agregarAlCarrito }    = useCart();
@@ -26,7 +26,7 @@ export default function ProductoDetallePage({ params }) {
 
   useEffect(() => {
     supabase
-      .from("productos_catalogo")
+      .from("productos_stock")
       .select("*")
       .eq("id", params.id)
       .single()
@@ -55,7 +55,7 @@ export default function ProductoDetallePage({ params }) {
     return (
       <main className="max-w-5xl mx-auto px-4 py-8 text-center">
         <p className="text-xl font-semibold text-gray-400">Producto no encontrado.</p>
-        <Link href="/catalogo" className="mt-6 inline-block text-orange-500 underline">Volver al catálogo</Link>
+        <Link href="/stock" className="mt-6 inline-block text-orange-500 underline">Volver al stock</Link>
       </main>
     );
   }
@@ -74,7 +74,7 @@ export default function ProductoDetallePage({ params }) {
       <nav className="flex items-center gap-1.5 text-sm text-gray-400 mb-3">
         <Link href="/" className="hover:text-orange-500 transition-colors">Inicio</Link>
         <FaChevronRight className="text-xs" />
-        <Link href="/catalogo" className="hover:text-orange-500 transition-colors">Catálogo</Link>
+        <Link href="/stock" className="hover:text-orange-500 transition-colors">Stock</Link>
         <FaChevronRight className="text-xs" />
         <span className="text-white font-medium truncate max-w-[180px]">{producto.nombre}</span>
       </nav>
@@ -103,6 +103,9 @@ export default function ProductoDetallePage({ params }) {
               {producto.tipo === "nacion" ? "Nación" : "Club"}
             </span>
             <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize">{producto.categoria}</span>
+            <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-600 text-white">
+              En stock · {producto.stock} disponible{producto.stock !== 1 ? "s" : ""}
+            </span>
           </div>
 
           <h1 className="text-2xl font-extrabold text-white leading-tight">{producto.nombre}</h1>
