@@ -66,7 +66,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaInstagram className="text-xl shrink-0" />
+              <span className="w-5 flex justify-center shrink-0"><FaInstagram className="text-xl" /></span>
               @camisetaszeus
             </a>
             <a
@@ -75,7 +75,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaTiktok className="text-xl shrink-0" />
+              <span className="w-5 flex justify-center shrink-0"><FaTiktok className="text-xl" /></span>
               @camisetaszeus
             </a>
             <a
@@ -84,7 +84,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaWhatsapp className="text-xl shrink-0" />
+              <span className="w-5 flex justify-center shrink-0"><FaWhatsapp className="text-xl" /></span>
               +54 9 221 622 0145
             </a>
           </div>
