@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {/* Middle column: links */}
-          <div className="flex flex-col gap-3 items-start">
+          <div className="flex flex-col gap-3 items-center">
             <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Enlaces
             </p>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
 
           {/* Right column: social */}
-          <div className="flex flex-col gap-3 items-start">
+          <div className="flex flex-col gap-3 items-end">
             <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Seguinos
             </p>
@@ -66,8 +66,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaInstagram className="text-xl shrink-0" />
               @camisetaszeus
+              <FaInstagram className="text-xl shrink-0" />
             </a>
             <a
               href="https://tiktok.com/@camisetaszeus8"
@@ -75,8 +75,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaTiktok className="text-xl shrink-0" />
               @camisetaszeus
+              <FaTiktok className="text-xl shrink-0" />
             </a>
             <a
               href="https://wa.me/5492216220145"
@@ -84,8 +84,8 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
-              <FaWhatsapp className="text-xl shrink-0" />
               +54 9 221 622 0145
+              <FaWhatsapp className="text-xl shrink-0" />
             </a>
           </div>
 
