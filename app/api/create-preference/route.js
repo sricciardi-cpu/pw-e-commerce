@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import MercadoPago, { Preference } from "mercadopago";
 
 const ENVIO_FIJO = 9;
