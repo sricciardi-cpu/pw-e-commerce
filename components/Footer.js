@@ -87,7 +87,7 @@ export default function Footer() {
         {/* Barra inferior con línea divisora naranja */}
         <div className="border-t border-orange-500 pt-6 flex flex-col items-center gap-1 text-center">
           <p className="text-gray-400 text-xs">© 2026 Camisetas Zeus. Todos los derechos reservados.</p>
-          <p className="text-gray-600 text-xs">Sitio web desarrollado por AlphaSites</p>
+          <a href="https://instagram.com/alphasitess" target="_blank" rel="noopener noreferrer" className="text-gray-600 text-xs hover:text-orange-500 transition-colors">Sitio web desarrollado por AlphaSites</a>
         </div>
 
       </div>
