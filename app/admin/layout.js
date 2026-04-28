@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FaBoxOpen, FaTshirt, FaSignOutAlt } from "react-icons/fa";
+import { FaBoxOpen, FaTshirt, FaSignOutAlt, FaStar } from "react-icons/fa";
 
 const secciones = [
-  { href: "/admin/stock",    label: "Stock",    icon: FaBoxOpen },
-  { href: "/admin/catalogo", label: "Catálogo", icon: FaTshirt  },
+  { href: "/admin/stock",      label: "Stock",      icon: FaBoxOpen },
+  { href: "/admin/catalogo",   label: "Catálogo",   icon: FaTshirt  },
+  { href: "/admin/especiales", label: "Especiales", icon: FaStar    },
 ];
 
 export default function AdminLayout({ children }) {

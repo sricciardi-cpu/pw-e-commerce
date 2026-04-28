@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import productos from "@/data/productos";
+import { supabase } from "@/lib/supabase";
 import FadeIn from "@/components/FadeIn";
 import { FaHeart, FaStar, FaShippingFast, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -194,7 +194,16 @@ function Carousel({ items }) {
 }
 
 export default function HomePage() {
-  const destacados = productos.slice(0, 4);
+  const [destacados, setDestacados] = useState([]);
+
+  useEffect(() => {
+    supabase
+      .from("productos_catalogo")
+      .select("id, nombre, precio, imagen")
+      .eq("destacado", true)
+      .limit(4)
+      .then(({ data }) => setDestacados(data ?? []));
+  }, []);
 
   return (
     <main>
@@ -266,12 +275,13 @@ export default function HomePage() {
         </FadeIn>
 
         {/* Carrusel de productos destacados */}
+        {destacados.length > 0 && (
         <FadeIn>
           <section className="mb-12 md:mb-16">
             <h2 className="text-2xl font-bold mb-6 text-white">Productos destacados</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Carousel items={destacados.slice(0, 2)} />
-              <Carousel items={destacados.slice(2, 4)} />
+              {destacados.slice(0, 2).length > 0 && <Carousel items={destacados.slice(0, 2)} />}
+              {destacados.slice(2, 4).length > 0 && <Carousel items={destacados.slice(2, 4)} />}
             </div>
             <div className="mt-6 text-center">
               <Link href="/catalogo" className="inline-block bg-zinc-900 text-white border border-zinc-600 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
@@ -280,6 +290,7 @@ export default function HomePage() {
             </div>
           </section>
         </FadeIn>
+        )}
 
       </div>
     </main>
