@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
+import productosLocales from "@/data/productos";
 import FadeIn from "@/components/FadeIn";
 import { FaHeart, FaStar, FaShippingFast, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -202,7 +203,14 @@ export default function HomePage() {
       .select("id, nombre, precio, imagen")
       .eq("destacado", true)
       .limit(4)
-      .then(({ data }) => setDestacados(data ?? []));
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setDestacados(data);
+        } else {
+          // fallback a los primeros 4 productos locales hasta que se configuren en el admin
+          setDestacados(productosLocales.slice(0, 4));
+        }
+      });
   }, []);
 
   return (

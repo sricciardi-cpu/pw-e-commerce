@@ -6,6 +6,19 @@ import { supabase } from "@/lib/supabase";
 import FadeIn from "@/components/FadeIn";
 import { FaSpinner } from "react-icons/fa";
 
+const FALLBACK = {
+  nombre: "Griptec Spray 200ml",
+  descripcion: "Spray de agarre instantáneo para rugby y fútbol. Mejora el grip en cualquier condición climática.",
+  imagen: "/griptec.png",
+  precio: 53000,
+  packs: [
+    { label: "1 unidad",  precio: 53000,  descuento: null },
+    { label: "Pack x2",   precio: 100700, descuento: "5% OFF" },
+    { label: "Pack x3",   precio: 151000, descuento: "5% OFF" },
+    { label: "Pack x12",  precio: 572400, descuento: "10% OFF" },
+  ],
+};
+
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
@@ -22,7 +35,9 @@ export default function GriptecSprayPage() {
       .select("*")
       .eq("id", "griptec_spray")
       .single()
-      .then(({ data }) => setData(data));
+      .then(({ data }) => {
+        setData(data ?? FALLBACK);
+      });
   }, []);
 
   useEffect(() => {

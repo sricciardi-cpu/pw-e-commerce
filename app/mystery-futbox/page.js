@@ -8,6 +8,15 @@ import { FaSpinner } from "react-icons/fa";
 
 const talles = ["S", "M", "L", "XL", "2XL", "3XL"];
 
+const FALLBACK = {
+  nombre: "Mystery Futbox",
+  precio: 50800,
+  precio_original: 69980,
+  descuento_label: "27% OFF",
+  descripcion: "Una caja sorpresa con una camiseta de fútbol o rugby a elección del equipo. Indicanos por WhatsApp el parche/estampado que querés.",
+  imagen: "/mysteryfutbox.png",
+};
+
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
@@ -24,7 +33,9 @@ export default function MysteryFutboxPage() {
       .select("*")
       .eq("id", "mystery_futbox")
       .single()
-      .then(({ data }) => setData(data));
+      .then(({ data }) => {
+        setData(data ?? FALLBACK);
+      });
   }, []);
 
   useEffect(() => {
