@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaSpinner, FaChevronDown, FaChevronUp, FaBox } from "react-icons/fa";
+import { FaSpinner, FaChevronDown, FaChevronUp, FaBox, FaTimes } from "react-icons/fa";
 
 const ESTADOS = ["pendiente", "pagado", "enviado", "entregado", "cancelado"];
 
@@ -32,9 +32,10 @@ function EstadoBadge({ estado }) {
   );
 }
 
-function PedidoCard({ pedido, onEstadoChange }) {
-  const [abierto,    setAbierto]    = useState(false);
-  const [guardando,  setGuardando]  = useState(false);
+function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
+  const [abierto,     setAbierto]     = useState(false);
+  const [guardando,   setGuardando]   = useState(false);
+  const [eliminando,  setEliminando]  = useState(false);
   const [estadoLocal, setEstadoLocal] = useState(pedido.estado);
 
   async function cambiarEstado(nuevoEstado) {
@@ -52,6 +53,18 @@ function PedidoCard({ pedido, onEstadoChange }) {
       }
     } finally {
       setGuardando(false);
+    }
+  }
+
+  async function handleEliminar(e) {
+    e.stopPropagation();
+    if (!confirm(`¿Eliminás el pedido de ${pedido.nombre ?? "este cliente"}? Esta acción no se puede deshacer.`)) return;
+    setEliminando(true);
+    try {
+      const res = await fetch(`/api/admin/pedidos/${pedido.id}`, { method: "DELETE" });
+      if (res.ok) onEliminar?.(pedido.id);
+    } finally {
+      setEliminando(false);
     }
   }
 
@@ -75,6 +88,15 @@ function PedidoCard({ pedido, onEstadoChange }) {
             {formatearFecha(pedido.created_at)} · {items.length} artículo{items.length !== 1 ? "s" : ""} · <span className="text-orange-400 font-medium">{formatearPrecio(pedido.total)}</span>
           </p>
         </div>
+
+        <button
+          onClick={handleEliminar}
+          disabled={eliminando}
+          className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:bg-red-900/50 hover:text-red-400 transition-colors shrink-0 disabled:opacity-40"
+          aria-label="Eliminar pedido"
+        >
+          {eliminando ? <FaSpinner className="animate-spin text-xs" /> : <FaTimes className="text-xs" />}
+        </button>
 
         {abierto ? <FaChevronUp className="text-gray-400 shrink-0" /> : <FaChevronDown className="text-gray-400 shrink-0" />}
       </button>
@@ -162,6 +184,10 @@ export default function AdminPedidosPage() {
     setPedidos((prev) => prev.map((p) => p.id === id ? { ...p, estado: nuevoEstado } : p));
   }
 
+  function onEliminar(id) {
+    setPedidos((prev) => prev.filter((p) => p.id !== id));
+  }
+
   const pedidosFiltrados = filtro === "todos"
     ? pedidos
     : pedidos.filter((p) => p.estado === filtro);
@@ -199,7 +225,7 @@ export default function AdminPedidosPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {pedidosFiltrados.map((p) => (
-            <PedidoCard key={p.id} pedido={p} onEstadoChange={onEstadoChange} />
+            <PedidoCard key={p.id} pedido={p} onEstadoChange={onEstadoChange} onEliminar={onEliminar} />
           ))}
         </div>
       )}

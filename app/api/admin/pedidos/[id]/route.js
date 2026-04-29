@@ -26,3 +26,18 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
+export async function DELETE(request, { params }) {
+  try {
+    const { error } = await supabaseAdmin()
+      .from("pedidos")
+      .delete()
+      .eq("id", params.id);
+
+    if (error) throw error;
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("Error deleting pedido:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
