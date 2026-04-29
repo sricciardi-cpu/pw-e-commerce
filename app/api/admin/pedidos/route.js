@@ -8,6 +8,7 @@ export async function GET() {
     const { data, error } = await supabaseAdmin()
       .from("pedidos")
       .select("*")
+      .neq("estado", "pendiente")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
