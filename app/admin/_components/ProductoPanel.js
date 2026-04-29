@@ -77,7 +77,7 @@ export default function ProductoPanel({ tabla, titulo }) {
   const [guardando,      setGuardando]      = useState(false);
   const [error,          setError]          = useState(null);
   const [modalAjuste,    setModalAjuste]    = useState(false);
-  const [ajusteTipo,     setAjusteTipo]     = useState("porcentaje");
+  const [ajusteTipo,     setAjusteTipo]     = useState("descuento_transferencia");
   const [ajusteValor,    setAjusteValor]    = useState("");
   const [ajustandoPrecio, setAjustandoPrecio] = useState(false);
   const formRef = useRef();
@@ -467,43 +467,47 @@ export default function ProductoPanel({ tabla, titulo }) {
 
             <form onSubmit={handleAjustarPrecios} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-400">Tipo de ajuste</label>
+                <label className="text-xs text-gray-400">Qué cambiar</label>
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setAjusteTipo("porcentaje")}
-                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "porcentaje" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
+                    onClick={() => { setAjusteTipo("descuento_transferencia"); setAjusteValor(""); }}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "descuento_transferencia" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
                   >
-                    % Porcentaje
+                    % Transferencia
                   </button>
                   <button
                     type="button"
-                    onClick={() => setAjusteTipo("fijo")}
-                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "fijo" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
+                    onClick={() => { setAjusteTipo("precio"); setAjusteValor(""); }}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "precio" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
                   >
-                    $ Monto fijo
+                    $ Precio base
                   </button>
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-gray-400">
-                  {ajusteTipo === "porcentaje"
-                    ? "Porcentaje (ej: 10 = +10%, -5 = -5%)"
-                    : "Monto (ej: 5000 = +$5000, -2000 = -$2000)"}
+                  {ajusteTipo === "descuento_transferencia"
+                    ? "% de descuento para transferencia (ej: 10 = 10% de descuento)"
+                    : "Nuevo precio base para TODOS los productos ($)"}
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={ajusteValor}
                   onChange={(e) => setAjusteValor(e.target.value)}
                   required
-                  placeholder={ajusteTipo === "porcentaje" ? "10" : "5000"}
+                  placeholder={ajusteTipo === "descuento_transferencia" ? "10" : "70000"}
                   className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
 
               <p className="text-xs text-gray-500">
-                Se aplica a <strong className="text-gray-300">todos</strong> los productos del {titulo.toLowerCase()}.
+                {ajusteTipo === "descuento_transferencia"
+                  ? <>Establece el <strong className="text-gray-300">descuento por transferencia</strong> para <strong className="text-gray-300">todos</strong> los productos.</>
+                  : <>Fija el <strong className="text-gray-300">precio base</strong> (sin transferencia) de <strong className="text-gray-300">todos</strong> los productos a ese valor.</>
+                }
               </p>
 
               <div className="flex gap-3">

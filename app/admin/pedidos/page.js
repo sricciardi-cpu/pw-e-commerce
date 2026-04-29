@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import { FaSpinner, FaChevronDown, FaChevronUp, FaBox, FaTimes } from "react-icons/fa";
 
-const ESTADOS = ["pendiente", "pagado", "enviado", "entregado", "cancelado"];
+const ESTADOS = ["pendiente_transferencia", "pagado", "enviado", "entregado", "cancelado"];
 
 const badgeEstado = {
-  pendiente:  "bg-zinc-700 text-gray-300",
-  pagado:     "bg-blue-900/60 text-blue-300",
+  pendiente:              "bg-zinc-700 text-gray-300",
+  pendiente_transferencia:"bg-yellow-900/60 text-yellow-300",
+  pagado:                 "bg-blue-900/60 text-blue-300",
   enviado:    "bg-orange-900/60 text-orange-300",
   entregado:  "bg-green-900/60 text-green-300",
   cancelado:  "bg-red-900/60 text-red-400",
@@ -83,7 +84,7 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-white text-sm truncate">{pedido.nombre ?? "—"}</span>
             <EstadoBadge estado={estadoLocal} />
-            {pedido.metodo_pago === "transferencia" && (
+            {(pedido.estado === "pendiente_transferencia" || pedido.metodo_pago === "transferencia") && (
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400">
                 Transferencia
               </span>

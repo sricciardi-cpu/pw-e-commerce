@@ -14,12 +14,14 @@ export default function ConfiguracionPage() {
   const [error,        setError]        = useState(null);
 
   useEffect(() => {
-    fetch("/api/admin/config")
+    fetch("/api/admin/config", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
+        if (d.error) { setError(d.error); setCargando(false); return; }
         setPrecioEnvio(d.precio_envio ?? "");
         setCargando(false);
-      });
+      })
+      .catch((e) => { setError(e.message); setCargando(false); });
   }, []);
 
   async function handleGuardar(e) {

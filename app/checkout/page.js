@@ -46,7 +46,7 @@ export default function CheckoutPage() {
   const [error,            setError]            = useState(null);
 
   useEffect(() => {
-    fetch("/api/admin/config")
+    fetch("/api/config", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setPrecioEnvio(parseInt(d.precio_envio) || 0))
       .catch(() => {});

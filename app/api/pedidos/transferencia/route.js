@@ -25,8 +25,7 @@ export async function POST(request) {
         observaciones: comprador.observaciones ?? "",
         items,
         total,
-        estado:        "pendiente",
-        metodo_pago:   "transferencia",
+        estado:        "pendiente_transferencia",
       })
       .select("id")
       .single();
