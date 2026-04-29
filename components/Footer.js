@@ -5,6 +5,7 @@ import { FaTiktok } from "react-icons/fa6";
 const enlaces = [
   { href: "/", label: "Inicio" },
   { href: "/catalogo", label: "Catálogo" },
+  { href: "/stock", label: "Stock" },
   { href: "/mystery-futbox", label: "Mystery Futbox" },
   { href: "/griptec-spray", label: "Griptec Spray" },
   { href: "/guia-de-talles", label: "Guía de Talles" },
@@ -79,7 +80,7 @@ export default function Footer() {
               className="flex items-center gap-2 text-sm text-gray-300 hover:text-orange-400 transition-colors"
             >
               <FaWhatsapp className="text-xl" />
-              +54 9 221 622 0145
+              WhatsApp
             </a>
           </div>
         </div>
@@ -87,7 +88,14 @@ export default function Footer() {
         {/* Barra inferior con línea divisora naranja */}
         <div className="border-t border-orange-500 pt-6 flex flex-col items-center gap-1 text-center">
           <p className="text-gray-400 text-xs">© 2026 Camisetas Zeus. Todos los derechos reservados.</p>
-          <p className="text-gray-600 text-xs">Sitio web desarrollado por AlphaSites</p>
+          <a
+            href="https://instagram.com/alphasitess"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 text-xs hover:text-orange-400 transition-colors"
+          >
+            Sitio web desarrollado por AlphaSites
+          </a>
         </div>
 
       </div>
