@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import FadeIn from "@/components/FadeIn";
-import { FaChevronDown, FaChevronUp, FaFilter, FaSpinner } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaFilter } from "react-icons/fa";
+import SkeletonCard from "@/components/SkeletonCard";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -112,8 +113,8 @@ export default function StockPage() {
       </section>
 
       {cargando ? (
-        <div className="flex items-center justify-center py-20">
-          <FaSpinner className="text-orange-500 text-3xl animate-spin" />
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : (
         <>
