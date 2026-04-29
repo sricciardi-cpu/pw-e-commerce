@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import MercadoPago, { Preference } from "mercadopago";
 import { supabaseAdmin } from "@/lib/supabase";
 
