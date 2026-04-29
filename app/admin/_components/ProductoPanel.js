@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FaPlus, FaEdit, FaTrash, FaTimes, FaUpload, FaSpinner } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrash, FaTimes, FaUpload, FaSpinner, FaPercentage } from "react-icons/fa";
 
 const TALLES = ["S", "M", "L", "XL", "2XL", "3XL"];
 const CATEGORIAS = ["local", "alternativa", "training"];
@@ -74,8 +74,12 @@ export default function ProductoPanel({ tabla, titulo }) {
   const [form,       setForm]       = useState(FORM_INICIAL);
   const [editandoId, setEditandoId] = useState(null);
   const [formVisible, setFormVisible] = useState(false);
-  const [guardando,  setGuardando]  = useState(false);
-  const [error,      setError]      = useState(null);
+  const [guardando,      setGuardando]      = useState(false);
+  const [error,          setError]          = useState(null);
+  const [modalAjuste,    setModalAjuste]    = useState(false);
+  const [ajusteTipo,     setAjusteTipo]     = useState("porcentaje");
+  const [ajusteValor,    setAjusteValor]    = useState("");
+  const [ajustandoPrecio, setAjustandoPrecio] = useState(false);
   const formRef = useRef();
 
   useEffect(() => { fetchProductos(); }, []);
@@ -129,6 +133,24 @@ export default function ProductoPanel({ tabla, titulo }) {
     }));
   }
 
+  async function handleAjustarPrecios(e) {
+    e.preventDefault();
+    const valor = parseFloat(ajusteValor);
+    if (isNaN(valor)) return;
+    setAjustandoPrecio(true);
+    const res = await fetch(`/api/admin/productos/${tabla}/ajustar-precios`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo: ajusteTipo, valor }),
+    });
+    if (res.ok) {
+      setModalAjuste(false);
+      setAjusteValor("");
+      fetchProductos();
+    }
+    setAjustandoPrecio(false);
+  }
+
   async function handleEliminar(id, nombre) {
     if (!confirm(`¿Eliminás "${nombre}"? Esta acción no se puede deshacer.`)) return;
     await fetch(`/api/admin/productos/${tabla}/${id}`, { method: "DELETE" });
@@ -173,15 +195,24 @@ export default function ProductoPanel({ tabla, titulo }) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="text-2xl font-extrabold text-white">{titulo}</h1>
-        <button
-          onClick={abrirNuevo}
-          className="flex items-center gap-2 bg-orange-500 text-black font-semibold px-4 py-2.5 rounded-xl hover:bg-orange-400 transition-colors text-sm"
-        >
-          <FaPlus />
-          Nuevo producto
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setModalAjuste(true)}
+            className="flex items-center gap-2 bg-zinc-700 text-white font-semibold px-4 py-2.5 rounded-xl hover:bg-zinc-600 transition-colors text-sm"
+          >
+            <FaPercentage />
+            Ajustar precios
+          </button>
+          <button
+            onClick={abrirNuevo}
+            className="flex items-center gap-2 bg-orange-500 text-black font-semibold px-4 py-2.5 rounded-xl hover:bg-orange-400 transition-colors text-sm"
+          >
+            <FaPlus />
+            Nuevo producto
+          </button>
+        </div>
       </div>
 
       {/* Formulario de alta/edición */}
@@ -420,6 +451,79 @@ export default function ProductoPanel({ tabla, titulo }) {
               </div>
             </article>
           ))}
+        </div>
+      )}
+
+      {/* Modal ajuste masivo de precios */}
+      {modalAjuste && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 w-full max-w-sm flex flex-col gap-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-white">Ajustar precios — {titulo}</h2>
+              <button onClick={() => setModalAjuste(false)} className="text-gray-400 hover:text-white transition-colors">
+                <FaTimes />
+              </button>
+            </div>
+
+            <form onSubmit={handleAjustarPrecios} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-gray-400">Tipo de ajuste</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAjusteTipo("porcentaje")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "porcentaje" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
+                  >
+                    % Porcentaje
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAjusteTipo("fijo")}
+                    className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${ajusteTipo === "fijo" ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-300 border-zinc-600 hover:border-white"}`}
+                  >
+                    $ Monto fijo
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-gray-400">
+                  {ajusteTipo === "porcentaje"
+                    ? "Porcentaje (ej: 10 = +10%, -5 = -5%)"
+                    : "Monto (ej: 5000 = +$5000, -2000 = -$2000)"}
+                </label>
+                <input
+                  type="number"
+                  value={ajusteValor}
+                  onChange={(e) => setAjusteValor(e.target.value)}
+                  required
+                  placeholder={ajusteTipo === "porcentaje" ? "10" : "5000"}
+                  className="bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+
+              <p className="text-xs text-gray-500">
+                Se aplica a <strong className="text-gray-300">todos</strong> los productos del {titulo.toLowerCase()}.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  type="submit"
+                  disabled={ajustandoPrecio || !ajusteValor}
+                  className="flex-1 bg-orange-500 text-black font-bold py-3 rounded-xl hover:bg-orange-400 transition-colors disabled:opacity-50"
+                >
+                  {ajustandoPrecio ? "Aplicando..." : "Aplicar a todos"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModalAjuste(false)}
+                  className="px-5 border border-zinc-600 text-gray-300 rounded-xl hover:bg-zinc-800 transition-colors"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

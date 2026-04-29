@@ -1,0 +1,23 @@
+{
+  "name": "Zeus Admin",
+  "short_name": "Zeus Admin",
+  "description": "Panel de administración — Camisetas Zeus",
+  "start_url": "/admin/stock",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

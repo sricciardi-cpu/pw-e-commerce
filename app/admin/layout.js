@@ -18,6 +18,12 @@ export default function AdminLayout({ children }) {
 
   if (pathname === "/admin") return <>{children}</>;
 
+  // Inyectar manifest del admin para la PWA (reemplaza el manifest del sitio)
+  if (typeof document !== "undefined") {
+    let link = document.querySelector('link[rel="manifest"]');
+    if (link) link.href = "/manifest-admin.json";
+  }
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.push("/admin");

@@ -143,7 +143,15 @@ export default function StockPage() {
                           <span key={t} className="text-xs border border-zinc-600 rounded px-1.5 py-0.5 text-gray-300">{t}</span>
                         ))}
                       </div>
-                      <p className="text-orange-500 font-bold mt-auto text-sm md:text-base">{formatearPrecio(producto.precio)}</p>
+                      <div className="mt-auto flex flex-col gap-0.5">
+                        <p className="text-orange-500 font-bold text-sm md:text-base">{formatearPrecio(producto.precio)}</p>
+                        {producto.descuento_transferencia > 0 && (
+                          <p className="text-green-400 text-xs font-semibold">
+                            Transf. {formatearPrecio(Math.round(producto.precio * (1 - producto.descuento_transferencia / 100)))}
+                            <span className="text-green-600 ml-1">−{producto.descuento_transferencia}%</span>
+                          </p>
+                        )}
+                      </div>
                       <div className="block text-center bg-orange-500 text-black text-sm font-semibold py-2.5 rounded-lg hover:bg-orange-400 transition-colors mt-1">
                         Ver detalle
                       </div>
