@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { FaChevronRight, FaArrowRight } from "react-icons/fa";
@@ -42,6 +42,16 @@ export default function CheckoutPage() {
   });
   const [cargando, setCargando] = useState(false);
   const [error,    setError]    = useState(null);
+
+  // Cuando el usuario vuelve con "atrás" desde MP, el bfcache restaura la
+  // página con cargando=true. El evento pageshow la resetea.
+  useEffect(() => {
+    function handlePageShow(e) {
+      if (e.persisted) setCargando(false);
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   if (items.length === 0) {
     return (
