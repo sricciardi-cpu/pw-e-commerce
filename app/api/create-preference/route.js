@@ -1,6 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import MercadoPago, { Preference } from "mercadopago";
+import { supabaseAdmin } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
 
 const ENVIO_FIJO = 9;
 
@@ -14,6 +17,36 @@ export async function POST(request) {
 
   try {
     const { items, comprador } = await request.json();
+
+    const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0) + ENVIO_FIJO;
+
+    // Guardar pedido en Supabase antes de redirigir a MP
+    let pedidoId = null;
+    try {
+      const { data } = await supabaseAdmin()
+        .from("pedidos")
+        .insert({
+          nombre:        comprador.nombre,
+          email:         comprador.email,
+          telefono:      `${comprador.codigoArea ?? ""}${comprador.celular ?? ""}`,
+          provincia:     comprador.provincia ?? "",
+          localidad:     comprador.localidad ?? "",
+          calle:         comprador.calle ?? "",
+          numero:        comprador.numero ?? "",
+          piso:          comprador.piso ?? "",
+          departamento:  comprador.departamento ?? "",
+          codigo_postal: comprador.codigoPostal ?? "",
+          observaciones: comprador.observaciones ?? "",
+          items,
+          total,
+          estado: "pendiente",
+        })
+        .select("id")
+        .single();
+      pedidoId = data?.id ?? null;
+    } catch (e) {
+      console.error("Error saving pedido (no bloqueante):", e);
+    }
 
     const client = new MercadoPago({ accessToken: process.env.MP_ACCESS_TOKEN });
     const preference = new Preference(client);
@@ -54,6 +87,7 @@ export async function POST(request) {
         },
         auto_return: "approved",
         notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
+        ...(pedidoId ? { external_reference: pedidoId } : {}),
       },
     });
 

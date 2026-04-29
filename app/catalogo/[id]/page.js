@@ -30,10 +30,7 @@ export default function ProductoDetallePage({ params }) {
       .select("*")
       .eq("id", params.id)
       .single()
-      .then(({ data }) => {
-        setProducto(data);
-        setCargando(false);
-      });
+      .then(({ data }) => { setProducto(data); setCargando(false); });
   }, [params.id]);
 
   useEffect(() => {
@@ -62,13 +59,21 @@ export default function ProductoDetallePage({ params }) {
 
   const imagenes = [producto.imagen, producto.imagen_espalda].filter(Boolean);
 
-  const yaEnCarrito = talleSeleccionado ? cantidadEnCarrito(producto?.id, talleSeleccionado) : 0;
-  const disponible  = talleSeleccionado ? Math.max(0, (producto?.stock ?? 0) - yaEnCarrito) : (producto?.stock ?? 0);
+  const stockTalle = talleSeleccionado && producto.stock_por_talle?.[talleSeleccionado] !== undefined
+    ? producto.stock_por_talle[talleSeleccionado]
+    : producto.stock ?? 0;
+
+  const yaEnCarrito = talleSeleccionado ? cantidadEnCarrito(producto.id, talleSeleccionado) : 0;
+  const disponible  = Math.max(0, stockTalle - yaEnCarrito);
 
   function handleAgregar() {
     if (!talleSeleccionado) { setEstado("warning"); return; }
     if (disponible === 0) return;
-    agregarAlCarrito({ id: producto.id, nombre: producto.nombre, talle: talleSeleccionado, precio: producto.precio, cantidad, imagen: producto.imagen, stock: producto.stock });
+    agregarAlCarrito({
+      id: producto.id, nombre: producto.nombre, talle: talleSeleccionado,
+      precio: producto.precio, cantidad, imagen: producto.imagen,
+      stock: stockTalle, tabla: "productos_catalogo",
+    });
     setCantidad(1);
     setEstado("success");
   }
@@ -117,7 +122,7 @@ export default function ProductoDetallePage({ params }) {
             <p className="text-sm font-semibold text-gray-300 mb-2">Seleccioná tu talle:</p>
             <div className="flex gap-2 flex-wrap">
               {(producto.talle ?? []).map((t) => (
-                <button key={t} onClick={() => { setTalleSeleccionado(t); setEstado("idle"); }}
+                <button key={t} onClick={() => { setTalleSeleccionado(t); setCantidad(1); setEstado("idle"); }}
                   className={`w-12 h-12 rounded-xl border-2 text-sm font-bold transition-colors active:scale-95 ${talleSeleccionado === t ? "bg-orange-500 text-black border-orange-500" : "bg-zinc-800 text-gray-200 border-zinc-600 hover:border-white hover:text-white"}`}>
                   {t}
                 </button>
@@ -138,7 +143,7 @@ export default function ProductoDetallePage({ params }) {
           {estado === "warning" && <p className="text-red-400 text-sm">Seleccioná un talle primero.</p>}
 
           <button onClick={handleAgregar} disabled={disponible === 0} className={`w-full font-semibold py-3 rounded-xl text-base active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${estado === "success" ? "bg-green-600 text-white scale-95" : "bg-orange-500 text-black hover:bg-orange-400"}`}>
-            {disponible === 0 ? "Límite de stock alcanzado" : estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
+            {disponible === 0 ? "Sin stock para este talle" : estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
           </button>
 
           <Link href="/guia-de-talles" className="text-sm text-gray-400 hover:text-orange-500 transition-colors">Ver guía de talles →</Link>

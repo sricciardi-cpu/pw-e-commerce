@@ -25,7 +25,7 @@ export function CartProvider({ children }) {
     } catch {}
   }, [items, hidratado]);
 
-  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null, stock = Infinity }) {
+  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null, stock = Infinity, tabla = null }) {
     setItems((prev) => {
       const existe = prev.find((i) => i.id === id && i.talle === talle);
       if (existe) {
@@ -35,7 +35,7 @@ export function CartProvider({ children }) {
           i.id === id && i.talle === talle ? { ...i, cantidad: nuevaCantidad, stock } : i
         );
       }
-      return [...prev, { id, nombre, talle, precio, cantidad: Math.min(cantidad, stock), imagen, stock }];
+      return [...prev, { id, nombre, talle, precio, cantidad: Math.min(cantidad, stock), imagen, stock, tabla }];
     });
   }
 

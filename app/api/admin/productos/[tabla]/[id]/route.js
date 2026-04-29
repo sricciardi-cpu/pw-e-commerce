@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { supabaseAdmin } from "@/lib/supabase";
 
 const TABLAS_VALIDAS = ["stock", "catalogo"];
@@ -16,18 +14,18 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
 
-    // Allow partial updates (e.g. just `destacado`)
-    const campos = {};
-    if (body.nombre       !== undefined) campos.nombre        = body.nombre;
-    if (body.precio       !== undefined) campos.precio        = parseInt(body.precio);
-    if (body.categoria    !== undefined) campos.categoria     = body.categoria;
-    if (body.tipo         !== undefined) campos.tipo          = body.tipo;
-    if (body.talle        !== undefined) campos.talle         = body.talle ?? [];
-    if (body.descripcion  !== undefined) campos.descripcion   = body.descripcion ?? "";
-    if (body.imagen       !== undefined) campos.imagen        = body.imagen ?? "";
-    if (body.imagenEspalda !== undefined) campos.imagen_espalda = body.imagenEspalda ?? "";
-    if (body.stock        !== undefined) campos.stock         = parseInt(body.stock) || 0;
-    if (body.destacado    !== undefined) campos.destacado     = body.destacado;
+    const campos = {
+      nombre: body.nombre,
+      precio: parseInt(body.precio),
+      categoria: body.categoria,
+      tipo: body.tipo,
+      talle: body.talle ?? [],
+      descripcion: body.descripcion ?? "",
+      imagen: body.imagen ?? "",
+      imagen_espalda: body.imagenEspalda ?? "",
+      stock: parseInt(body.stock) || 0,
+      stock_por_talle: body.stockPorTalle ?? {},
+    };
 
     const { data, error } = await supabaseAdmin()
       .from(nombreTabla(params.tabla))

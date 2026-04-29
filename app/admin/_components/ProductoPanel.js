@@ -10,7 +10,7 @@ const TIPOS = ["nacion", "club"];
 const FORM_INICIAL = {
   nombre: "", precio: "", stock: "0", categoria: "local",
   tipo: "nacion", talle: [], descripcion: "",
-  imagen: "", imagenEspalda: "",
+  imagen: "", imagenEspalda: "", stockPorTalle: {},
 };
 
 function formatearPrecio(precio) {
@@ -96,15 +96,16 @@ export default function ProductoPanel({ tabla, titulo }) {
 
   function abrirEditar(p) {
     setForm({
-      nombre:       p.nombre,
-      precio:       String(p.precio),
-      stock:        String(p.stock),
-      categoria:    p.categoria,
-      tipo:         p.tipo,
-      talle:        p.talle ?? [],
-      descripcion:  p.descripcion ?? "",
-      imagen:       p.imagen ?? "",
+      nombre:        p.nombre,
+      precio:        String(p.precio),
+      stock:         String(p.stock),
+      categoria:     p.categoria,
+      tipo:          p.tipo,
+      talle:         p.talle ?? [],
+      descripcion:   p.descripcion ?? "",
+      imagen:        p.imagen ?? "",
       imagenEspalda: p.imagen_espalda ?? "",
+      stockPorTalle: p.stock_por_talle ?? {},
     });
     setEditandoId(p.id);
     setFormVisible(true);
@@ -137,7 +138,7 @@ export default function ProductoPanel({ tabla, titulo }) {
     setGuardando(true);
     setError(null);
 
-    const body = { ...form, precio: parseInt(form.precio), stock: parseInt(form.stock) };
+    const body = { ...form, precio: parseInt(form.precio), stock: parseInt(form.stock), stockPorTalle: form.stockPorTalle };
     const url  = editandoId
       ? `/api/admin/productos/${tabla}/${editandoId}`
       : `/api/admin/productos/${tabla}`;
@@ -278,6 +279,29 @@ export default function ProductoPanel({ tabla, titulo }) {
                 ))}
               </div>
             </div>
+
+            {/* Stock por talle */}
+            {form.talle.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <label className="text-xs text-gray-400">Stock por talle</label>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {form.talle.map((t) => (
+                    <div key={t} className="flex flex-col gap-1 items-center">
+                      <span className="text-xs text-gray-500">{t}</span>
+                      <input
+                        type="number" min="0"
+                        value={form.stockPorTalle[t] ?? 0}
+                        onChange={(e) => setForm((p) => ({
+                          ...p,
+                          stockPorTalle: { ...p.stockPorTalle, [t]: parseInt(e.target.value) || 0 },
+                        }))}
+                        className={`${inputClass} text-center px-1`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Descripción */}
             <div className="flex flex-col gap-1">

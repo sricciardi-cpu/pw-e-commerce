@@ -42,6 +42,7 @@ export async function POST(request, { params }) {
       imagen: body.imagen ?? "",
       imagen_espalda: body.imagenEspalda ?? "",
       stock: parseInt(body.stock) || 0,
+      stock_por_talle: body.stockPorTalle ?? {},
     };
 
     const { data, error } = await supabaseAdmin()
