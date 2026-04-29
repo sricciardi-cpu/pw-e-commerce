@@ -45,6 +45,7 @@ export function CartProvider({ children }) {
 
   function vaciarCarrito() {
     setItems([]);
+    try { localStorage.removeItem("zeus_cart"); } catch {}
   }
 
   function cantidadEnCarrito(id, talle) {
