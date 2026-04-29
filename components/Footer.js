@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           {/* Middle column: links */}
-          <div className="flex flex-col gap-3 items-center">
+          <div className="flex flex-col gap-3 items-start md:items-center">
             <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Enlaces
             </p>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
 
           {/* Right column: social */}
-          <div className="flex flex-col gap-3 items-end">
+          <div className="flex flex-col gap-3 items-start md:items-end">
             <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Seguinos
             </p>
