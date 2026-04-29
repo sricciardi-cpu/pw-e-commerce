@@ -7,19 +7,22 @@ const CartContext = createContext(null);
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
-  // Agrega un item; si ya existe el mismo id+talle incrementa cantidad
-  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null }) {
+  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null, stock = Infinity }) {
     setItems((prev) => {
       const existe = prev.find((i) => i.id === id && i.talle === talle);
       if (existe) {
+        const nuevaCantidad = Math.min(existe.cantidad + cantidad, stock);
+        if (nuevaCantidad === existe.cantidad) return prev; // ya está al límite
         return prev.map((i) =>
-          i.id === id && i.talle === talle
-            ? { ...i, cantidad: i.cantidad + cantidad }
-            : i
+          i.id === id && i.talle === talle ? { ...i, cantidad: nuevaCantidad, stock } : i
         );
       }
-      return [...prev, { id, nombre, talle, precio, cantidad, imagen }];
+      return [...prev, { id, nombre, talle, precio, cantidad: Math.min(cantidad, stock), imagen, stock }];
     });
+  }
+
+  function cantidadEnCarrito(id, talle) {
+    return items.find((i) => i.id === id && i.talle === talle)?.cantidad ?? 0;
   }
 
   // Elimina completamente un item por id + talle
@@ -35,7 +38,7 @@ export function CartProvider({ children }) {
   const cantidadTotal = items.reduce((acc, i) => acc + i.cantidad, 0);
 
   return (
-    <CartContext.Provider value={{ items, agregarAlCarrito, quitarDelCarrito, vaciarCarrito, total, cantidadTotal }}>
+    <CartContext.Provider value={{ items, agregarAlCarrito, quitarDelCarrito, vaciarCarrito, total, cantidadTotal, cantidadEnCarrito }}>
       {children}
     </CartContext.Provider>
   );

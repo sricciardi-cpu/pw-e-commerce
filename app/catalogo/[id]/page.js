@@ -15,7 +15,7 @@ const badgeTipo = { nacion: "bg-zinc-700 text-white", club: "bg-orange-500/20 te
 export default function ProductoDetallePage({ params }) {
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const { agregarAlCarrito }    = useCart();
+  const { agregarAlCarrito, cantidadEnCarrito } = useCart();
 
   const [imagenActiva,      setImagenActiva]      = useState(0);
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
@@ -62,9 +62,13 @@ export default function ProductoDetallePage({ params }) {
 
   const imagenes = [producto.imagen, producto.imagen_espalda].filter(Boolean);
 
+  const yaEnCarrito = talleSeleccionado ? cantidadEnCarrito(producto?.id, talleSeleccionado) : 0;
+  const disponible  = talleSeleccionado ? Math.max(0, (producto?.stock ?? 0) - yaEnCarrito) : (producto?.stock ?? 0);
+
   function handleAgregar() {
     if (!talleSeleccionado) { setEstado("warning"); return; }
-    agregarAlCarrito({ id: producto.id, nombre: producto.nombre, talle: talleSeleccionado, precio: producto.precio, cantidad, imagen: producto.imagen });
+    if (disponible === 0) return;
+    agregarAlCarrito({ id: producto.id, nombre: producto.nombre, talle: talleSeleccionado, precio: producto.precio, cantidad, imagen: producto.imagen, stock: producto.stock });
     setCantidad(1);
     setEstado("success");
   }
@@ -126,14 +130,15 @@ export default function ProductoDetallePage({ params }) {
             <div className="flex items-center w-fit">
               <button onClick={() => setCantidad(c => Math.max(1, c - 1))} disabled={cantidad === 1} className="w-10 h-10 rounded-l-xl bg-orange-500 text-black font-bold text-lg hover:bg-orange-400 disabled:opacity-40 transition-colors">−</button>
               <span className="w-12 h-10 flex items-center justify-center bg-zinc-900 border-y border-zinc-600 text-white font-bold text-sm">{cantidad}</span>
-              <button onClick={() => setCantidad(c => Math.min(producto.stock, c + 1))} disabled={cantidad === producto.stock} className="w-10 h-10 rounded-r-xl bg-orange-500 text-black font-bold text-lg hover:bg-orange-400 disabled:opacity-40 transition-colors">+</button>
+              <button onClick={() => setCantidad(c => Math.min(disponible, c + 1))} disabled={cantidad >= disponible} className="w-10 h-10 rounded-r-xl bg-orange-500 text-black font-bold text-lg hover:bg-orange-400 disabled:opacity-40 transition-colors">+</button>
             </div>
+            {yaEnCarrito > 0 && <p className="text-xs text-gray-400 mt-1">Ya tenés {yaEnCarrito} en el carrito</p>}
           </div>
 
           {estado === "warning" && <p className="text-red-400 text-sm">Seleccioná un talle primero.</p>}
 
-          <button onClick={handleAgregar} className={`w-full font-semibold py-3 rounded-xl text-base active:scale-95 transition-all duration-200 ${estado === "success" ? "bg-green-600 text-white scale-95" : "bg-orange-500 text-black hover:bg-orange-400"}`}>
-            {estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
+          <button onClick={handleAgregar} disabled={disponible === 0} className={`w-full font-semibold py-3 rounded-xl text-base active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${estado === "success" ? "bg-green-600 text-white scale-95" : "bg-orange-500 text-black hover:bg-orange-400"}`}>
+            {disponible === 0 ? "Límite de stock alcanzado" : estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
           </button>
 
           <Link href="/guia-de-talles" className="text-sm text-gray-400 hover:text-orange-500 transition-colors">Ver guía de talles →</Link>
