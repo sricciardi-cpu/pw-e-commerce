@@ -28,7 +28,8 @@ export async function POST(request) {
     const { items, comprador } = await request.json();
 
     const precioEnvio = await getPrecioEnvio();
-    const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0) + precioEnvio;
+    console.log("[create-preference] precioEnvio:", precioEnvio, "| items:", JSON.stringify(items.map(i => ({ nombre: i.nombre, precio: i.precio, tipo: typeof i.precio }))));
+    const total = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0) + precioEnvio;
 
     // Guardar pedido en Supabase antes de redirigir a MP
     let pedidoId = null;
@@ -67,8 +68,8 @@ export async function POST(request) {
           ...items.map((item) => ({
             id: String(item.id),
             title: `${item.nombre} - Talle ${item.talle}`,
-            quantity: item.cantidad,
-            unit_price: item.precio,
+            quantity: Number(item.cantidad),
+            unit_price: Number(item.precio),
             currency_id: "ARS",
             ...(item.imagen ? { picture_url: item.imagen } : {}),
           })),
@@ -76,7 +77,7 @@ export async function POST(request) {
             id: "envio",
             title: "Envío",
             quantity: 1,
-            unit_price: precioEnvio,
+            unit_price: Number(precioEnvio),
             currency_id: "ARS",
           },
         ],
