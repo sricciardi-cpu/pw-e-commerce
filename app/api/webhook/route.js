@@ -40,34 +40,49 @@ export async function POST(request) {
     }
 
     // Descontar stock usando updates directos (no depende de RPCs)
-    const itemsParaStock = pedido?.items ?? [];
+    // Si no hay pedido guardado, usa los items de MP como fallback
+    const itemsParaStock = pedido?.items?.length
+      ? pedido.items
+      : (payment.additional_info?.items ?? []).map((i) => ({
+          id: i.id,
+          cantidad: i.quantity,
+          talle: null,
+          tabla: null,
+        }));
 
     for (const item of itemsParaStock) {
       if (!item.id || item.id === "envio") continue;
-      const tabla    = item.tabla ?? "productos_stock";
-      const talle    = item.talle ?? "";
-      const cantidad = Number(item.cantidad ?? 1);
+      const cantidad = Number(item.cantidad ?? item.quantity ?? 1);
 
-      const { data: prod } = await supabaseAdmin()
-        .from(tabla)
-        .select("stock, stock_por_talle")
-        .eq("id", String(item.id))
-        .single();
+      // Si sabemos la tabla, actualizamos solo esa. Si no, intentamos ambas.
+      const tablas = item.tabla
+        ? [item.tabla]
+        : ["productos_stock", "productos_catalogo"];
 
-      if (!prod) continue;
+      for (const tabla of tablas) {
+        const { data: prod } = await supabaseAdmin()
+          .from(tabla)
+          .select("stock, stock_por_talle")
+          .eq("id", String(item.id))
+          .single();
 
-      const updates = {
-        stock: Math.max(0, (prod.stock ?? 0) - cantidad),
-      };
+        if (!prod) continue;
 
-      if (talle && prod.stock_por_talle?.[talle] !== undefined) {
-        updates.stock_por_talle = {
-          ...prod.stock_por_talle,
-          [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
+        const updates = {
+          stock: Math.max(0, (prod.stock ?? 0) - cantidad),
         };
-      }
 
-      await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
+        const talle = item.talle ?? "";
+        if (talle && prod.stock_por_talle?.[talle] !== undefined) {
+          updates.stock_por_talle = {
+            ...prod.stock_por_talle,
+            [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
+          };
+        }
+
+        await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
+        break; // encontró el producto, no buscar en la otra tabla
+      }
     }
 
     // Enviar email de confirmación al comprador
