@@ -8,11 +8,14 @@ export const metadata = {
   title: "Camisetas Zeus",
   description: "Las mejores camisetas de rugby de Argentina",
   manifest: "/manifest.json",
-  themeColor: "#f97316",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#f97316",
 };
 
 export default function RootLayout({ children }) {
