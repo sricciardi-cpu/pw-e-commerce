@@ -83,6 +83,12 @@ export async function POST(request) {
           failure: `${process.env.NEXT_PUBLIC_URL}/checkout/error`,
           pending: `${process.env.NEXT_PUBLIC_URL}/checkout/exito`,
         },
+        payment_methods: {
+          excluded_payment_types: [
+            { id: "ticket" },
+            { id: "atm" },
+          ],
+        },
         auto_return: "approved",
         notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
         ...(pedidoId ? { external_reference: pedidoId } : {}),
