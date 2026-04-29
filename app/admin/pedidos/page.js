@@ -83,6 +83,11 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-white text-sm truncate">{pedido.nombre ?? "—"}</span>
             <EstadoBadge estado={estadoLocal} />
+            {pedido.metodo_pago === "transferencia" && (
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400">
+                Transferencia
+              </span>
+            )}
           </div>
           <p className="text-xs text-gray-400 mt-0.5">
             {formatearFecha(pedido.created_at)} · {items.length} artículo{items.length !== 1 ? "s" : ""} · <span className="text-orange-400 font-medium">{formatearPrecio(pedido.total)}</span>

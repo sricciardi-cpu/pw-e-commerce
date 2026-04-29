@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FaChevronRight, FaArrowRight } from "react-icons/fa";
+import { FaChevronRight, FaArrowRight, FaWhatsapp } from "react-icons/fa";
 
-const ENVIO_FIJO = 9;
+const WHATSAPP_ADMIN = "5492216220145";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -24,7 +24,7 @@ const inputClass =
   "bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors";
 
 export default function CheckoutPage() {
-  const { items, total } = useCart();
+  const { items, total, vaciarCarrito } = useCart();
 
   const [form, setForm] = useState({
     nombre: "",
@@ -40,14 +40,23 @@ export default function CheckoutPage() {
     codigoPostal: "",
     observaciones: "",
   });
-  const [cargando, setCargando] = useState(false);
-  const [error,    setError]    = useState(null);
+  const [precioEnvio,      setPrecioEnvio]      = useState(0);
+  const [cargando,         setCargando]         = useState(false);
+  const [cargandoTransf,   setCargandoTransf]   = useState(false);
+  const [error,            setError]            = useState(null);
+
+  useEffect(() => {
+    fetch("/api/admin/config")
+      .then((r) => r.json())
+      .then((d) => setPrecioEnvio(parseInt(d.precio_envio) || 0))
+      .catch(() => {});
+  }, []);
 
   // Cuando el usuario vuelve con "atrás" desde MP, el bfcache restaura la
   // página con cargando=true. El evento pageshow la resetea.
   useEffect(() => {
     function handlePageShow(e) {
-      if (e.persisted) setCargando(false);
+      if (e.persisted) { setCargando(false); setCargandoTransf(false); }
     }
     window.addEventListener("pageshow", handlePageShow);
     return () => window.removeEventListener("pageshow", handlePageShow);
@@ -70,6 +79,13 @@ export default function CheckoutPage() {
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  function formValido() {
+    return (
+      form.nombre && form.email && form.codigoArea && form.celular &&
+      form.provincia && form.localidad && form.calle && form.numero && form.codigoPostal
+    );
   }
 
   async function handleSubmit(e) {
@@ -95,7 +111,47 @@ export default function CheckoutPage() {
     }
   }
 
-  const totalConEnvio = total + ENVIO_FIJO;
+  async function handleTransferencia(e) {
+    e.preventDefault();
+    if (!formValido()) {
+      setError("Completá todos los campos obligatorios antes de continuar.");
+      return;
+    }
+    setCargandoTransf(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/pedidos/transferencia", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items, comprador: form, precioEnvio }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Error al registrar el pedido");
+
+      const resumen = items
+        .map((i) => `• ${i.nombre} T.${i.talle} x${i.cantidad} = ${formatearPrecio(i.precio * i.cantidad)}`)
+        .join("\n");
+      const totalConEnvio = total + precioEnvio;
+      const msg =
+        `Hola! Quiero pagar por transferencia.\n\n` +
+        `*Pedido #${data.id}*\n${resumen}\n` +
+        `Envío: ${formatearPrecio(precioEnvio)}\n` +
+        `*Total: ${formatearPrecio(totalConEnvio)}*\n\n` +
+        `Nombre: ${form.nombre}\n` +
+        `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
+
+      vaciarCarrito();
+      window.location.href = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(msg)}`;
+    } catch (err) {
+      setError(err.message);
+      setCargandoTransf(false);
+    }
+  }
+
+  const totalConEnvio = total + precioEnvio;
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -236,14 +292,31 @@ export default function CheckoutPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={cargando}
-            className="w-full flex items-center justify-center gap-2 bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-          >
-            <FaArrowRight className="text-base" />
-            {cargando ? "Procesando..." : "Ir a pagar con MercadoPago"}
-          </button>
+          {/* Botones de pago */}
+          <div className="flex flex-col gap-3">
+            <button
+              type="submit"
+              disabled={cargando || cargandoTransf}
+              className="w-full flex items-center justify-center gap-2 bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+            >
+              <FaArrowRight className="text-base" />
+              {cargando ? "Procesando..." : "Pagar con MercadoPago"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleTransferencia}
+              disabled={cargando || cargandoTransf}
+              className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-bold py-4 rounded-xl text-lg hover:bg-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+            >
+              <FaWhatsapp className="text-xl" />
+              {cargandoTransf ? "Registrando..." : "Pagar por transferencia"}
+            </button>
+
+            <p className="text-xs text-gray-500 text-center">
+              Al pagar por transferencia te abrimos WhatsApp con los datos. Confirmamos tu pedido cuando recibamos el pago.
+            </p>
+          </div>
         </form>
 
         {/* Resumen del pedido */}
@@ -277,7 +350,7 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between text-sm text-gray-400">
                 <span>Envío</span>
-                <span>{formatearPrecio(ENVIO_FIJO)}</span>
+                <span>{precioEnvio > 0 ? formatearPrecio(precioEnvio) : "—"}</span>
               </div>
               <div className="flex justify-between text-white font-bold text-base border-t border-zinc-700 pt-2 mt-1">
                 <span>Total</span>

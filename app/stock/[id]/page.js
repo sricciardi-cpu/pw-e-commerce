@@ -118,7 +118,26 @@ export default function StockDetallePage({ params }) {
           </div>
 
           <h1 className="text-2xl font-extrabold text-white leading-tight">{producto.nombre}</h1>
-          <p className="text-orange-500 text-2xl font-bold">{formatearPrecio(producto.precio)}</p>
+
+          {producto.descuento_transferencia > 0 ? (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-baseline gap-3">
+                <p className="text-orange-500 text-2xl font-bold">{formatearPrecio(producto.precio)}</p>
+                <span className="text-xs text-gray-400">MercadoPago</span>
+              </div>
+              <div className="flex items-baseline gap-3">
+                <p className="text-green-400 text-2xl font-bold">
+                  {formatearPrecio(Math.round(producto.precio * (1 - producto.descuento_transferencia / 100)))}
+                </p>
+                <span className="text-xs bg-green-900/50 text-green-400 px-2 py-0.5 rounded-full font-medium">
+                  Transferencia −{producto.descuento_transferencia}%
+                </span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-orange-500 text-2xl font-bold">{formatearPrecio(producto.precio)}</p>
+          )}
+
           <p className="text-gray-300 text-sm leading-relaxed">{producto.descripcion}</p>
 
           <div>

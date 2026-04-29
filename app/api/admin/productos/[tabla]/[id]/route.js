@@ -25,6 +25,7 @@ export async function PUT(request, { params }) {
       imagen_espalda: body.imagenEspalda ?? "",
       stock: parseInt(body.stock) || 0,
       stock_por_talle: body.stockPorTalle ?? {},
+      descuento_transferencia: parseInt(body.descuentoTransferencia) || 0,
     };
 
     const { data, error } = await supabaseAdmin()

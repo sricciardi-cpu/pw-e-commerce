@@ -11,6 +11,7 @@ const FORM_INICIAL = {
   nombre: "", precio: "", stock: "0", categoria: "local",
   tipo: "nacion", talle: [], descripcion: "",
   imagen: "", imagenEspalda: "", stockPorTalle: {},
+  descuentoTransferencia: "0",
 };
 
 function formatearPrecio(precio) {
@@ -96,16 +97,17 @@ export default function ProductoPanel({ tabla, titulo }) {
 
   function abrirEditar(p) {
     setForm({
-      nombre:        p.nombre,
-      precio:        String(p.precio),
-      stock:         String(p.stock),
-      categoria:     p.categoria,
-      tipo:          p.tipo,
-      talle:         p.talle ?? [],
-      descripcion:   p.descripcion ?? "",
-      imagen:        p.imagen ?? "",
-      imagenEspalda: p.imagen_espalda ?? "",
-      stockPorTalle: p.stock_por_talle ?? {},
+      nombre:                 p.nombre,
+      precio:                 String(p.precio),
+      stock:                  String(p.stock),
+      categoria:              p.categoria,
+      tipo:                   p.tipo,
+      talle:                  p.talle ?? [],
+      descripcion:            p.descripcion ?? "",
+      imagen:                 p.imagen ?? "",
+      imagenEspalda:          p.imagen_espalda ?? "",
+      stockPorTalle:          p.stock_por_talle ?? {},
+      descuentoTransferencia: String(p.descuento_transferencia ?? 0),
     });
     setEditandoId(p.id);
     setFormVisible(true);
@@ -138,7 +140,13 @@ export default function ProductoPanel({ tabla, titulo }) {
     setGuardando(true);
     setError(null);
 
-    const body = { ...form, precio: parseInt(form.precio), stock: parseInt(form.stock), stockPorTalle: form.stockPorTalle };
+    const body = {
+      ...form,
+      precio: parseInt(form.precio),
+      stock: parseInt(form.stock),
+      stockPorTalle: form.stockPorTalle,
+      descuentoTransferencia: parseInt(form.descuentoTransferencia) || 0,
+    };
     const url  = editandoId
       ? `/api/admin/productos/${tabla}/${editandoId}`
       : `/api/admin/productos/${tabla}`;
@@ -231,6 +239,18 @@ export default function ProductoPanel({ tabla, titulo }) {
                   className={inputClass}
                 />
               </div>
+            </div>
+
+            {/* Descuento transferencia */}
+            <div className="flex flex-col gap-1 sm:w-1/3">
+              <label className="text-xs text-gray-400">Descuento transferencia (%)</label>
+              <input
+                type="number" min="0" max="100"
+                value={form.descuentoTransferencia}
+                onChange={e => setForm(p => ({ ...p, descuentoTransferencia: e.target.value }))}
+                placeholder="0"
+                className={inputClass}
+              />
             </div>
 
             {/* Categoría y tipo */}
@@ -368,8 +388,13 @@ export default function ProductoPanel({ tabla, titulo }) {
                 <p className="text-xs text-gray-400 mt-0.5">
                   {p.categoria} · {p.tipo === "nacion" ? "Nación" : "Club"} · Talles: {(p.talle ?? []).join(", ") || "—"}
                 </p>
-                <div className="flex items-center gap-3 mt-1">
+                <div className="flex items-center gap-3 mt-1 flex-wrap">
                   <span className="text-orange-500 font-bold text-sm">{formatearPrecio(p.precio)}</span>
+                  {p.descuento_transferencia > 0 && (
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-900/50 text-green-400">
+                      Transf. −{p.descuento_transferencia}%
+                    </span>
+                  )}
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${p.stock > 0 ? "bg-green-900/50 text-green-400" : "bg-red-900/50 text-red-400"}`}>
                     Stock: {p.stock}
                   </span>

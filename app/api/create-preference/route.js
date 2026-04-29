@@ -3,7 +3,18 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const ENVIO_FIJO = 9;
+async function getPrecioEnvio() {
+  try {
+    const { data } = await supabaseAdmin()
+      .from("configuracion")
+      .select("valor")
+      .eq("clave", "precio_envio")
+      .single();
+    return data ? parseInt(data.valor) || 0 : 0;
+  } catch {
+    return 0;
+  }
+}
 
 export async function POST(request) {
   if (!process.env.MP_ACCESS_TOKEN) {
@@ -16,7 +27,8 @@ export async function POST(request) {
   try {
     const { items, comprador } = await request.json();
 
-    const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0) + ENVIO_FIJO;
+    const precioEnvio = await getPrecioEnvio();
+    const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0) + precioEnvio;
 
     // Guardar pedido en Supabase antes de redirigir a MP
     let pedidoId = null;
@@ -64,7 +76,7 @@ export async function POST(request) {
             id: "envio",
             title: "Envío",
             quantity: 1,
-            unit_price: ENVIO_FIJO,
+            unit_price: precioEnvio,
             currency_id: "ARS",
           },
         ],

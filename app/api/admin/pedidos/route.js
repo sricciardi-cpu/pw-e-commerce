@@ -8,7 +8,7 @@ export async function GET() {
     const { data, error } = await supabaseAdmin()
       .from("pedidos")
       .select("*")
-      .neq("estado", "pendiente")
+      .or("estado.neq.pendiente,metodo_pago.eq.transferencia")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
