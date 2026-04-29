@@ -14,7 +14,7 @@ export default function ConfiguracionPage() {
   const [error,        setError]        = useState(null);
 
   useEffect(() => {
-    fetch("/api/admin/config", { cache: "no-store" })
+    fetch(`/api/admin/config?t=${Date.now()}`, { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (d.error) { setError(d.error); setCargando(false); return; }
@@ -39,6 +39,10 @@ export default function ConfiguracionPage() {
     if (res.ok) {
       setGuardado(true);
       setTimeout(() => setGuardado(false), 3000);
+      // Refetch para confirmar que el valor persistió en la DB
+      const fresh = await fetch(`/api/admin/config?t=${Date.now()}`, { cache: "no-store" });
+      const freshData = await fresh.json();
+      if (!freshData.error) setPrecioEnvio(freshData.precio_envio ?? "");
     } else {
       const d = await res.json();
       setError(d.error ?? "Error al guardar");

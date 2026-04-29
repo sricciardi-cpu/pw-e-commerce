@@ -2,15 +2,20 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+const NO_CACHE = { "Cache-Control": "no-store, no-cache, must-revalidate" };
+
 export async function GET() {
   const { data, error } = await supabaseAdmin()
     .from("configuracion")
     .select("clave, valor");
 
-  if (error) return Response.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error("[config] GET error:", error.message);
+    return Response.json({ error: error.message }, { status: 500, headers: NO_CACHE });
+  }
 
   const config = Object.fromEntries((data ?? []).map(({ clave, valor }) => [clave, valor]));
-  return Response.json(config);
+  return Response.json(config, { headers: NO_CACHE });
 }
 
 export async function PUT(request) {
@@ -19,27 +24,36 @@ export async function PUT(request) {
   for (const [clave, valor] of Object.entries(body)) {
     const valorStr = String(valor);
 
-    // Intentar UPDATE primero
-    const { data: updated, error: updateError } = await supabaseAdmin()
+    // Verificar si ya existe la fila
+    const { data: existing, error: selectError } = await supabaseAdmin()
       .from("configuracion")
-      .update({ valor: valorStr })
+      .select("clave")
       .eq("clave", clave)
-      .select("clave");
+      .maybeSingle();
 
-    if (updateError) {
-      console.error("[config] PUT update error:", updateError.message);
-      return Response.json({ error: updateError.message }, { status: 500 });
+    if (selectError) {
+      console.error("[config] PUT select error:", selectError.message);
+      return Response.json({ error: selectError.message }, { status: 500 });
     }
 
-    // Si no existía la fila, INSERT
-    if (!updated || updated.length === 0) {
-      const { error: insertError } = await supabaseAdmin()
+    if (existing) {
+      const { error } = await supabaseAdmin()
+        .from("configuracion")
+        .update({ valor: valorStr })
+        .eq("clave", clave);
+
+      if (error) {
+        console.error("[config] PUT update error:", error.message);
+        return Response.json({ error: error.message }, { status: 500 });
+      }
+    } else {
+      const { error } = await supabaseAdmin()
         .from("configuracion")
         .insert({ clave, valor: valorStr });
 
-      if (insertError) {
-        console.error("[config] PUT insert error:", insertError.message);
-        return Response.json({ error: insertError.message }, { status: 500 });
+      if (error) {
+        console.error("[config] PUT insert error:", error.message);
+        return Response.json({ error: error.message }, { status: 500 });
       }
     }
 
