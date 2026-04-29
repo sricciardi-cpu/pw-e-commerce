@@ -1,7 +1,17 @@
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
 import { FaCheckCircle } from "react-icons/fa";
+import { useCart } from "@/context/CartContext";
 
 export default function CheckoutExitoPage() {
+  const { vaciarCarrito } = useCart();
+
+  useEffect(() => {
+    vaciarCarrito();
+  }, []);
+
   return (
     <main className="max-w-xl mx-auto px-4 py-20 text-center">
       <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-6" />

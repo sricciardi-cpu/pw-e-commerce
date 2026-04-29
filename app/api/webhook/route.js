@@ -39,29 +39,35 @@ export async function POST(request) {
         .eq("id", pedidoId);
     }
 
-    // Descontar stock (usa datos del pedido si disponibles, sino los items de MP)
-    const itemsParaStock = pedido?.items ?? payment.additional_info?.items ?? [];
+    // Descontar stock usando updates directos (no depende de RPCs)
+    const itemsParaStock = pedido?.items ?? [];
 
     for (const item of itemsParaStock) {
-      if (item.id === "envio" || !item.id) continue;
-      const tabla  = item.tabla ?? "productos_stock";
-      const talle  = item.talle ?? "";
-      const cantidad = item.cantidad ?? item.quantity ?? 1;
+      if (!item.id || item.id === "envio") continue;
+      const tabla    = item.tabla ?? "productos_stock";
+      const talle    = item.talle ?? "";
+      const cantidad = Number(item.cantidad ?? 1);
 
-      try {
-        await supabaseAdmin().rpc("decrementar_stock_talle", {
-          p_tabla:    tabla,
-          p_id:       String(item.id),
-          p_talle:    talle,
-          p_cantidad: cantidad,
-        });
-      } catch {
-        // Fallback al RPC original si decrementar_stock_talle no existe aún
-        await supabaseAdmin().rpc("decrementar_stock", {
-          producto_id: String(item.id),
-          cantidad,
-        }).catch(() => {});
+      const { data: prod } = await supabaseAdmin()
+        .from(tabla)
+        .select("stock, stock_por_talle")
+        .eq("id", String(item.id))
+        .single();
+
+      if (!prod) continue;
+
+      const updates = {
+        stock: Math.max(0, (prod.stock ?? 0) - cantidad),
+      };
+
+      if (talle && prod.stock_por_talle?.[talle] !== undefined) {
+        updates.stock_por_talle = {
+          ...prod.stock_por_talle,
+          [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
+        };
       }
+
+      await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
     }
 
     // Enviar email de confirmación al comprador
