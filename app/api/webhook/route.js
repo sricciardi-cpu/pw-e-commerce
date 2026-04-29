@@ -86,7 +86,11 @@ export async function POST(request) {
     }
 
     // Enviar email de confirmación al comprador
-    if (pedido?.email && process.env.RESEND_API_KEY) {
+    if (!pedido?.email) {
+      console.warn("[email] No hay pedido o email — skip");
+    } else if (!process.env.RESEND_API_KEY) {
+      console.warn("[email] RESEND_API_KEY no está seteada en Vercel — skip");
+    } else {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
         const itemsHtml = (pedido.items ?? [])
@@ -102,8 +106,11 @@ export async function POST(request) {
             </tr>`)
           .join("");
 
-        await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev",
+        const fromEmail = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
+        console.log(`[email] Enviando confirmación a ${pedido.email} desde ${fromEmail}`);
+
+        const result = await resend.emails.send({
+          from: fromEmail,
           to: pedido.email,
           subject: "¡Tu pedido fue confirmado! — Camisetas Zeus",
           html: `
@@ -123,8 +130,14 @@ export async function POST(request) {
             </div>
           `,
         });
+
+        if (result.error) {
+          console.error("[email] Resend retornó error:", JSON.stringify(result.error));
+        } else {
+          console.log("[email] Enviado OK — id:", result.data?.id);
+        }
       } catch (emailErr) {
-        console.error("Error enviando email confirmacion:", emailErr);
+        console.error("[email] Excepción:", emailErr?.message ?? emailErr);
       }
     }
 

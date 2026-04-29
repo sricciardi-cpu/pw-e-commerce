@@ -88,6 +88,7 @@ export async function POST(request) {
             { id: "ticket" },
             { id: "atm" },
           ],
+          installments: 1,
         },
         auto_return: "approved",
         notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
