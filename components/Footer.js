@@ -85,7 +85,7 @@ export default function Footer() {
               className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
               <span className="w-5 flex justify-center shrink-0"><FaWhatsapp className="text-xl" /></span>
-              +54 9 221 622 0145
+              WhatsApp
             </a>
           </div>
 
