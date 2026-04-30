@@ -11,6 +11,13 @@ function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
 
+function tieneStock(p) {
+  if ((p.stock ?? 0) > 0) return true;
+  const porTalle = p.stock_por_talle ?? {};
+  const total = Object.values(porTalle).reduce((s, n) => s + (Number(n) || 0), 0);
+  return total > 0;
+}
+
 const filtrosTipo      = ["Todos", "Naciones", "Clubes"];
 const filtrosCategoria = ["Todas", "local", "alternativa", "training"];
 const filtrosTalle     = ["Todos", "S", "M", "L", "XL", "2XL", "3XL"];
@@ -52,12 +59,17 @@ export default function StockPage() {
       });
   }, []);
 
-  const productosFiltrados = productos.filter((p) => {
+  // Solo productos con stock disponible (>0 en stock global o en algún talle).
+  const productosConStock = productos.filter(tieneStock);
+
+  const productosFiltrados = productosConStock.filter((p) => {
     const matchTipo      = tipo      === "Todos" || p.tipo      === tipoValor[tipo];
     const matchCategoria = categoria === "Todas" || p.categoria === categoria;
     const matchTalle     = talle     === "Todos" || (p.talle ?? []).includes(talle);
     return matchTipo && matchCategoria && matchTalle;
   });
+
+  const sinStockGeneral = !cargando && productosConStock.length === 0;
 
   const hayFiltrosActivos  = tipo !== "Todos" || categoria !== "Todas" || talle !== "Todos";
   const cantFiltrosActivos =
@@ -115,6 +127,18 @@ export default function StockPage() {
       {cargando ? (
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+        </div>
+      ) : sinStockGeneral ? (
+        <div className="bg-zinc-900 border border-zinc-700 rounded-2xl py-16 px-6 text-center flex flex-col items-center gap-5">
+          <div className="text-orange-500 text-5xl">📦</div>
+          <p className="text-xl font-bold text-white">No tenemos stock por el momento</p>
+          <p className="text-gray-400 max-w-md">Únicamente pedidos por encargo. Mirá nuestro catálogo y encargá la tuya.</p>
+          <Link
+            href="/catalogo"
+            className="inline-block bg-orange-500 text-black font-semibold px-8 py-4 rounded-xl hover:bg-orange-400 transition-colors mt-2"
+          >
+            Ver catálogo
+          </Link>
         </div>
       ) : (
         <>
