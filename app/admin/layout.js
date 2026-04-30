@@ -5,48 +5,43 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaBoxOpen, FaTshirt, FaSignOutAlt, FaStar, FaClipboardList, FaCog } from "react-icons/fa";
 
-// Inyecta meta tags para que se pueda agregar el panel a la pantalla de inicio
-// como app independiente (PWA) en Android y iOS, sin afectar al sitio público.
-function usePwaAdmin() {
+// Script síncrono que se ejecuta al parsear el HTML, ANTES de que React
+// hidrate y antes de que el navegador muestre el prompt de "instalar app".
+// Cambia el manifest del sitio público al del admin y agrega los meta tags
+// necesarios para "Agregar a pantalla de inicio" en iOS.
+const PWA_ADMIN_INIT = `
+(function(){
+  try {
+    var l = document.querySelector('link[rel="manifest"]');
+    if (l) l.href = '/manifest-admin.json';
+    function ensureMeta(name, content){
+      if (document.querySelector('meta[name="'+name+'"]')) return;
+      var m = document.createElement('meta');
+      m.setAttribute('name', name);
+      m.setAttribute('content', content);
+      document.head.appendChild(m);
+    }
+    function ensureLink(rel, href){
+      var existing = document.querySelector('link[rel="'+rel+'"]');
+      if (existing) { existing.href = href; return; }
+      var el = document.createElement('link');
+      el.setAttribute('rel', rel);
+      el.setAttribute('href', href);
+      document.head.appendChild(el);
+    }
+    ensureMeta('apple-mobile-web-app-capable', 'yes');
+    ensureMeta('apple-mobile-web-app-title', 'Zeus Admin');
+    ensureMeta('apple-mobile-web-app-status-bar-style', 'black-translucent');
+    ensureLink('apple-touch-icon', '/logo.png');
+  } catch(e) {}
+})();
+`;
+
+// Restaura el manifest del sitio cuando el usuario sale del panel admin
+// (navegación interna de Next.js no recarga la página).
+function usePwaAdminCleanup() {
   useEffect(() => {
-    const tags = [];
-    function setMeta(selector, attrs) {
-      let el = document.head.querySelector(selector);
-      const created = !el;
-      if (!el) {
-        el = document.createElement("meta");
-        document.head.appendChild(el);
-      }
-      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-      if (created) tags.push(el);
-      return el;
-    }
-    function setLink(selector, attrs) {
-      let el = document.head.querySelector(selector);
-      const created = !el;
-      if (!el) {
-        el = document.createElement("link");
-        document.head.appendChild(el);
-      }
-      const prev = {};
-      Object.keys(attrs).forEach(k => prev[k] = el.getAttribute(k));
-      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-      if (created) tags.push(el);
-      else tags.push({ el, prev, restore: true });
-      return el;
-    }
-
-    // Manifest del admin (Android Chrome / Edge)
-    setLink('link[rel="manifest"]', { rel: "manifest", href: "/manifest-admin.json" });
-
-    // iOS — agregar a pantalla de inicio
-    setMeta('meta[name="apple-mobile-web-app-capable"]',     { name: "apple-mobile-web-app-capable",     content: "yes" });
-    setMeta('meta[name="apple-mobile-web-app-title"]',       { name: "apple-mobile-web-app-title",       content: "Zeus Admin" });
-    setMeta('meta[name="apple-mobile-web-app-status-bar-style"]', { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" });
-    setLink('link[rel="apple-touch-icon"]', { rel: "apple-touch-icon", href: "/logo.png" });
-
     return () => {
-      // Al salir del panel, restauramos el manifest del sitio público
       const manifest = document.head.querySelector('link[rel="manifest"]');
       if (manifest) manifest.setAttribute("href", "/manifest.json");
     };
@@ -65,9 +60,16 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const router   = useRouter();
 
-  usePwaAdmin();
+  usePwaAdminCleanup();
 
-  if (pathname === "/admin") return <>{children}</>;
+  if (pathname === "/admin") {
+    return (
+      <>
+        <script dangerouslySetInnerHTML={{ __html: PWA_ADMIN_INIT }} />
+        {children}
+      </>
+    );
+  }
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -76,6 +78,7 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
+      <script dangerouslySetInnerHTML={{ __html: PWA_ADMIN_INIT }} />
       {/* Header */}
       <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3">
