@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useCart } from "@/context/CartContext";
 import { FaChevronRight, FaSpinner } from "react-icons/fa";
+import { trackViewContent, trackAddToCart } from "@/lib/fbpixel";
 
 function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
@@ -30,7 +31,11 @@ export default function StockDetallePage({ params }) {
       .select("*")
       .eq("id", params.id)
       .single()
-      .then(({ data }) => { setProducto(data); setCargando(false); });
+      .then(({ data }) => {
+        setProducto(data);
+        setCargando(false);
+        if (data) trackViewContent(data);
+      });
   }, [params.id]);
 
   useEffect(() => {
@@ -73,6 +78,10 @@ export default function StockDetallePage({ params }) {
       id: producto.id, nombre: producto.nombre, talle: talleSeleccionado,
       precio: producto.precio, cantidad, imagen: producto.imagen,
       stock: stockTalle, tabla: "productos_stock",
+    });
+    trackAddToCart({
+      id: producto.id, nombre: producto.nombre, precio: producto.precio,
+      cantidad, talle: talleSeleccionado,
     });
     setCantidad(1);
     setEstado("success");

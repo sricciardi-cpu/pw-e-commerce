@@ -4,11 +4,27 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { FaCheckCircle } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
+import { trackPurchase } from "@/lib/fbpixel";
 
 export default function CheckoutExitoPage() {
   const { vaciarCarrito } = useCart();
 
   useEffect(() => {
+    // Disparar Purchase si veníamos de pagar (resumen guardado en checkout)
+    try {
+      const raw = localStorage.getItem("pendingPurchase");
+      if (raw) {
+        const { items, total, ts } = JSON.parse(raw);
+        // Solo disparamos si el resumen es reciente (< 1 hora) para evitar
+        // duplicados si el usuario abre /checkout/exito directamente.
+        if (items && total && ts && Date.now() - ts < 60 * 60 * 1000) {
+          const url = new URL(window.location.href);
+          const pedidoId = url.searchParams.get("external_reference") ?? null;
+          trackPurchase({ items, total, pedidoId });
+        }
+        localStorage.removeItem("pendingPurchase");
+      }
+    } catch {}
     vaciarCarrito();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

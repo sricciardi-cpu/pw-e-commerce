@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProgressBar from "@/components/ProgressBar";
+import MetaPixel from "@/components/MetaPixel";
 import { CartProvider } from "@/context/CartContext";
 
 export const metadata = {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className="bg-black text-white antialiased">
+        <MetaPixel />
         <CartProvider>
           <ProgressBar />
           <Navbar />

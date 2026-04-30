@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { FaChevronRight, FaArrowRight, FaWhatsapp } from "react-icons/fa";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/fbpixel";
 
 const WHATSAPP_ADMIN = "5492216220145";
 
@@ -51,6 +52,13 @@ export default function CheckoutPage() {
       .then((d) => setPrecioEnvio(parseInt(d.precio_envio) || 0))
       .catch(() => {});
   }, []);
+
+  // Disparar InitiateCheckout cuando hay items y el componente está listo.
+  useEffect(() => {
+    if (items.length === 0) return;
+    trackInitiateCheckout({ items, total: total + precioEnvio });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length, precioEnvio]);
 
   // Cuando el usuario vuelve con "atrás" desde MP, el bfcache restaura la
   // página con cargando=true. El evento pageshow la resetea.
@@ -104,6 +112,13 @@ export default function CheckoutPage() {
 
       if (!res.ok) throw new Error(data.error || "Error al procesar el pago");
 
+      // Guardar resumen para disparar Purchase en /checkout/exito al volver de MP
+      try {
+        localStorage.setItem("pendingPurchase", JSON.stringify({
+          items, total: total + precioEnvio, ts: Date.now(),
+        }));
+      } catch {}
+
       window.location.href = data.url;
     } catch (err) {
       setError(err.message);
@@ -143,6 +158,7 @@ export default function CheckoutPage() {
         `Nombre: ${form.nombre}\n` +
         `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
 
+      trackPurchase({ items, total: totalConEnvio, pedidoId: data.id });
       vaciarCarrito();
       window.location.href = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(msg)}`;
     } catch (err) {
