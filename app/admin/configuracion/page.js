@@ -7,21 +7,25 @@ const inputClass =
   "bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors w-full";
 
 export default function ConfiguracionPage() {
-  const [precioEnvio,  setPrecioEnvio]  = useState("");
-  const [cargando,     setCargando]     = useState(true);
-  const [guardando,    setGuardando]    = useState(false);
-  const [guardado,     setGuardado]     = useState(false);
-  const [error,        setError]        = useState(null);
+  const [precioEnvio,    setPrecioEnvio]    = useState("");
+  const [precioEnvioDB,  setPrecioEnvioDB]  = useState(null);
+  const [cargando,       setCargando]       = useState(true);
+  const [guardando,      setGuardando]      = useState(false);
+  const [guardado,       setGuardado]       = useState(false);
+  const [error,          setError]          = useState(null);
+
+  async function cargarDesdeDB() {
+    const res = await fetch(`/api/admin/config?t=${Date.now()}`, { cache: "no-store" });
+    const d = await res.json();
+    if (d.error) { setError(d.error); return null; }
+    const valor = d.precio_envio ?? "";
+    setPrecioEnvio(valor);
+    setPrecioEnvioDB(valor);
+    return valor;
+  }
 
   useEffect(() => {
-    fetch(`/api/admin/config?t=${Date.now()}`, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.error) { setError(d.error); setCargando(false); return; }
-        setPrecioEnvio(d.precio_envio ?? "");
-        setCargando(false);
-      })
-      .catch((e) => { setError(e.message); setCargando(false); });
+    cargarDesdeDB().finally(() => setCargando(false));
   }, []);
 
   async function handleGuardar(e) {
@@ -37,18 +41,21 @@ export default function ConfiguracionPage() {
     });
 
     if (res.ok) {
-      setGuardado(true);
-      setTimeout(() => setGuardado(false), 3000);
-      // Refetch para confirmar que el valor persistió en la DB
-      const fresh = await fetch(`/api/admin/config?t=${Date.now()}`, { cache: "no-store" });
-      const freshData = await fresh.json();
-      if (!freshData.error) setPrecioEnvio(freshData.precio_envio ?? "");
+      const valorEnDB = await cargarDesdeDB();
+      if (valorEnDB === String(precioEnvio)) {
+        setGuardado(true);
+        setTimeout(() => setGuardado(false), 3000);
+      } else {
+        setError(`Guardó ${valorEnDB ?? "(vacío)"} en lugar de ${precioEnvio}. Revisá los logs del servidor.`);
+      }
     } else {
       const d = await res.json();
       setError(d.error ?? "Error al guardar");
     }
     setGuardando(false);
   }
+
+  const sinGuardar = precioEnvioDB !== null && String(precioEnvio) !== String(precioEnvioDB);
 
   return (
     <div>
@@ -72,6 +79,10 @@ export default function ConfiguracionPage() {
                 placeholder="9000"
                 className={inputClass}
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Valor guardado en base de datos: <strong className={sinGuardar ? "text-yellow-400" : "text-green-400"}>${precioEnvioDB ?? "—"}</strong>
+                {sinGuardar && <span className="text-yellow-400 ml-2">· cambios sin guardar</span>}
+              </p>
             </div>
           </div>
 

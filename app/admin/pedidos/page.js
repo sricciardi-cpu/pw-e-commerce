@@ -176,14 +176,30 @@ function Info({ label, value, className = "" }) {
 }
 
 export default function AdminPedidosPage() {
-  const [pedidos,   setPedidos]   = useState([]);
-  const [cargando,  setCargando]  = useState(true);
-  const [filtro,    setFiltro]    = useState("todos");
+  const [pedidos,         setPedidos]         = useState([]);
+  const [cargando,        setCargando]        = useState(true);
+  const [filtro,          setFiltro]          = useState("todos");
+  const [ultimaActualiz,  setUltimaActualiz]  = useState(null);
+
+  async function fetchPedidos(silencioso = false) {
+    if (!silencioso) setCargando(true);
+    try {
+      const res = await fetch(`/api/admin/pedidos?t=${Date.now()}`, { cache: "no-store" });
+      const data = await res.json();
+      setPedidos(Array.isArray(data) ? data : []);
+      setUltimaActualiz(new Date());
+    } catch (err) {
+      console.error("[pedidos] fetch error:", err);
+    } finally {
+      if (!silencioso) setCargando(false);
+    }
+  }
 
   useEffect(() => {
-    fetch("/api/admin/pedidos")
-      .then((r) => r.json())
-      .then((data) => { setPedidos(Array.isArray(data) ? data : []); setCargando(false); });
+    fetchPedidos();
+    // Polling cada 10 segundos para reflejar pagos de MP y nuevas transferencias
+    const interval = setInterval(() => fetchPedidos(true), 10000);
+    return () => clearInterval(interval);
   }, []);
 
   function onEstadoChange(id, nuevoEstado) {
@@ -200,9 +216,22 @@ export default function AdminPedidosPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
         <h1 className="text-2xl font-extrabold text-white">Pedidos</h1>
-        <span className="text-sm text-gray-400">{pedidos.length} total</span>
+        <div className="flex items-center gap-3">
+          {ultimaActualiz && (
+            <span className="text-xs text-gray-500">
+              Actualizado: {ultimaActualiz.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+            </span>
+          )}
+          <button
+            onClick={() => fetchPedidos()}
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-zinc-800 text-gray-300 hover:bg-zinc-700 transition-colors"
+          >
+            ↻ Refrescar
+          </button>
+          <span className="text-sm text-gray-400">{pedidos.length} total</span>
+        </div>
       </div>
 
       {/* Filtro por estado */}
