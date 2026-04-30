@@ -1,10 +1,12 @@
 import { supabaseAdmin } from "@/lib/supabase";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 const NO_CACHE = { "Cache-Control": "no-store, no-cache, must-revalidate" };
 
 export async function GET() {
+  noStore();
   const { data, error } = await supabaseAdmin()
     .from("configuracion")
     .select("clave, valor");

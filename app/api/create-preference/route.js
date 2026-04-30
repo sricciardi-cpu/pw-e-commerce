@@ -1,5 +1,6 @@
 import MercadoPago, { Preference } from "mercadopago";
 import { supabaseAdmin } from "@/lib/supabase";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ async function getPrecioEnvio() {
 }
 
 export async function POST(request) {
+  noStore();
   if (!process.env.MP_ACCESS_TOKEN) {
     return Response.json(
       { error: "El servicio de pagos aún no está configurado. Contactanos por WhatsApp." },

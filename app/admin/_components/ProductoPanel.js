@@ -82,7 +82,7 @@ export default function ProductoPanel({ tabla, titulo }) {
   const [ajustandoPrecio, setAjustandoPrecio] = useState(false);
   const formRef = useRef();
 
-  useEffect(() => { fetchProductos(); }, []);
+  useEffect(() => { fetchProductos(); /* eslint-disable-line react-hooks/exhaustive-deps */ }, []);
 
   async function fetchProductos() {
     setCargando(true);

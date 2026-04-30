@@ -10,6 +10,7 @@ export default function CheckoutExitoPage() {
 
   useEffect(() => {
     vaciarCarrito();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

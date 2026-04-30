@@ -84,7 +84,7 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-semibold text-white text-sm truncate">{pedido.nombre ?? "—"}</span>
             <EstadoBadge estado={estadoLocal} />
-            {(pedido.estado === "pendiente_transferencia" || pedido.metodo_pago === "transferencia") && (
+            {(pedido.estado === "pendiente_transferencia" || pedido.metodo_pago === "transferencia" || (pedido.observaciones ?? "").includes("[TRANSFERENCIA]")) && (
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400">
                 Transferencia
               </span>

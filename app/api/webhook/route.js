@@ -1,9 +1,11 @@
 import { supabaseAdmin } from "@/lib/supabase";
 import { Resend } from "resend";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request) {
+  noStore();
   try {
     const { type, data } = await request.json();
 
