@@ -1,8 +1,57 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { FaBoxOpen, FaTshirt, FaSignOutAlt, FaStar, FaClipboardList, FaCog } from "react-icons/fa";
+
+// Inyecta meta tags para que se pueda agregar el panel a la pantalla de inicio
+// como app independiente (PWA) en Android y iOS, sin afectar al sitio público.
+function usePwaAdmin() {
+  useEffect(() => {
+    const tags = [];
+    function setMeta(selector, attrs) {
+      let el = document.head.querySelector(selector);
+      const created = !el;
+      if (!el) {
+        el = document.createElement("meta");
+        document.head.appendChild(el);
+      }
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      if (created) tags.push(el);
+      return el;
+    }
+    function setLink(selector, attrs) {
+      let el = document.head.querySelector(selector);
+      const created = !el;
+      if (!el) {
+        el = document.createElement("link");
+        document.head.appendChild(el);
+      }
+      const prev = {};
+      Object.keys(attrs).forEach(k => prev[k] = el.getAttribute(k));
+      Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+      if (created) tags.push(el);
+      else tags.push({ el, prev, restore: true });
+      return el;
+    }
+
+    // Manifest del admin (Android Chrome / Edge)
+    setLink('link[rel="manifest"]', { rel: "manifest", href: "/manifest-admin.json" });
+
+    // iOS — agregar a pantalla de inicio
+    setMeta('meta[name="apple-mobile-web-app-capable"]',     { name: "apple-mobile-web-app-capable",     content: "yes" });
+    setMeta('meta[name="apple-mobile-web-app-title"]',       { name: "apple-mobile-web-app-title",       content: "Zeus Admin" });
+    setMeta('meta[name="apple-mobile-web-app-status-bar-style"]', { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" });
+    setLink('link[rel="apple-touch-icon"]', { rel: "apple-touch-icon", href: "/logo.png" });
+
+    return () => {
+      // Al salir del panel, restauramos el manifest del sitio público
+      const manifest = document.head.querySelector('link[rel="manifest"]');
+      if (manifest) manifest.setAttribute("href", "/manifest.json");
+    };
+  }, []);
+}
 
 const secciones = [
   { href: "/admin/stock",          label: "Stock",      icon: FaBoxOpen       },
@@ -16,13 +65,9 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const router   = useRouter();
 
-  if (pathname === "/admin") return <>{children}</>;
+  usePwaAdmin();
 
-  // Inyectar manifest del admin para la PWA (reemplaza el manifest del sitio)
-  if (typeof document !== "undefined") {
-    let link = document.querySelector('link[rel="manifest"]');
-    if (link) link.href = "/manifest-admin.json";
-  }
+  if (pathname === "/admin") return <>{children}</>;
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
