@@ -17,16 +17,24 @@ const valores = [
   { icon: FaShippingFast, titulo: "Entrega rápida",        texto: "Stock disponible y envíos a todo el país." },
 ];
 
-// Contador animado
+// Contador animado. Si el target cambia después de que la animación terminó
+// (porque llega data fresca del servidor), actualiza el número directamente.
 function AnimatedCounter({ target, suffix = "" }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const started = useRef(false);
+  const animatedTo = useRef(null); // target al que ya se animó (null = sin animar todavía)
 
   useEffect(() => {
+    // Si ya animamos antes y target cambió, actualizar sin re-animar.
+    if (animatedTo.current !== null && animatedTo.current !== target) {
+      setCount(target);
+      animatedTo.current = target;
+      return;
+    }
+
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) {
-        started.current = true;
+      if (entry.isIntersecting && animatedTo.current === null) {
+        animatedTo.current = target;
         const duration = 1500;
         const steps = 60;
         const increment = target / steps;
@@ -194,8 +202,14 @@ function Carousel({ items }) {
   );
 }
 
+// Base de "camisetas vendidas" (marketing) — las ventas reales se suman a este número.
+const VENDIDAS_BASE = 500;
+const MODELOS_FALLBACK = 19;
+
 export default function HomePage() {
-  const [destacados, setDestacados] = useState([]);
+  const [destacados,     setDestacados]     = useState([]);
+  const [modelosCount,   setModelosCount]   = useState(MODELOS_FALLBACK);
+  const [vendidasCount,  setVendidasCount]  = useState(VENDIDAS_BASE);
 
   useEffect(() => {
     supabase
@@ -210,6 +224,32 @@ export default function HomePage() {
           // fallback a los primeros 4 productos locales hasta que se configuren en el admin
           setDestacados(productosLocales.slice(0, 4));
         }
+      });
+
+    // Cuenta dinámica de modelos en catálogo. Si falla, queda el fallback.
+    supabase
+      .from("productos_catalogo")
+      .select("*", { count: "exact", head: true })
+      .then(({ count, error }) => {
+        if (!error && typeof count === "number" && count > 0) {
+          setModelosCount(count);
+        }
+      });
+
+    // Camisetas vendidas: BASE + suma de cantidad de items en pedidos confirmados.
+    // Si la query falla, queda el VENDIDAS_BASE.
+    supabase
+      .from("pedidos")
+      .select("items, estado")
+      .neq("estado", "pendiente")
+      .then(({ data, error }) => {
+        if (error || !Array.isArray(data)) return;
+        const sumaReal = data.reduce((acc, pedido) => {
+          const items = Array.isArray(pedido.items) ? pedido.items : [];
+          const subtotal = items.reduce((s, i) => s + (Number(i?.cantidad) || 0), 0);
+          return acc + subtotal;
+        }, 0);
+        setVendidasCount(VENDIDAS_BASE + sumaReal);
       });
   }, []);
 
@@ -242,13 +282,13 @@ export default function HomePage() {
             <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
               <div>
                 <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
-                  <AnimatedCounter target={500} suffix="+" />
+                  <AnimatedCounter target={vendidasCount} suffix="+" />
                 </p>
                 <p className="text-xs md:text-sm text-gray-300 mt-1">Camisetas vendidas</p>
               </div>
               <div>
                 <p className="text-2xl md:text-3xl font-extrabold text-orange-500">
-                  <AnimatedCounter target={19} />
+                  <AnimatedCounter target={modelosCount} />
                 </p>
                 <p className="text-xs md:text-sm text-gray-300 mt-1">Modelos disponibles</p>
               </div>
