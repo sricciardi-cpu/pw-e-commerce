@@ -13,7 +13,7 @@ const FALLBACK = {
   precio: 50800,
   precio_original: 69980,
   descuento_label: "27% OFF",
-  descripcion: "Una caja sorpresa con una camiseta de fútbol o rugby a elección del equipo. Indicanos por WhatsApp el parche/estampado que querés.",
+  descripcion: "Una caja sorpresa con una camiseta de rugby a elección del equipo. Indicanos por WhatsApp el parche/estampado que querés.",
   imagen: "/mysteryfutbox.png",
 };
 
