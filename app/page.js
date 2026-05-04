@@ -226,13 +226,19 @@ export default function HomePage() {
         }
       });
 
-    // Cuenta dinámica de modelos en catálogo. Si falla, queda el fallback.
+    // Cuenta dinámica de modelos en catálogo. Traemos solo los IDs y
+    // contamos el array — evita problemas con el header de count en Supabase.
+    // Si la query falla o devuelve vacío, queda el MODELOS_FALLBACK.
     supabase
       .from("productos_catalogo")
-      .select("*", { count: "exact", head: true })
-      .then(({ count, error }) => {
-        if (!error && typeof count === "number" && count > 0) {
-          setModelosCount(count);
+      .select("id")
+      .then(({ data, error }) => {
+        if (error) {
+          console.warn("[home] No se pudo contar modelos:", error.message);
+          return;
+        }
+        if (Array.isArray(data) && data.length > 0) {
+          setModelosCount(data.length);
         }
       });
 
