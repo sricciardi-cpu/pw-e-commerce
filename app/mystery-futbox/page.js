@@ -9,7 +9,7 @@ import { FaSpinner } from "react-icons/fa";
 const talles = ["S", "M", "L", "XL", "2XL", "3XL"];
 
 const FALLBACK = {
-  nombre: "Mystery Futbox",
+  nombre: "Mystery Rugbox",
   precio: 50800,
   precio_original: 69980,
   descuento_label: "27% OFF",

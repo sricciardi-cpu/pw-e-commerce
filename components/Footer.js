@@ -6,7 +6,7 @@ const enlaces = [
   { href: "/", label: "Inicio" },
   { href: "/catalogo", label: "Catálogo" },
   { href: "/stock", label: "Stock" },
-  { href: "/mystery-futbox", label: "Mystery Futbox" },
+  { href: "/mystery-futbox", label: "Mystery Rugbox" },
   { href: "/griptec-spray", label: "Griptec Spray" },
   { href: "/guia-de-talles", label: "Guía de Talles" },
   { href: "/contacto", label: "Contacto" },
