@@ -223,7 +223,7 @@ export default function EspecialesPage() {
     <div className="flex flex-col gap-8">
       <h1 className="text-2xl font-extrabold text-white">Páginas especiales</h1>
       <DestacadosPanel />
-      <EspecialForm id="mystery_futbox" titulo="Mystery Futbox" />
+      <EspecialForm id="mystery_futbox" titulo="Mystery Rugbox" />
       <EspecialForm id="griptec_spray"  titulo="Griptec Spray 200ml" />
     </div>
   );

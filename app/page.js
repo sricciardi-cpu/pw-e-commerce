@@ -18,15 +18,22 @@ const valores = [
 ];
 
 // Contador animado. Si el target cambia después de que la animación terminó
-// (porque llega data fresca del servidor), actualiza el número directamente.
+// (o mientras está corriendo), actualiza el número directamente.
 function AnimatedCounter({ target, suffix = "" }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const animatedTo = useRef(null); // target al que ya se animó (null = sin animar todavía)
+  const timerRef = useRef(null);
 
   useEffect(() => {
     // Si ya animamos antes y target cambió, actualizar sin re-animar.
+    // También clereamos cualquier interval viejo que pudiera estar corriendo
+    // hacia el target anterior.
     if (animatedTo.current !== null && animatedTo.current !== target) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
       setCount(target);
       animatedTo.current = target;
       return;
@@ -39,11 +46,12 @@ function AnimatedCounter({ target, suffix = "" }) {
         const steps = 60;
         const increment = target / steps;
         let current = 0;
-        const timer = setInterval(() => {
+        timerRef.current = setInterval(() => {
           current += increment;
           if (current >= target) {
             setCount(target);
-            clearInterval(timer);
+            clearInterval(timerRef.current);
+            timerRef.current = null;
           } else {
             setCount(Math.floor(current));
           }
@@ -52,7 +60,13 @@ function AnimatedCounter({ target, suffix = "" }) {
     }, { threshold: 0.3 });
 
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
   }, [target]);
 
   return <span ref={ref}>{count.toLocaleString("es-AR")}{suffix}</span>;
@@ -227,16 +241,13 @@ export default function HomePage() {
       });
 
     // Cuenta dinámica de modelos en catálogo. Traemos solo los IDs y
-    // contamos el array — evita problemas con el header de count en Supabase.
-    // Si la query falla o devuelve vacío, queda el MODELOS_FALLBACK.
-    console.log("[home v2] Consultando modelos del catálogo...");
+    // contamos el array. Si la query falla, queda el MODELOS_FALLBACK.
     supabase
       .from("productos_catalogo")
       .select("id")
       .then(({ data, error }) => {
-        console.log("[home v2] Resultado modelos:", { count: data?.length, error: error?.message });
         if (error) {
-          console.warn("[home v2] No se pudo contar modelos:", error.message);
+          console.warn("[home] No se pudo contar modelos:", error.message);
           return;
         }
         if (Array.isArray(data) && data.length > 0) {

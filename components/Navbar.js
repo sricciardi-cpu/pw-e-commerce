@@ -21,7 +21,7 @@ const links = [
   { href: "/",               label: "Inicio",          icon: FaHome },
   { href: "/catalogo",       label: "Catálogo",        icon: FaTshirt },
   { href: "/stock",          label: "Stock",           icon: FaStore },
-  { href: "/mystery-futbox", label: "Mystery Futbox",  icon: FaBox },
+  { href: "/mystery-futbox", label: "Mystery Rugbox",  icon: FaBox },
   { href: "/griptec-spray",  label: "Griptec Spray",   icon: FaSprayCan },
   { href: "/guia-de-talles", label: "Guía de Talles",  icon: FaRuler },
   { href: "/contacto",       label: "Contacto",        icon: FaEnvelope },
