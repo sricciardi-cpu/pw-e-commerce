@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProgressBar from "@/components/ProgressBar";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
           <Footer />
         </CartProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
