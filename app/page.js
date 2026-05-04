@@ -229,12 +229,14 @@ export default function HomePage() {
     // Cuenta dinámica de modelos en catálogo. Traemos solo los IDs y
     // contamos el array — evita problemas con el header de count en Supabase.
     // Si la query falla o devuelve vacío, queda el MODELOS_FALLBACK.
+    console.log("[home v2] Consultando modelos del catálogo...");
     supabase
       .from("productos_catalogo")
       .select("id")
       .then(({ data, error }) => {
+        console.log("[home v2] Resultado modelos:", { count: data?.length, error: error?.message });
         if (error) {
-          console.warn("[home] No se pudo contar modelos:", error.message);
+          console.warn("[home v2] No se pudo contar modelos:", error.message);
           return;
         }
         if (Array.isArray(data) && data.length > 0) {
