@@ -67,7 +67,14 @@ export default function CatalogoPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-extrabold mb-6 text-white">Catálogo Rugby</h1>
+      <h1 className="text-3xl font-extrabold mb-2 text-white">Catálogo Rugby</h1>
+      <div className="bg-orange-500/10 border border-orange-500/40 rounded-xl px-4 py-3 mb-6 flex items-start gap-3">
+        <span className="text-orange-500 text-xl shrink-0">📦</span>
+        <div>
+          <p className="text-orange-400 font-semibold text-sm">Productos por encargo</p>
+          <p className="text-gray-300 text-sm">Estas camisetas se producen a pedido. Tiempo estimado de entrega: <strong className="text-white">20 a 40 días</strong> desde la confirmación del pago.</p>
+        </div>
+      </div>
 
       {/* Filtros */}
       <section className="bg-zinc-900 border border-zinc-700 rounded-xl mb-8 overflow-hidden">
