@@ -131,7 +131,7 @@ export default function CatalogoPage() {
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-[fadeScaleIn_0.35s_ease-out]"
           >
             {productosFiltrados.map((producto, i) => (
-              <FadeIn key={producto.id} delay={i * 60}>
+              <FadeIn key={producto.id} delay={i * 20}>
                 <Link href={`/catalogo/${producto.id}`} className="block h-full">
                   <article className="bg-zinc-900 rounded-xl border border-zinc-700 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
                     <div className="h-52 bg-white flex items-center justify-center">
