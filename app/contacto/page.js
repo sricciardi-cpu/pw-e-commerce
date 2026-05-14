@@ -37,9 +37,6 @@ export default function ContactoPage() {
   const [errores, setErrores]       = useState(erroresIniciales);
   const [captcha, setCaptcha]       = useState(null);
   const [captchaInput, setCaptchaInput] = useState("");
-  const [enviando, setEnviando]     = useState(false);
-  const [enviado, setEnviado]       = useState(false);
-  const [errorServidor, setErrorServidor] = useState("");
 
   useEffect(() => { setCaptcha(generarCaptcha()); }, []);
 
@@ -59,25 +56,19 @@ export default function ContactoPage() {
       return;
     }
 
-    setEnviando(true);
-    setErrorServidor("");
-    try {
-      const res = await fetch("/api/contacto", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(campos),
-      });
-      if (!res.ok) throw new Error("server");
-      setEnviado(true);
-      setCampos(camposIniciales);
-      setErrores(erroresIniciales);
-    } catch {
-      setErrorServidor("No se pudo enviar el mensaje. Intentá de nuevo más tarde.");
-    } finally {
-      setEnviando(false);
-      setCaptcha(generarCaptcha());
-      setCaptchaInput("");
-    }
+    const msg =
+      `Hola! Me contacto desde la web de Zeus Camisetas.\n\n` +
+      `*Nombre:* ${campos.nombre}\n` +
+      `*Email:* ${campos.email}\n` +
+      `*Teléfono:* ${campos.telefono}\n\n` +
+      `*Consulta:*\n${campos.mensaje}`;
+
+    window.open(`https://wa.me/5492216220145?text=${encodeURIComponent(msg)}`, "_blank");
+
+    setCampos(camposIniciales);
+    setErrores(erroresIniciales);
+    setCaptcha(generarCaptcha());
+    setCaptchaInput("");
   }
 
   return (
@@ -85,21 +76,9 @@ export default function ContactoPage() {
       <FadeIn>
         <h1 className="text-3xl font-extrabold mb-2 text-white">Contacto</h1>
         <p className="text-gray-300 mb-8">
-          ¿Tenés alguna pregunta? Completá el formulario y te respondemos a la brevedad.
+          ¿Tenés alguna pregunta? Completá el formulario y te abrimos WhatsApp con tu consulta lista para enviar.
         </p>
       </FadeIn>
-
-      {enviado && (
-        <div className="bg-orange-900/30 border border-orange-500 text-orange-300 rounded-xl px-5 py-4 mb-6">
-          ¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.
-        </div>
-      )}
-
-      {errorServidor && (
-        <div className="bg-red-900/30 border border-red-500 text-red-300 rounded-xl px-5 py-4 mb-6">
-          {errorServidor}
-        </div>
-      )}
 
       <FadeIn delay={100}>
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
@@ -174,10 +153,9 @@ export default function ContactoPage() {
 
           <button
             type="submit"
-            disabled={enviando}
-            className="bg-orange-500 text-black font-semibold py-3 rounded-lg hover:bg-orange-400 transition-colors disabled:opacity-50"
+            className="bg-orange-500 text-black font-semibold py-3 rounded-lg hover:bg-orange-400 transition-colors"
           >
-            {enviando ? "Enviando..." : "Enviar mensaje"}
+            Contactar por WhatsApp
           </button>
         </form>
       </FadeIn>
