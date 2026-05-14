@@ -74,7 +74,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto ? "bg-[#f5f5f0] shadow-sm border-b border-gray-200 text-gray-900" : `bg-transparent ${pathname === "/" ? "text-white" : "text-gray-900"}`}`} ref={menuRef}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto || pathname !== "/" ? "bg-[#ece9e3] shadow-sm border-b border-gray-200 text-gray-900" : "bg-transparent text-white"}`} ref={menuRef}>
       <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -131,7 +131,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown con animación */}
       <div
-        className={`md:hidden bg-white w-full border-t border-gray-200 overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-[#ece9e3] w-full border-t border-gray-200 overflow-hidden transition-all duration-300 ease-in-out ${
           menuAbierto ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         }`}
       >
