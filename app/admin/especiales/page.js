@@ -154,7 +154,7 @@ function DestacadosPanel() {
 
   useEffect(() => {
     supabase
-      .from("productos_catalogo")
+      .from("productos_stock")
       .select("id, nombre, imagen, destacado")
       .order("nombre")
       .then(({ data }) => { setProductos(data ?? []); setCargando(false); });
@@ -162,7 +162,7 @@ function DestacadosPanel() {
 
   async function toggleDestacado(id, actual) {
     setGuardando(id);
-    await fetch(`/api/admin/productos/catalogo/${id}`, {
+    await fetch(`/api/admin/productos/stock/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ destacado: !actual }),
@@ -223,8 +223,7 @@ export default function EspecialesPage() {
     <div className="flex flex-col gap-8">
       <h1 className="text-2xl font-extrabold text-white">Páginas especiales</h1>
       <DestacadosPanel />
-      <EspecialForm id="mystery_futbox" titulo="Mystery Rugbox" />
-      <EspecialForm id="griptec_spray"  titulo="Griptec Spray 200ml" />
+      <EspecialForm id="griptec_spray" titulo="Griptec Spray 200ml" />
     </div>
   );
 }

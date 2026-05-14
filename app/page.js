@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import productosLocales from "@/data/productos";
 import FadeIn from "@/components/FadeIn";
 import { FaHeart, FaStar, FaShippingFast, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -14,7 +13,7 @@ function formatearPrecio(precio) {
 const valores = [
   { icon: FaHeart,        titulo: "Pasión por el deporte", texto: "Vivimos el rugby desde adentro." },
   { icon: FaStar,         titulo: "Calidad garantizada",   texto: "Solo vendemos lo que nosotros mismos usaríamos." },
-  { icon: FaShippingFast, titulo: "Entrega rápida",        texto: "Stock disponible y envíos a todo el país." },
+  { icon: FaShippingFast, titulo: "Mejor precio del mercado", texto: "Camisetas de calidad a precios accesibles, sin intermediarios." },
 ];
 
 // Contador animado. Si el target cambia después de que la animación terminó
@@ -177,7 +176,7 @@ function Carousel({ items }) {
               <h3 className="font-bold text-white text-lg leading-tight">{producto.nombre}</h3>
               <p className="text-orange-500 font-extrabold text-xl">{formatearPrecio(producto.precio)}</p>
               <Link
-                href={`/catalogo/${producto.id}`}
+                href={`/stock/${producto.id}`}
                 className="mt-2 inline-block text-center bg-black text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors border border-zinc-600"
                 onClick={(e) => { if (Math.abs(offset) > 5) e.preventDefault(); }}
               >
@@ -227,17 +226,12 @@ export default function HomePage() {
 
   useEffect(() => {
     supabase
-      .from("productos_catalogo")
+      .from("productos_stock")
       .select("id, nombre, precio, imagen")
       .eq("destacado", true)
       .limit(4)
       .then(({ data }) => {
-        if (data && data.length > 0) {
-          setDestacados(data);
-        } else {
-          // fallback a los primeros 4 productos locales hasta que se configuren en el admin
-          setDestacados(productosLocales.slice(0, 4));
-        }
+        if (data && data.length > 0) setDestacados(data);
       });
 
     // Cuenta dinámica de modelos en catálogo. Traemos solo los IDs y
@@ -345,19 +339,44 @@ export default function HomePage() {
         {destacados.length > 0 && (
         <FadeIn>
           <section className="mb-12 md:mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-white">Productos destacados</h2>
+            <h2 className="text-2xl font-bold mb-6 text-white">Productos disponibles para entrega inmediata</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {destacados.slice(0, 2).length > 0 && <Carousel items={destacados.slice(0, 2)} />}
               {destacados.slice(2, 4).length > 0 && <Carousel items={destacados.slice(2, 4)} />}
             </div>
             <div className="mt-6 text-center">
-              <Link href="/catalogo" className="inline-block bg-zinc-900 text-white border border-zinc-600 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
-                Ver catálogo completo
+              <Link href="/stock" className="inline-block bg-zinc-900 text-white border border-zinc-600 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
+                Ver todos los disponibles
               </Link>
             </div>
           </section>
         </FadeIn>
         )}
+
+        {/* Diferencia Stock vs Catálogo */}
+        <FadeIn>
+          <section className="mb-12 md:mb-16">
+            <h2 className="text-2xl font-bold mb-6 text-white">¿Cómo comprás?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Link href="/stock" className="group bg-green-900/20 border border-green-600/40 rounded-2xl p-6 flex flex-col gap-3 hover:border-green-500 hover:bg-green-900/30 transition-all">
+                <div className="flex items-center gap-2">
+                  <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Entrega inmediata</span>
+                </div>
+                <h3 className="text-xl font-bold text-white group-hover:text-green-400 transition-colors">Stock disponible</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Camisetas que tenemos en mano. Pagás y las enviamos en <strong className="text-white">24 a 72hs</strong>.</p>
+                <span className="text-green-400 text-sm font-semibold mt-auto">Ver stock →</span>
+              </Link>
+              <Link href="/catalogo" className="group bg-orange-500/10 border border-orange-500/40 rounded-2xl p-6 flex flex-col gap-3 hover:border-orange-500 hover:bg-orange-500/20 transition-all">
+                <div className="flex items-center gap-2">
+                  <span className="bg-orange-500 text-black text-xs font-bold px-2.5 py-1 rounded-full">Por encargo</span>
+                </div>
+                <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors">Catálogo completo</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">Más de 50 modelos para pedir. Se producen a pedido y llegan en <strong className="text-white">20 a 40 días</strong>.</p>
+                <span className="text-orange-400 text-sm font-semibold mt-auto">Ver catálogo →</span>
+              </Link>
+            </div>
+          </section>
+        </FadeIn>
 
       </div>
     </main>

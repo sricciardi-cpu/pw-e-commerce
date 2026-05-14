@@ -18,12 +18,10 @@ function tieneStock(p) {
   return total > 0;
 }
 
-const filtrosTipo      = ["Todos", "Naciones", "Clubes"];
-const filtrosCategoria = ["Todas", "local", "alternativa", "training"];
-const filtrosTalle     = ["Todos", "S", "M", "L", "XL", "2XL", "3XL"];
-const tipoValor        = { Naciones: "nacion", Clubes: "club" };
-const categoriaLabel   = { Todas: "Todas", local: "Local", alternativa: "Alternativa", training: "Training" };
-const badgeTipo        = { nacion: "bg-zinc-700 text-white", club: "bg-orange-500/20 text-orange-400" };
+const filtrosTipo  = ["Todos", "Naciones", "Clubes"];
+const filtrosTalle = ["Todos", "S", "M", "L", "XL", "2XL", "3XL"];
+const tipoValor    = { Naciones: "nacion", Clubes: "club" };
+const badgeTipo    = { nacion: "bg-zinc-700 text-white", club: "bg-orange-500/20 text-orange-400" };
 
 function BotonFiltro({ label, activo, onClick }) {
   return (
@@ -43,9 +41,8 @@ function BotonFiltro({ label, activo, onClick }) {
 export default function StockPage() {
   const [productos, setProductos] = useState([]);
   const [cargando,  setCargando]  = useState(true);
-  const [tipo,      setTipo]      = useState("Todos");
-  const [categoria, setCategoria] = useState("Todas");
-  const [talle,     setTalle]     = useState("Todos");
+  const [tipo,  setTipo]  = useState("Todos");
+  const [talle, setTalle] = useState("Todos");
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
 
   useEffect(() => {
@@ -63,19 +60,15 @@ export default function StockPage() {
   const productosConStock = productos.filter(tieneStock);
 
   const productosFiltrados = productosConStock.filter((p) => {
-    const matchTipo      = tipo      === "Todos" || p.tipo      === tipoValor[tipo];
-    const matchCategoria = categoria === "Todas" || p.categoria === categoria;
-    const matchTalle     = talle     === "Todos" || (p.talle ?? []).includes(talle);
-    return matchTipo && matchCategoria && matchTalle;
+    const matchTipo  = tipo  === "Todos" || p.tipo  === tipoValor[tipo];
+    const matchTalle = talle === "Todos" || (p.talle ?? []).includes(talle);
+    return matchTipo && matchTalle;
   });
 
   const sinStockGeneral = !cargando && productosConStock.length === 0;
 
-  const hayFiltrosActivos  = tipo !== "Todos" || categoria !== "Todas" || talle !== "Todos";
-  const cantFiltrosActivos =
-    (tipo      !== "Todos" ? 1 : 0) +
-    (categoria !== "Todas" ? 1 : 0) +
-    (talle     !== "Todos" ? 1 : 0);
+  const hayFiltrosActivos  = tipo !== "Todos" || talle !== "Todos";
+  const cantFiltrosActivos = (tipo !== "Todos" ? 1 : 0) + (talle !== "Todos" ? 1 : 0);
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -109,15 +102,11 @@ export default function StockPage() {
             {filtrosTipo.map((f) => <BotonFiltro key={f} label={f} activo={tipo === f} onClick={() => setTipo(f)} />)}
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-gray-400 w-20">Categoría</span>
-            {filtrosCategoria.map((f) => <BotonFiltro key={f} label={categoriaLabel[f]} activo={categoria === f} onClick={() => setCategoria(f)} />)}
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-gray-400 w-20">Talle</span>
             {filtrosTalle.map((f) => <BotonFiltro key={f} label={f} activo={talle === f} onClick={() => setTalle(f)} />)}
           </div>
           {hayFiltrosActivos && (
-            <button onClick={() => { setTipo("Todos"); setCategoria("Todas"); setTalle("Todos"); }} className="self-start text-sm text-gray-400 underline hover:text-red-400 transition-colors">
+            <button onClick={() => { setTipo("Todos"); setTalle("Todos"); }} className="self-start text-sm text-gray-400 underline hover:text-red-400 transition-colors">
               Limpiar filtros
             </button>
           )}
