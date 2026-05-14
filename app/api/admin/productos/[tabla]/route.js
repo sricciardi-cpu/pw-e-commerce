@@ -41,6 +41,7 @@ export async function POST(request, { params }) {
       descripcion: body.descripcion ?? "",
       imagen: body.imagen ?? "",
       imagen_espalda: body.imagenEspalda ?? "",
+      imagenes_extra: body.imagenesExtra ?? [],
       stock: parseInt(body.stock) || 0,
       stock_por_talle: body.stockPorTalle ?? {},
       descuento_transferencia: parseInt(body.descuentoTransferencia) || 0,

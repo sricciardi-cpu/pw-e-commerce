@@ -25,6 +25,7 @@ export async function PUT(request, { params }) {
     if (body.descripcion !== undefined)    campos.descripcion = body.descripcion ?? "";
     if (body.imagen !== undefined)         campos.imagen = body.imagen ?? "";
     if (body.imagenEspalda !== undefined)  campos.imagen_espalda = body.imagenEspalda ?? "";
+    if (body.imagenesExtra !== undefined)  campos.imagenes_extra = body.imagenesExtra ?? [];
     if (body.stock !== undefined)          campos.stock = parseInt(body.stock) || 0;
     if (body.stockPorTalle !== undefined)  campos.stock_por_talle = body.stockPorTalle ?? {};
     if (body.descuentoTransferencia !== undefined)

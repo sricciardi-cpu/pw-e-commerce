@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FaChevronRight, FaArrowRight, FaWhatsapp } from "react-icons/fa";
+import { FaChevronRight, FaCreditCard, FaWhatsapp } from "react-icons/fa";
 import { trackInitiateCheckout, trackPurchase } from "@/lib/fbpixel";
 
 const WHATSAPP_ADMIN = "5492216220145";
@@ -119,7 +119,10 @@ export default function CheckoutPage() {
         }));
       } catch {}
 
-      window.location.href = data.url;
+      // Abrir en nueva pestaña para evitar que iOS redirija a la app de MP
+      // (los Universal Links solo se disparan en navegación de misma pestaña)
+      window.open(data.url, "_blank", "noopener,noreferrer");
+      setCargando(false);
     } catch (err) {
       setError(err.message);
       setCargando(false);
@@ -315,8 +318,8 @@ export default function CheckoutPage() {
               disabled={cargando || cargandoTransf}
               className="w-full flex items-center justify-center gap-2 bg-orange-500 text-black font-bold py-4 rounded-xl text-lg hover:bg-orange-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
             >
-              <FaArrowRight className="text-base" />
-              {cargando ? "Procesando..." : "Pagar con MercadoPago"}
+              <FaCreditCard className="text-base" />
+              {cargando ? "Procesando..." : "Tarjeta o Mercado Pago"}
             </button>
 
             <button

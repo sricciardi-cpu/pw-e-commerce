@@ -62,7 +62,7 @@ export default function ProductoDetallePage({ params }) {
     );
   }
 
-  const imagenes = [producto.imagen, producto.imagen_espalda].filter(Boolean);
+  const imagenes = [producto.imagen, producto.imagen_espalda, ...(producto.imagenes_extra ?? [])].filter(Boolean);
 
   // Catálogo = por encargo, sin restricción de stock
   const MAX_CANTIDAD = 10;
@@ -99,9 +99,9 @@ export default function ProductoDetallePage({ params }) {
             <img key={imagenActiva} src={imagenes[imagenActiva]} alt={producto.nombre} className="h-full w-full object-contain animate-[fadeIn_0.3s_ease-out]" loading="lazy" />
           </div>
           {imagenes.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1">
               {imagenes.map((src, i) => (
-                <button key={i} onClick={() => setImagenActiva(i)} className={`flex-1 h-20 rounded-lg overflow-hidden border-2 transition-colors bg-gray-100 flex items-center justify-center ${imagenActiva === i ? "border-orange-500" : "border-gray-200 hover:border-gray-400"}`}>
+                <button key={i} onClick={() => setImagenActiva(i)} className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-gray-100 flex items-center justify-center ${imagenActiva === i ? "border-orange-500" : "border-gray-200 hover:border-gray-400"}`}>
                   <img src={src} alt={`Vista ${i + 1}`} className="h-full w-full object-contain" />
                 </button>
               ))}

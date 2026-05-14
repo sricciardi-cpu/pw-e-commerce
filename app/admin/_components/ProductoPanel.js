@@ -10,8 +10,8 @@ const TIPOS = ["nacion", "club"];
 const FORM_INICIAL = {
   nombre: "", precio: "", stock: "0", categoria: "local",
   tipo: "nacion", talle: [], descripcion: "",
-  imagen: "", imagenEspalda: "", stockPorTalle: {},
-  descuentoTransferencia: "0",
+  imagen: "", imagenEspalda: "", imagenesExtra: ["", "", "", ""],
+  stockPorTalle: {}, descuentoTransferencia: "0",
 };
 
 function formatearPrecio(precio) {
@@ -110,6 +110,7 @@ export default function ProductoPanel({ tabla, titulo }) {
       descripcion:            p.descripcion ?? "",
       imagen:                 p.imagen ?? "",
       imagenEspalda:          p.imagen_espalda ?? "",
+      imagenesExtra:          [...(p.imagenes_extra ?? []), "", "", "", ""].slice(0, 4),
       stockPorTalle:          p.stock_por_talle ?? {},
       descuentoTransferencia: String(p.descuento_transferencia ?? 0),
     });
@@ -168,6 +169,7 @@ export default function ProductoPanel({ tabla, titulo }) {
       stock: parseInt(form.stock),
       stockPorTalle: form.stockPorTalle,
       descuentoTransferencia: parseInt(form.descuentoTransferencia) || 0,
+      imagenesExtra: form.imagenesExtra.filter(Boolean),
     };
     const url  = editandoId
       ? `/api/admin/productos/${tabla}/${editandoId}`
@@ -229,17 +231,36 @@ export default function ProductoPanel({ tabla, titulo }) {
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {/* Imágenes */}
-            <div className="grid grid-cols-2 gap-4">
-              <ImageUploader
-                label="Imagen frente"
-                value={form.imagen}
-                onChange={(url) => setForm(p => ({ ...p, imagen: url }))}
-              />
-              <ImageUploader
-                label="Imagen espalda"
-                value={form.imagenEspalda}
-                onChange={(url) => setForm(p => ({ ...p, imagenEspalda: url }))}
-              />
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-2 gap-4">
+                <ImageUploader
+                  label="Imagen frente *"
+                  value={form.imagen}
+                  onChange={(url) => setForm(p => ({ ...p, imagen: url }))}
+                />
+                <ImageUploader
+                  label="Imagen espalda"
+                  value={form.imagenEspalda}
+                  onChange={(url) => setForm(p => ({ ...p, imagenEspalda: url }))}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs text-gray-500">Fotos adicionales (máx. 4)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[0, 1, 2, 3].map((i) => (
+                    <ImageUploader
+                      key={i}
+                      label={`Extra ${i + 1}`}
+                      value={form.imagenesExtra[i] ?? ""}
+                      onChange={(url) => setForm(p => {
+                        const next = [...p.imagenesExtra];
+                        next[i] = url;
+                        return { ...p, imagenesExtra: next };
+                      })}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Nombre, precio, stock */}
