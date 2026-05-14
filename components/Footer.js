@@ -13,8 +13,8 @@ const enlaces = [
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#ece9e3] text-gray-900 border-t border-gray-200 py-10 md:py-16">
-      <div className="max-w-5xl mx-auto px-4 md:px-8">
+    <footer className="w-full bg-gray-900 text-white py-16">
+      <div className="max-w-5xl mx-auto px-8">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start text-left">
 
@@ -22,7 +22,7 @@ export default function Footer() {
           <div className="flex flex-col gap-3 items-start">
             <div className="flex items-center gap-2 mb-1">
               
-              <span className="text-sm font-semibold uppercase tracking-widest text-gray-500">
+              <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">
                 Camisetas Zeus
               </span>
             </div>
@@ -30,24 +30,24 @@ export default function Footer() {
               href="https://www.google.com/maps/place/La+Plata,+Buenos+Aires"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-sm text-gray-500 hover:text-orange-400 transition-colors"
+              className="inline-block text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
               La Plata, Buenos Aires
             </a>
-            <p className="text-sm text-gray-500">Envíos a todo el país</p>
-            <p className="text-sm text-gray-500">Transferencia · Efectivo · Mercado Pago</p>
+            <p className="text-sm text-gray-400">Envíos a todo el país</p>
+            <p className="text-sm text-gray-400">Transferencia · Tarjeta · Mercado Pago</p>
           </div>
 
           {/* Middle column: links */}
           <div className="flex flex-col gap-3 items-start md:items-center">
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-1">
+            <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Enlaces
             </p>
             {enlaces.map((e) => (
               <Link
                 key={e.href}
                 href={e.href}
-                className="inline-block text-sm text-gray-500 hover:text-orange-400 transition-colors"
+                className="inline-block text-sm text-gray-400 hover:text-orange-400 transition-colors"
               >
                 {e.label}
               </Link>
@@ -56,14 +56,14 @@ export default function Footer() {
 
           {/* Right column: social */}
           <div className="flex flex-col gap-3 items-start md:items-end">
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-1">
+            <p className="text-sm uppercase tracking-widest text-gray-400 mb-1">
               Seguinos
             </p>
             <a
               href="https://instagram.com/camisetaszeus"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
               <span className="w-5 flex justify-center shrink-0"><FaInstagram className="text-xl" /></span>
               @camisetaszeus
@@ -72,7 +72,7 @@ export default function Footer() {
               href="https://tiktok.com/@camisetaszeus8"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
               <span className="w-5 flex justify-center shrink-0"><FaTiktok className="text-xl" /></span>
               @camisetaszeus
@@ -81,7 +81,7 @@ export default function Footer() {
               href="https://wa.me/5492216220145"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-orange-400 transition-colors"
             >
               <span className="w-5 flex justify-center shrink-0"><FaWhatsapp className="text-xl" /></span>
               WhatsApp
@@ -92,12 +92,12 @@ export default function Footer() {
 
         {/* Orange divider + bottom bar */}
         <div className="border-t border-orange-500 mt-12 pt-6 flex flex-col items-center gap-1 text-center">
-          <p className="text-sm text-gray-500">© 2026 Camisetas Zeus</p>
+          <p className="text-sm text-gray-400">© 2026 Camisetas Zeus</p>
           <a
             href="https://instagram.com/alphasitess"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-xs text-gray-400 hover:text-orange-400 transition-colors"
+            className="inline-block text-xs text-gray-600 hover:text-orange-400 transition-colors"
           >
             Sitio web desarrollado por AlphaSites
           </a>
