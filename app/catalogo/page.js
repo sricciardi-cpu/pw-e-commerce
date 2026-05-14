@@ -134,8 +134,15 @@ export default function CatalogoPage() {
               <FadeIn key={producto.id} delay={i * 20}>
                 <Link href={`/catalogo/${producto.id}`} className="block h-full">
                   <article className="bg-zinc-900 rounded-xl border border-zinc-700 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
-                    <div className="h-52 bg-white flex items-center justify-center">
-                      <img src={producto.imagen} alt={producto.nombre} className="h-full w-full object-contain" loading="lazy" />
+                    <div className="h-52 bg-white flex items-center justify-center relative">
+                      <div className="absolute inset-0 bg-zinc-200 animate-pulse" />
+                      <img
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        className="h-full w-full object-contain relative z-10"
+                        loading="lazy"
+                        onLoad={(e) => e.currentTarget.previousSibling.style.display = "none"}
+                      />
                     </div>
                     <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
