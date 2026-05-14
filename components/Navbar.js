@@ -75,7 +75,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto || pathname !== "/" ? "bg-[#ece9e3] shadow-sm border-b border-gray-200 text-gray-900" : "bg-transparent text-white"}`} ref={menuRef}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto || pathname !== "/" ? "bg-[#d6d3cd] border-b border-[#c4c0b9] text-gray-900" : "bg-transparent text-white"}`} ref={menuRef}>
       <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -132,7 +132,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown con animación */}
       <div
-        className={`md:hidden bg-[#ece9e3] w-full border-t border-gray-200 overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-[#d6d3cd] w-full border-t border-[#c4c0b9] overflow-hidden transition-all duration-300 ease-in-out ${
           menuAbierto ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -143,8 +143,8 @@ export default function Navbar() {
                 href={href}
                 className={`flex items-center gap-3 px-6 py-4 text-lg transition-colors active:bg-gray-100 ${
                   pathname === href
-                    ? "text-orange-500 font-semibold bg-gray-100"
-                    : "text-gray-800 hover:text-orange-400 hover:bg-gray-100"
+                    ? "text-orange-500 font-semibold bg-[#c4c0b9]"
+                    : "text-gray-900 hover:text-orange-400 hover:bg-[#c4c0b9]"
                 }`}
               >
                 <Icon className="text-xl shrink-0" />
