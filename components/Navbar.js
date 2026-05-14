@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -81,7 +82,7 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 text-xl md:text-2xl font-bold tracking-wide hover:text-orange-400 transition-colors"
         >
-          <img src="/logo.png" alt="Camisetas Zeus" className="h-9 md:h-10 w-auto" />
+          <Image src="/logo.png" alt="Camisetas Zeus" width={40} height={40} className="h-9 md:h-10 w-auto" priority />
           <span className="hidden sm:inline">Camisetas Zeus</span>
         </Link>
 

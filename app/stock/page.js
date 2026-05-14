@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import FadeIn from "@/components/FadeIn";
 import { FaChevronDown, FaChevronUp, FaFilter } from "react-icons/fa";
@@ -140,8 +141,15 @@ export default function StockPage() {
               <FadeIn key={producto.id} delay={i * 60}>
                 <Link href={`/stock/${producto.id}`} className="block h-full">
                   <article className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
-                    <div className="relative h-40 sm:h-52 bg-white flex items-center justify-center">
-                      <img src={producto.imagen} alt={producto.nombre} className="h-full w-full object-contain" loading="lazy" />
+                    <div className="relative h-40 sm:h-52 bg-gray-100 overflow-hidden">
+                      <Image
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                        loading="lazy"
+                      />
                       <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                         Stock: {producto.stock}
                       </span>

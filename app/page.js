@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import FadeIn from "@/components/FadeIn";
@@ -163,12 +164,16 @@ function Carousel({ items }) {
       >
         {extItems.map((producto, i) => (
           <div key={i} style={{ width: `${100 / extTotal}%` }} className="shrink-0">
-            <img
-              src={producto.imagen}
-              alt={producto.nombre}
-              className="w-full object-contain max-h-64 md:max-h-80 bg-white pointer-events-none"
-              loading="lazy"
-            />
+            <div className="relative h-64 md:h-80 w-full bg-white">
+              <Image
+                src={producto.imagen}
+                alt={producto.nombre}
+                fill
+                className="object-contain pointer-events-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                loading="lazy"
+              />
+            </div>
             <div className="p-4 md:p-6 flex flex-col gap-2">
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize self-start">
                 Rugby
@@ -269,10 +274,14 @@ export default function HomePage() {
   return (
     <main>
       {/* Hero + Stats */}
-      <section
-        className="relative w-full text-white -mt-16 md:-mt-24 min-h-screen flex flex-col items-center text-center px-6"
-        style={{ backgroundImage: "url('/fondo_inicio.png')", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
+      <section className="relative w-full text-white -mt-16 md:-mt-24 min-h-screen flex flex-col items-center text-center px-6">
+        <Image
+          src="/fondo_inicio.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+        />
         <div className="absolute inset-0 bg-black/60" />
 
         {/* Hero content — centrado verticalmente */}
