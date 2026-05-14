@@ -6,12 +6,12 @@ import { FaSpinner, FaChevronDown, FaChevronUp, FaBox, FaTimes } from "react-ico
 const ESTADOS = ["pendiente_transferencia", "pagado", "enviado", "entregado", "cancelado"];
 
 const badgeEstado = {
-  pendiente:              "bg-zinc-700 text-gray-300",
-  pendiente_transferencia:"bg-yellow-900/60 text-yellow-300",
-  pagado:                 "bg-blue-900/60 text-blue-300",
-  enviado:    "bg-orange-900/60 text-orange-300",
-  entregado:  "bg-green-900/60 text-green-300",
-  cancelado:  "bg-red-900/60 text-red-400",
+  pendiente:              "bg-gray-200 text-gray-600",
+  pendiente_transferencia:"bg-yellow-100 text-yellow-700",
+  pagado:                 "bg-blue-100 text-blue-700",
+  enviado:    "bg-orange-100 text-orange-700",
+  entregado:  "bg-green-100 text-green-700",
+  cancelado:  "bg-red-100 text-red-600",
 };
 
 function formatearFecha(iso) {
@@ -27,7 +27,7 @@ function formatearPrecio(n) {
 
 function EstadoBadge({ estado }) {
   return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${badgeEstado[estado] ?? "bg-zinc-700 text-gray-300"}`}>
+    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${badgeEstado[estado] ?? "bg-gray-200 text-gray-600"}`}>
       {estado}
     </span>
   );
@@ -72,7 +72,7 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
   const items = pedido.items ?? [];
 
   return (
-    <article className="bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden">
+    <article className="bg-white border border-gray-200 rounded-xl overflow-hidden">
       {/* Cabecera siempre visible */}
       <button
         className="w-full flex items-center gap-3 px-4 py-4 text-left"
@@ -82,15 +82,15 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-semibold text-white text-sm truncate">{pedido.nombre ?? "—"}</span>
+            <span className="font-semibold text-gray-900 text-sm truncate">{pedido.nombre ?? "—"}</span>
             <EstadoBadge estado={estadoLocal} />
             {(pedido.estado === "pendiente_transferencia" || pedido.metodo_pago === "transferencia" || (pedido.observaciones ?? "").includes("[TRANSFERENCIA]")) && (
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-900/50 text-green-400">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700">
                 Transferencia
               </span>
             )}
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             {formatearFecha(pedido.created_at)} · {items.length} artículo{items.length !== 1 ? "s" : ""} · <span className="text-orange-400 font-medium">{formatearPrecio(pedido.total)}</span>
           </p>
         </div>
@@ -98,7 +98,7 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
         <button
           onClick={handleEliminar}
           disabled={eliminando}
-          className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:bg-red-900/50 hover:text-red-400 transition-colors shrink-0 disabled:opacity-40"
+          className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors shrink-0 disabled:opacity-40"
           aria-label="Eliminar pedido"
         >
           {eliminando ? <FaSpinner className="animate-spin text-xs" /> : <FaTimes className="text-xs" />}
@@ -109,11 +109,11 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
 
       {/* Detalle expandible */}
       {abierto && (
-        <div className="border-t border-zinc-700 px-4 pb-5 pt-4 flex flex-col gap-5">
+        <div className="border-t border-gray-200 px-4 pb-5 pt-4 flex flex-col gap-5">
 
           {/* Cambiar estado */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-gray-400 font-medium mr-1">Cambiar estado:</span>
+            <span className="text-xs text-gray-500 font-medium mr-1">Cambiar estado:</span>
             {ESTADOS.map((e) => (
               <button
                 key={e}
@@ -122,7 +122,7 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
                 className={`text-xs font-semibold px-3 py-1.5 rounded-full capitalize transition-colors disabled:opacity-40 ${
                   e === estadoLocal
                     ? badgeEstado[e]
-                    : "bg-zinc-800 text-gray-300 hover:bg-zinc-700"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
                 {guardando && e !== estadoLocal ? "..." : e}
@@ -143,16 +143,16 @@ function PedidoCard({ pedido, onEstadoChange, onEliminar }) {
 
           {/* Items */}
           <div>
-            <p className="text-xs text-gray-400 font-medium mb-2">Productos</p>
+            <p className="text-xs text-gray-500 font-medium mb-2">Productos</p>
             <div className="flex flex-col gap-2">
               {items.map((item, i) => (
-                <div key={i} className="flex items-center gap-3 bg-zinc-800 rounded-lg px-3 py-2">
+                <div key={i} className="flex items-center gap-3 bg-gray-100 rounded-lg px-3 py-2">
                   {item.imagen && (
                     <img src={item.imagen} alt={item.nombre} className="w-10 h-10 object-contain rounded bg-white shrink-0" />
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white font-medium truncate">{item.nombre}</p>
-                    <p className="text-xs text-gray-400">Talle {item.talle} · x{item.cantidad}</p>
+                    <p className="text-sm text-gray-900 font-medium truncate">{item.nombre}</p>
+                    <p className="text-xs text-gray-500">Talle {item.talle} · x{item.cantidad}</p>
                   </div>
                   <span className="text-orange-400 font-bold text-sm shrink-0">{formatearPrecio(item.precio * item.cantidad)}</span>
                 </div>
@@ -170,7 +170,7 @@ function Info({ label, value, className = "" }) {
   return (
     <div className={className}>
       <span className="text-xs text-gray-500">{label}: </span>
-      <span className="text-xs text-gray-200">{value}</span>
+      <span className="text-xs text-gray-700">{value}</span>
     </div>
   );
 }
@@ -217,7 +217,7 @@ export default function AdminPedidosPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-        <h1 className="text-2xl font-extrabold text-white">Pedidos</h1>
+        <h1 className="text-2xl font-extrabold text-gray-900">Pedidos</h1>
         <div className="flex items-center gap-3">
           {ultimaActualiz && (
             <span className="text-xs text-gray-500">
@@ -226,7 +226,7 @@ export default function AdminPedidosPage() {
           )}
           <button
             onClick={() => fetchPedidos()}
-            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-zinc-800 text-gray-300 hover:bg-zinc-700 transition-colors"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
           >
             ↻ Refrescar
           </button>
@@ -241,7 +241,7 @@ export default function AdminPedidosPage() {
             key={e}
             onClick={() => setFiltro(e)}
             className={`text-xs font-semibold px-3 py-1.5 rounded-full capitalize transition-colors ${
-              filtro === e ? "bg-orange-500 text-black" : "bg-zinc-800 text-gray-300 hover:bg-zinc-700"
+              filtro === e ? "bg-orange-500 text-black" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             {e}
@@ -254,7 +254,7 @@ export default function AdminPedidosPage() {
           <FaSpinner className="text-orange-500 text-3xl animate-spin" />
         </div>
       ) : pedidosFiltrados.length === 0 ? (
-        <p className="text-center text-gray-400 py-20">
+        <p className="text-center text-gray-500 py-20">
           {filtro === "todos" ? "No hay pedidos todavía." : `No hay pedidos con estado "${filtro}".`}
         </p>
       ) : (

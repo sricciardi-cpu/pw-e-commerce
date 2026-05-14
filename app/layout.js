@@ -24,7 +24,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className="bg-black text-white antialiased">
+      <body className="bg-[#f5f5f0] text-gray-900 antialiased">
         <MetaPixel />
         <CartProvider>
           <ProgressBar />

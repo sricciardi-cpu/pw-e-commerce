@@ -74,8 +74,8 @@ export default function ContactoPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2 text-white">Contacto</h1>
-        <p className="text-gray-300 mb-8">
+        <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Contacto</h1>
+        <p className="text-gray-600 mb-8">
           ¿Tenés alguna pregunta? Completá el formulario y te abrimos WhatsApp con tu consulta lista para enviar.
         </p>
       </FadeIn>
@@ -85,12 +85,12 @@ export default function ContactoPage() {
 
           {/* Nombre */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="nombre" className="text-sm font-medium text-gray-300">Nombre</label>
+            <label htmlFor="nombre" className="text-sm font-medium text-gray-700">Nombre</label>
             <input
               id="nombre" name="nombre" type="text"
               value={campos.nombre} onChange={handleChange}
               aria-describedby="nombre-error"
-              className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.nombre ? "border-red-400" : "border-zinc-600"}`}
+              className={`bg-white text-gray-900 placeholder-gray-400 border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.nombre ? "border-red-400" : "border-gray-300"}`}
               placeholder="Tu nombre completo"
             />
             <p id="nombre-error" className="text-red-400 text-xs min-h-[1rem]">{errores.nombre}</p>
@@ -98,12 +98,12 @@ export default function ContactoPage() {
 
           {/* Email */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
+            <label htmlFor="email" className="text-sm font-medium text-gray-700">Email</label>
             <input
               id="email" name="email" type="email"
               value={campos.email} onChange={handleChange}
               aria-describedby="email-error"
-              className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.email ? "border-red-400" : "border-zinc-600"}`}
+              className={`bg-white text-gray-900 placeholder-gray-400 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.email ? "border-red-400" : "border-gray-300"}`}
               placeholder="tu@email.com"
             />
             <p id="email-error" className="text-red-400 text-xs min-h-[1rem]">{errores.email}</p>
@@ -111,12 +111,12 @@ export default function ContactoPage() {
 
           {/* Teléfono */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="telefono" className="text-sm font-medium text-gray-300">Teléfono</label>
+            <label htmlFor="telefono" className="text-sm font-medium text-gray-700">Teléfono</label>
             <input
               id="telefono" name="telefono" type="tel"
               value={campos.telefono} onChange={handleChange}
               aria-describedby="telefono-error"
-              className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.telefono ? "border-red-400" : "border-zinc-600"}`}
+              className={`bg-white text-gray-900 placeholder-gray-400 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.telefono ? "border-red-400" : "border-gray-300"}`}
               placeholder="Ej: 2213530494"
             />
             <p id="telefono-error" className="text-red-400 text-xs min-h-[1rem]">{errores.telefono}</p>
@@ -124,12 +124,12 @@ export default function ContactoPage() {
 
           {/* Mensaje */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="mensaje" className="text-sm font-medium text-gray-300">Mensaje</label>
+            <label htmlFor="mensaje" className="text-sm font-medium text-gray-700">Mensaje</label>
             <textarea
               id="mensaje" name="mensaje" rows={5}
               value={campos.mensaje} onChange={handleChange}
               aria-describedby="mensaje-error"
-              className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none ${errores.mensaje ? "border-red-400" : "border-zinc-600"}`}
+              className={`bg-white text-gray-900 placeholder-gray-400 border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none ${errores.mensaje ? "border-red-400" : "border-gray-300"}`}
               placeholder="Escribí tu consulta (mínimo 20 caracteres)"
             />
             <p id="mensaje-error" className="text-red-400 text-xs min-h-[1rem]">{errores.mensaje}</p>
@@ -137,7 +137,7 @@ export default function ContactoPage() {
 
           {/* CAPTCHA */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="captcha" className="text-sm font-medium text-gray-300">
+            <label htmlFor="captcha" className="text-sm font-medium text-gray-700">
               Verificación: {captcha?.pregunta}
             </label>
             <input
@@ -145,7 +145,7 @@ export default function ContactoPage() {
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value)}
               aria-describedby="captcha-error"
-              className={`bg-zinc-900 text-white placeholder-gray-500 border rounded-lg px-4 py-2 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.captcha ? "border-red-400" : "border-zinc-600"}`}
+              className={`bg-white text-gray-900 placeholder-gray-400 border rounded-lg px-4 py-3 text-sm w-32 focus:outline-none focus:ring-2 focus:ring-orange-500 ${errores.captcha ? "border-red-400" : "border-gray-300"}`}
               placeholder="0"
             />
             <p id="captcha-error" className="text-red-400 text-xs min-h-[1rem]">{errores.captcha}</p>

@@ -30,41 +30,41 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black flex items-center justify-center px-4">
+    <main className="min-h-screen bg-[#f5f5f0] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <img src="/logo.png" alt="Zeus" className="h-14 mx-auto mb-3" />
-          <h1 className="text-2xl font-extrabold text-white">Panel de administración</h1>
-          <p className="text-gray-400 text-sm mt-1">Camisetas Zeus</p>
+          <h1 className="text-2xl font-extrabold text-gray-900">Panel de administración</h1>
+          <p className="text-gray-500 text-sm mt-1">Camisetas Zeus</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-400">Usuario</label>
+            <label className="text-sm text-gray-600">Usuario</label>
             <input
               type="text"
               value={form.usuario}
               onChange={(e) => setForm(p => ({ ...p, usuario: e.target.value }))}
               required
               autoComplete="username"
-              className="bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500 transition-colors"
+              className="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
             />
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-400">Contraseña</label>
+            <label className="text-sm text-gray-600">Contraseña</label>
             <input
               type="password"
               value={form.password}
               onChange={(e) => setForm(p => ({ ...p, password: e.target.value }))}
               required
               autoComplete="current-password"
-              className="bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500 transition-colors"
+              className="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
             />
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-3 py-2">
+            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               {error}
             </p>
           )}

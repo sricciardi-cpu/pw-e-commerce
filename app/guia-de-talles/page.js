@@ -1,9 +1,9 @@
 import FadeIn from "@/components/FadeIn";
 
-const thClass = "px-4 py-3 text-left text-sm font-semibold text-white bg-zinc-800";
-const tdClass = "px-4 py-3 text-sm text-gray-300";
-const trEven  = "bg-zinc-900";
-const trOdd   = "bg-zinc-800/50";
+const thClass = "px-3 py-2 md:px-4 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-100 whitespace-nowrap";
+const tdClass = "px-3 py-2 md:px-4 md:py-3 text-xs md:text-sm text-gray-600 text-center";
+const trEven  = "bg-white";
+const trOdd   = "bg-gray-50";
 
 const rugby = [
   { talle: "S",   hombros: 45, pecho: 52, largo: 71, manga: 36.5 },
@@ -20,8 +20,8 @@ export default function GuiaDeTallesPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2 text-white">Guía de Talles</h1>
-        <p className="text-gray-300 mb-10">
+        <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Guía de Talles</h1>
+        <p className="text-gray-600 mb-10">
           Todas las medidas están expresadas en centímetros. Si tenés dudas, consultanos por WhatsApp.
         </p>
       </FadeIn>
@@ -29,10 +29,10 @@ export default function GuiaDeTallesPage() {
       {/* Sección 1: Rugby */}
       <FadeIn delay={80}>
       <section className="mb-12">
-        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-white">
+        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-gray-900">
           Camisetas de Rugby
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-zinc-700">
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
           <table className="w-full border-collapse">
             <thead>
               <tr>
@@ -46,7 +46,7 @@ export default function GuiaDeTallesPage() {
             <tbody>
               {rugby.map((row, i) => (
                 <tr key={row.talle} className={i % 2 === 0 ? trEven : trOdd}>
-                  <td className={`${tdClass} font-semibold text-white`}>{row.talle}</td>
+                  <td className={`${tdClass} font-semibold text-gray-900 text-left`}>{row.talle}</td>
                   <td className={tdClass}>{row.hombros}</td>
                   <td className={tdClass}>{row.pecho}</td>
                   <td className={tdClass}>{row.largo}</td>

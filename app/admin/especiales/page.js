@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { FaSpinner, FaUpload, FaSave } from "react-icons/fa";
 
 const inputClass =
-  "bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors w-full";
+  "bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors w-full";
 
 function Campo({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-400">{label}</label>
+      <label className="text-sm text-gray-600">{label}</label>
       {children}
     </div>
   );
@@ -33,9 +33,9 @@ function ImageUploader({ value, onChange }) {
   return (
     <div className="flex flex-col gap-2">
       {value && (
-        <img src={value} alt="preview" className="h-32 object-contain rounded-lg bg-zinc-800 border border-zinc-700" />
+        <img src={value} alt="preview" className="h-32 object-contain rounded-lg bg-gray-100 border border-gray-200" />
       )}
-      <label className="flex items-center gap-2 cursor-pointer bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-gray-300 hover:border-orange-500 transition-colors w-fit">
+      <label className="flex items-center gap-2 cursor-pointer bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-600 hover:border-orange-500 transition-colors w-fit">
         {subiendo ? <FaSpinner className="animate-spin text-orange-500" /> : <FaUpload />}
         {subiendo ? "Subiendo..." : "Subir foto"}
         <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={subiendo} />
@@ -81,8 +81,8 @@ function EspecialForm({ id, titulo }) {
   if (cargando) return <div className="flex justify-center py-8"><FaSpinner className="text-orange-500 text-2xl animate-spin" /></div>;
 
   return (
-    <section className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 flex flex-col gap-5">
-      <h2 className="text-xl font-bold text-white">{titulo}</h2>
+    <section className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-5">
+      <h2 className="text-xl font-bold text-gray-900">{titulo}</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Campo label="Nombre">
@@ -115,11 +115,11 @@ function EspecialForm({ id, titulo }) {
 
       {id === "griptec_spray" && form.packs && (
         <div>
-          <p className="text-sm text-gray-400 mb-3">Packs</p>
+          <p className="text-sm text-gray-600 mb-3">Packs</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {form.packs.map((pack, i) => (
-              <div key={i} className="bg-zinc-800 border border-zinc-700 rounded-xl p-4 flex flex-col gap-2">
-                <p className="text-white font-semibold text-sm">{pack.label}</p>
+              <div key={i} className="bg-gray-100 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
+                <p className="text-gray-900 font-semibold text-sm">{pack.label}</p>
                 <Campo label="Precio ($)">
                   <input type="number" className={inputClass} value={pack.precio ?? ""} onChange={(e) => setPack(i, "precio", e.target.value)} />
                 </Campo>
@@ -174,10 +174,10 @@ function DestacadosPanel() {
   const destacados = productos.filter((p) => p.destacado);
 
   return (
-    <section className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 flex flex-col gap-4">
+    <section className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-4">
       <div>
-        <h2 className="text-xl font-bold text-white">Productos destacados</h2>
-        <p className="text-sm text-gray-400 mt-1">Seleccioná cuáles aparecen en el carrusel de la página de inicio. Se muestran los primeros 4 activos.</p>
+        <h2 className="text-xl font-bold text-gray-900">Productos destacados</h2>
+        <p className="text-sm text-gray-500 mt-1">Seleccioná cuáles aparecen en el carrusel de la página de inicio. Se muestran los primeros 4 activos.</p>
       </div>
 
       {cargando ? (
@@ -194,13 +194,13 @@ function DestacadosPanel() {
                 className={`relative flex flex-col gap-2 rounded-xl border-2 p-3 transition-all text-left ${
                   p.destacado
                     ? "border-orange-500 bg-orange-500/10"
-                    : "border-zinc-700 bg-zinc-800 hover:border-zinc-500"
+                    : "border-gray-200 bg-gray-100 hover:border-gray-400"
                 }`}
               >
                 {p.imagen && (
                   <img src={p.imagen} alt={p.nombre} className="h-20 w-full object-contain rounded-lg bg-white" />
                 )}
-                <p className="text-xs text-white font-medium leading-tight">{p.nombre}</p>
+                <p className="text-xs text-gray-900 font-medium leading-tight">{p.nombre}</p>
                 {p.destacado && (
                   <span className="absolute top-2 right-2 bg-orange-500 text-black text-xs font-bold px-1.5 py-0.5 rounded-full">★</span>
                 )}
@@ -221,7 +221,7 @@ function DestacadosPanel() {
 export default function EspecialesPage() {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-extrabold text-white">Páginas especiales</h1>
+      <h1 className="text-2xl font-extrabold text-gray-900">Páginas especiales</h1>
       <DestacadosPanel />
       <EspecialForm id="griptec_spray" titulo="Griptec Spray 200ml" />
     </div>

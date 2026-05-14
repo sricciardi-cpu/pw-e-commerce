@@ -77,13 +77,13 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className="min-h-screen bg-[#f5f5f0] flex flex-col">
       <script dangerouslySetInnerHTML={{ __html: PWA_ADMIN_INIT }} />
       {/* Header */}
-      <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Zeus" className="h-8" />
-          <span className="text-white font-bold text-lg hidden sm:inline">Panel Zeus</span>
+          <span className="text-gray-900 font-bold text-lg hidden sm:inline">Panel Zeus</span>
         </div>
 
         {/* Nav — desktop */}
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }) {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 pathname.startsWith(href)
                   ? "bg-orange-500 text-black"
-                  : "text-gray-300 hover:bg-zinc-800"
+                  : "text-gray-600 hover:bg-gray-100"
               }`}
             >
               <Icon />
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }) {
         {/* Cerrar sesión — desktop */}
         <button
           onClick={handleLogout}
-          className="hidden sm:flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-zinc-800"
+          className="hidden sm:flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors px-3 py-2 rounded-lg hover:bg-gray-100"
         >
           <FaSignOutAlt />
           Salir
@@ -116,7 +116,7 @@ export default function AdminLayout({ children }) {
         {/* Cerrar sesión — mobile (solo icono) */}
         <button
           onClick={handleLogout}
-          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-lg text-gray-400 hover:text-white hover:bg-zinc-800 transition-colors"
+          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
           aria-label="Cerrar sesión"
         >
           <FaSignOutAlt />
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }) {
       </main>
 
       {/* Bottom nav — solo mobile */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 flex z-10">
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex z-10">
         {secciones.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
@@ -137,7 +137,7 @@ export default function AdminLayout({ children }) {
             className={`flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium transition-colors ${
               pathname.startsWith(href)
                 ? "text-orange-500"
-                : "text-gray-400"
+                : "text-gray-400 hover:text-gray-900"
             }`}
           >
             <Icon className="text-lg" />

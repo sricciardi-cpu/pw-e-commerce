@@ -15,14 +15,14 @@ function formatearPrecio(precio) {
 function Campo({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-400">{label}</label>
+      <label className="text-sm text-gray-600">{label}</label>
       {children}
     </div>
   );
 }
 
 const inputClass =
-  "bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors";
+  "bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors";
 
 export default function CheckoutPage() {
   const { items, total, vaciarCarrito } = useCart();
@@ -73,8 +73,8 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <main className="max-w-5xl mx-auto px-4 py-16 text-center">
-        <p className="text-2xl font-bold text-white mb-2">Tu carrito está vacío</p>
-        <p className="text-gray-400 mb-8">Agregá productos desde el stock para continuar.</p>
+        <p className="text-2xl font-bold text-gray-900 mb-2">Tu carrito está vacío</p>
+        <p className="text-gray-500 mb-8">Agregá productos desde el stock para continuar.</p>
         <Link
           href="/stock"
           className="inline-block bg-orange-500 text-black font-semibold px-8 py-4 rounded-xl hover:bg-orange-400 transition-colors text-lg"
@@ -177,10 +177,10 @@ export default function CheckoutPage() {
         <FaChevronRight className="text-xs" />
         <Link href="/carrito" className="hover:text-orange-500 transition-colors">Carrito</Link>
         <FaChevronRight className="text-xs" />
-        <span className="text-white font-medium">Checkout</span>
+        <span className="text-gray-900 font-medium">Checkout</span>
       </nav>
 
-      <h1 className="text-3xl font-extrabold mb-8 text-white">Finalizar compra</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold mb-6 md:mb-8 text-gray-900">Finalizar compra</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
 
@@ -188,8 +188,8 @@ export default function CheckoutPage() {
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
 
           {/* Datos personales */}
-          <section className="bg-zinc-900 border border-zinc-700 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-white">Datos personales</h2>
+          <section className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col gap-4">
+            <h2 className="text-lg font-bold text-gray-900">Datos personales</h2>
 
             <Campo label="Nombre y apellido *">
               <input
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
               />
             </Campo>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Campo label="Cód. de área *">
                 <input
                   type="tel" name="codigoArea" value={form.codigoArea}
@@ -228,8 +228,8 @@ export default function CheckoutPage() {
           </section>
 
           {/* Dirección */}
-          <section className="bg-zinc-900 border border-zinc-700 rounded-xl p-5 flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-white">Dirección de envío</h2>
+          <section className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col gap-4">
+            <h2 className="text-lg font-bold text-gray-900">Dirección de envío</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Campo label="Provincia *">
@@ -248,8 +248,8 @@ export default function CheckoutPage() {
               </Campo>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="col-span-2 sm:col-span-2">
                 <Campo label="Calle *">
                   <input
                     type="text" name="calle" value={form.calle}
@@ -303,7 +303,7 @@ export default function CheckoutPage() {
           </section>
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-4 py-3">
+            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-3">
               {error}
             </p>
           )}
@@ -336,9 +336,9 @@ export default function CheckoutPage() {
         </form>
 
         {/* Resumen del pedido */}
-        <aside className="lg:w-80 shrink-0">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-5 sticky top-24">
-            <h2 className="text-lg font-bold text-white mb-4">Resumen del pedido</h2>
+        <aside className="lg:w-80 shrink-0 order-first lg:order-last">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 sticky top-24">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Resumen del pedido</h2>
 
             <div className="flex flex-col gap-3 mb-4">
               {items.map((item) => (
@@ -349,8 +349,8 @@ export default function CheckoutPage() {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white font-medium truncate">{item.nombre}</p>
-                    <p className="text-xs text-gray-400">Talle {item.talle} · x{item.cantidad}</p>
+                    <p className="text-sm text-gray-900 font-medium truncate">{item.nombre}</p>
+                    <p className="text-xs text-gray-500">Talle {item.talle} · x{item.cantidad}</p>
                   </div>
                   <p className="text-sm text-orange-500 font-bold shrink-0">
                     {formatearPrecio(item.precio * item.cantidad)}
@@ -359,16 +359,16 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            <div className="border-t border-zinc-700 pt-3 flex flex-col gap-2">
-              <div className="flex justify-between text-sm text-gray-400">
+            <div className="border-t border-gray-200 pt-3 flex flex-col gap-2">
+              <div className="flex justify-between text-sm text-gray-500">
                 <span>Subtotal</span>
                 <span>{formatearPrecio(total)}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-400">
+              <div className="flex justify-between text-sm text-gray-500">
                 <span>Envío</span>
                 <span>{precioEnvio > 0 ? formatearPrecio(precioEnvio) : "—"}</span>
               </div>
-              <div className="flex justify-between text-white font-bold text-base border-t border-zinc-700 pt-2 mt-1">
+              <div className="flex justify-between text-gray-900 font-bold text-base border-t border-gray-200 pt-2 mt-1">
                 <span>Total</span>
                 <span className="text-orange-500">{formatearPrecio(totalConEnvio)}</span>
               </div>

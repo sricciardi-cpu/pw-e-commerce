@@ -30,7 +30,7 @@ function BotonFiltro({ label, activo, onClick }) {
       className={`px-4 py-2.5 rounded-full text-sm font-medium border transition-colors min-w-[60px] ${
         activo
           ? "bg-orange-500 text-black border-orange-500"
-          : "bg-zinc-800 text-gray-200 border-zinc-600 hover:bg-white hover:text-black hover:border-white"
+          : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-white hover:text-black hover:border-gray-400"
       }`}
     >
       {label}
@@ -72,19 +72,19 @@ export default function StockPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-3 mb-2">
-        <h1 className="text-3xl font-extrabold text-white">Stock disponible</h1>
+      <div className="flex flex-wrap items-center gap-3 mb-2">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">Stock disponible</h1>
         <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">En stock</span>
       </div>
-      <p className="text-gray-400 text-sm mb-6">Productos disponibles para envío inmediato.</p>
+      <p className="text-gray-500 text-sm mb-6">Productos disponibles para envío inmediato.</p>
 
       {/* Filtros */}
-      <section className="bg-zinc-900 border border-zinc-700 rounded-xl mb-8 overflow-hidden">
+      <section className="bg-gray-50 border border-gray-200 rounded-xl mb-8 overflow-hidden">
         <button
           className="w-full flex items-center justify-between px-5 py-4 md:hidden"
           onClick={() => setFiltrosAbiertos(!filtrosAbiertos)}
         >
-          <span className="flex items-center gap-2 font-semibold text-white">
+          <span className="flex items-center gap-2 font-semibold text-gray-900">
             <FaFilter className="text-orange-500" />
             Filtros
             {hayFiltrosActivos && (
@@ -93,20 +93,20 @@ export default function StockPage() {
               </span>
             )}
           </span>
-          {filtrosAbiertos ? <FaChevronUp className="text-gray-400" /> : <FaChevronDown className="text-gray-400" />}
+          {filtrosAbiertos ? <FaChevronUp className="text-gray-500" /> : <FaChevronDown className="text-gray-500" />}
         </button>
 
         <div className={`flex flex-col gap-4 transition-all duration-300 overflow-hidden md:px-5 md:pb-5 md:pt-5 md:max-h-none md:overflow-visible ${filtrosAbiertos ? "max-h-[500px] px-5 pb-5" : "max-h-0"}`}>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-gray-400 w-20">Tipo</span>
+            <span className="text-sm font-semibold text-gray-500 w-20">Tipo</span>
             {filtrosTipo.map((f) => <BotonFiltro key={f} label={f} activo={tipo === f} onClick={() => setTipo(f)} />)}
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-semibold text-gray-400 w-20">Talle</span>
+            <span className="text-sm font-semibold text-gray-500 w-20">Talle</span>
             {filtrosTalle.map((f) => <BotonFiltro key={f} label={f} activo={talle === f} onClick={() => setTalle(f)} />)}
           </div>
           {hayFiltrosActivos && (
-            <button onClick={() => { setTipo("Todos"); setTalle("Todos"); }} className="self-start text-sm text-gray-400 underline hover:text-red-400 transition-colors">
+            <button onClick={() => { setTipo("Todos"); setTalle("Todos"); }} className="self-start text-sm text-gray-400 underline hover:text-red-600 transition-colors">
               Limpiar filtros
             </button>
           )}
@@ -118,10 +118,10 @@ export default function StockPage() {
           {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : sinStockGeneral ? (
-        <div className="bg-zinc-900 border border-zinc-700 rounded-2xl py-16 px-6 text-center flex flex-col items-center gap-5">
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl py-16 px-6 text-center flex flex-col items-center gap-5">
           <div className="text-orange-500 text-5xl">📦</div>
-          <p className="text-xl font-bold text-white">No tenemos stock por el momento</p>
-          <p className="text-gray-400 max-w-md">Únicamente pedidos por encargo. Mirá nuestro catálogo y encargá la tuya.</p>
+          <p className="text-xl font-bold text-gray-900">No tenemos stock por el momento</p>
+          <p className="text-gray-500 max-w-md">Únicamente pedidos por encargo. Mirá nuestro catálogo y encargá la tuya.</p>
           <Link
             href="/catalogo"
             className="inline-block bg-orange-500 text-black font-semibold px-8 py-4 rounded-xl hover:bg-orange-400 transition-colors mt-2"
@@ -139,8 +139,8 @@ export default function StockPage() {
             {productosFiltrados.map((producto, i) => (
               <FadeIn key={producto.id} delay={i * 60}>
                 <Link href={`/stock/${producto.id}`} className="block h-full">
-                  <article className="bg-zinc-900 rounded-xl border border-zinc-700 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
-                    <div className="relative h-52 bg-white flex items-center justify-center">
+                  <article className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
+                    <div className="relative h-40 sm:h-52 bg-white flex items-center justify-center">
                       <img src={producto.imagen} alt={producto.nombre} className="h-full w-full object-contain" loading="lazy" />
                       <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                         Stock: {producto.stock}
@@ -150,16 +150,16 @@ export default function StockPage() {
                       <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
                         {producto.tipo === "nacion" ? "Nación" : "Club"}
                       </span>
-                      <h2 className="font-semibold text-white text-sm md:text-base leading-tight">{producto.nombre}</h2>
+                      <h2 className="font-semibold text-gray-900 text-sm md:text-base leading-tight">{producto.nombre}</h2>
                       <div className="flex gap-1 flex-wrap">
                         {(producto.talle ?? []).map((t) => (
-                          <span key={t} className="text-xs border border-zinc-600 rounded px-1.5 py-0.5 text-gray-300">{t}</span>
+                          <span key={t} className="text-xs border border-gray-300 rounded px-1.5 py-0.5 text-gray-600">{t}</span>
                         ))}
                       </div>
                       <div className="mt-auto flex flex-col gap-0.5">
                         <p className="text-orange-500 font-bold text-sm md:text-base">{formatearPrecio(producto.precio)}</p>
                         {producto.descuento_transferencia > 0 && (
-                          <p className="text-green-400 text-xs font-semibold">
+                          <p className="text-green-700 text-xs font-semibold">
                             Transf. {formatearPrecio(Math.round(producto.precio * (1 - producto.descuento_transferencia / 100)))}
                             <span className="text-green-600 ml-1">−{producto.descuento_transferencia}%</span>
                           </p>

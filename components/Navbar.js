@@ -74,7 +74,7 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className={`text-white sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto ? "bg-black" : "bg-transparent"}`} ref={menuRef}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto ? "bg-[#f5f5f0] shadow-sm border-b border-gray-200 text-gray-900" : `bg-transparent ${pathname === "/" ? "text-white" : "text-gray-900"}`}`} ref={menuRef}>
       <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
         {/* Logo */}
         <Link
@@ -87,15 +87,15 @@ export default function Navbar() {
 
         {/* Desktop: links + carrito */}
         <div className="hidden md:flex items-center gap-6">
-          <ul className="flex gap-6 list-none">
+          <ul className="flex gap-3 lg:gap-6 list-none">
             {links.map(({ href, label, icon: Icon }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className={`text-lg transition-colors ${
+                  className={`text-sm lg:text-base xl:text-lg transition-colors ${
                     pathname === href
                       ? "text-orange-500 font-semibold"
-                      : "text-white hover:text-orange-400"
+                      : "hover:text-orange-400 opacity-90"
                   }`}
                 >
                   {label}
@@ -103,7 +103,7 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors">
+          <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors opacity-90">
             <FaShoppingCart className="text-xl" />
             <span className={`bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-150 ${pop ? "scale-150" : "scale-100"}`}>
               {cantidadTotal}
@@ -113,7 +113,7 @@ export default function Navbar() {
 
         {/* Mobile: carrito + hamburger */}
         <div className="flex md:hidden items-center gap-4">
-          <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors">
+          <Link href="/carrito" className="flex items-center gap-1.5 hover:text-orange-400 transition-colors opacity-90">
             <FaShoppingCart className="text-xl" />
             <span className={`bg-orange-500 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-transform duration-150 ${pop ? "scale-150" : "scale-100"}`}>
               {cantidadTotal}
@@ -121,7 +121,7 @@ export default function Navbar() {
           </Link>
           <button
             onClick={() => setMenuAbierto(!menuAbierto)}
-            className="text-2xl hover:text-orange-400 transition-colors p-1"
+            className="text-2xl hover:text-orange-400 transition-colors p-1 opacity-90"
             aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           >
             {menuAbierto ? <FaTimes /> : <FaBars />}
@@ -131,7 +131,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown con animación */}
       <div
-        className={`md:hidden bg-black w-full border-t border-gray-800 overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden bg-white w-full border-t border-gray-200 overflow-hidden transition-all duration-300 ease-in-out ${
           menuAbierto ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -140,10 +140,10 @@ export default function Navbar() {
             <li key={href}>
               <Link
                 href={href}
-                className={`flex items-center gap-3 px-6 py-4 text-lg transition-colors active:bg-gray-900 ${
+                className={`flex items-center gap-3 px-6 py-4 text-lg transition-colors active:bg-gray-100 ${
                   pathname === href
-                    ? "text-orange-500 font-semibold bg-gray-900"
-                    : "text-white hover:text-orange-400 hover:bg-gray-900"
+                    ? "text-orange-500 font-semibold bg-gray-100"
+                    : "text-gray-800 hover:text-orange-400 hover:bg-gray-100"
                 }`}
               >
                 <Icon className="text-xl shrink-0" />

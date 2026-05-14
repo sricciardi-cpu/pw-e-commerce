@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { FaSpinner, FaSave } from "react-icons/fa";
 
 const inputClass =
-  "bg-zinc-800 border border-zinc-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors w-full";
+  "bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors w-full";
 
 export default function ConfiguracionPage() {
   const [precioEnvio,    setPrecioEnvio]    = useState("");
@@ -59,7 +59,7 @@ export default function ConfiguracionPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold text-white mb-6">Configuración</h1>
+      <h1 className="text-2xl font-extrabold text-gray-900 mb-6">Configuración</h1>
 
       {cargando ? (
         <div className="flex items-center justify-center py-20">
@@ -67,10 +67,10 @@ export default function ConfiguracionPage() {
         </div>
       ) : (
         <form onSubmit={handleGuardar} className="max-w-md flex flex-col gap-6">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 flex flex-col gap-4">
-            <h2 className="text-base font-bold text-white">Envío</h2>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-4">
+            <h2 className="text-base font-bold text-gray-900">Envío</h2>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-400">Precio de envío (ARS)</label>
+              <label className="text-xs text-gray-600">Precio de envío (ARS)</label>
               <input
                 type="number"
                 min="0"
@@ -80,14 +80,14 @@ export default function ConfiguracionPage() {
                 className={inputClass}
               />
               <p className="text-xs text-gray-500 mt-1">
-                Valor guardado en base de datos: <strong className={sinGuardar ? "text-yellow-400" : "text-green-400"}>${precioEnvioDB ?? "—"}</strong>
-                {sinGuardar && <span className="text-yellow-400 ml-2">· cambios sin guardar</span>}
+                Valor guardado en base de datos: <strong className={sinGuardar ? "text-yellow-600" : "text-green-700"}>${precioEnvioDB ?? "—"}</strong>
+                {sinGuardar && <span className="text-yellow-600 ml-2">· cambios sin guardar</span>}
               </p>
             </div>
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-900/20 border border-red-800 rounded-lg px-3 py-2">
+            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               {error}
             </p>
           )}

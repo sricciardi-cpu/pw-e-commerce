@@ -143,7 +143,7 @@ function Carousel({ items }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-zinc-700 bg-zinc-900 shadow-sm select-none cursor-grab active:cursor-grabbing"
+      className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 shadow-sm select-none cursor-grab active:cursor-grabbing"
       onMouseDown={(e) => onDragStart(e.clientX)}
       onMouseMove={(e) => onDragMove(e.clientX)}
       onMouseUp={onDragEnd}
@@ -173,11 +173,11 @@ function Carousel({ items }) {
               <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize self-start">
                 Rugby
               </span>
-              <h3 className="font-bold text-white text-lg leading-tight">{producto.nombre}</h3>
+              <h3 className="font-bold text-gray-900 text-base md:text-lg leading-tight line-clamp-2">{producto.nombre}</h3>
               <p className="text-orange-500 font-extrabold text-xl">{formatearPrecio(producto.precio)}</p>
               <Link
                 href={`/stock/${producto.id}`}
-                className="mt-2 inline-block text-center bg-black text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors border border-zinc-600"
+                className="mt-2 inline-block text-center bg-white text-gray-900 font-semibold px-6 py-2.5 rounded-lg hover:bg-orange-500 hover:text-black transition-colors border border-gray-300"
                 onClick={(e) => { if (Math.abs(offset) > 5) e.preventDefault(); }}
               >
                 Ver detalle
@@ -190,13 +190,13 @@ function Carousel({ items }) {
       {/* Flechas */}
       <button
         onClick={() => { if (!jumping.current) { setAnimated(true); setIdx((i) => i - 1); } }}
-        className="absolute top-1/3 left-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10"
+        className="absolute top-1/3 left-2 bg-white/50 hover:bg-white text-gray-900 rounded-full p-2 transition-colors z-10"
       >
         <FaChevronLeft />
       </button>
       <button
         onClick={() => { if (!jumping.current) { setAnimated(true); setIdx((i) => i + 1); } }}
-        className="absolute top-1/3 right-2 bg-black/50 hover:bg-black text-white rounded-full p-2 transition-colors z-10"
+        className="absolute top-1/3 right-2 bg-white/50 hover:bg-white text-gray-900 rounded-full p-2 transition-colors z-10"
       >
         <FaChevronRight />
       </button>
@@ -207,7 +207,7 @@ function Carousel({ items }) {
           <button
             key={i}
             onClick={() => { if (!jumping.current) { setAnimated(true); setIdx(i + 1); } }}
-            className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-zinc-600"}`}
+            className={`w-2 h-2 rounded-full transition-colors ${i === dotIdx ? "bg-orange-500" : "bg-gray-300"}`}
           />
         ))}
       </div>
@@ -270,26 +270,26 @@ export default function HomePage() {
     <main>
       {/* Hero + Stats */}
       <section
-        className="relative w-full text-white -mt-16 md:-mt-20 flex flex-col items-center text-center px-6"
+        className="relative w-full text-white -mt-16 md:-mt-24 min-h-screen flex flex-col items-center text-center px-6"
         style={{ backgroundImage: "url('/fondo_inicio.png')", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         <div className="absolute inset-0 bg-black/60" />
 
-        {/* Hero content */}
-        <div className="relative z-10 flex flex-col items-center pt-24 md:pt-32 pb-10 md:pb-16 min-h-[300px] md:min-h-[400px] justify-center w-full">
-          <h1 className="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">Camisetas Zeus</h1>
-          <p className="text-sm md:text-xl text-orange-500 font-semibold mb-10 max-w-xs md:max-w-none">
+        {/* Hero content — centrado verticalmente */}
+        <div className="relative z-10 flex flex-col items-center justify-center flex-1 w-full pt-24 md:pt-32 pb-10">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Camisetas Zeus</h1>
+          <p className="text-base md:text-2xl text-orange-500 font-semibold mb-10 max-w-xs md:max-w-none">
             Las mejores camisetas de rugby de Argentina
           </p>
           <Link
             href="/catalogo"
-            className="inline-block bg-orange-500 text-black font-bold px-6 md:px-8 py-3 rounded-full text-sm md:text-base hover:bg-orange-400 transition-colors active:scale-95 shadow-lg shadow-orange-500/30"
+            className="inline-block bg-orange-500 text-black font-bold px-8 md:px-10 py-3.5 rounded-full text-base md:text-lg hover:bg-orange-400 transition-colors active:scale-95 shadow-lg shadow-orange-500/30"
           >
             Ver catálogo
           </Link>
         </div>
 
-        {/* Stats */}
+        {/* Stats — pegados al fondo del hero */}
         <FadeIn>
           <div className="relative z-10 w-full border-t border-white/20">
             <div className="max-w-5xl mx-auto px-4 py-8 grid grid-cols-2 gap-4 text-center">
@@ -314,9 +314,9 @@ export default function HomePage() {
 
         {/* Quiénes Somos */}
         <FadeIn>
-          <section className="bg-zinc-900 rounded-2xl text-white p-6 md:p-10 mb-12 md:mb-16 transition-transform duration-300 hover:-translate-y-1 border border-zinc-700">
-            <h2 className="text-2xl md:text-3xl font-extrabold mb-4">Quiénes Somos</h2>
-            <p className="text-gray-300 mb-8 max-w-2xl text-sm md:text-base leading-relaxed">
+          <section className="bg-gray-50 rounded-2xl text-gray-900 p-6 md:p-10 mb-12 md:mb-16 transition-transform duration-300 hover:-translate-y-1 border border-gray-200">
+            <h2 className="text-xl md:text-3xl font-extrabold mb-4">Quiénes Somos</h2>
+            <p className="text-gray-600 mb-8 max-w-2xl text-sm md:text-base leading-relaxed">
               Camisetas Zeus nació en La Plata con una idea simple: acercar las mejores camisetas de rugby
               a quienes realmente las viven. Somos un emprendimiento que combina la pasión por el deporte
               con el compromiso de ofrecer productos de calidad a precios accesibles.
@@ -324,10 +324,10 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
               {valores.map(({ icon: Icon, titulo, texto }, i) => (
                 <FadeIn key={titulo} delay={i * 100}>
-                  <div className="border border-zinc-700 rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 cursor-default h-full">
+                  <div className="border border-gray-200 rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 cursor-default h-full">
                     <Icon className="text-3xl text-orange-500" />
                     <h3 className="text-base md:text-lg font-semibold mt-3 mb-1">{titulo}</h3>
-                    <p className="text-gray-400 text-sm">{texto}</p>
+                    <p className="text-gray-500 text-sm">{texto}</p>
                   </div>
                 </FadeIn>
               ))}
@@ -339,13 +339,13 @@ export default function HomePage() {
         {destacados.length > 0 && (
         <FadeIn>
           <section className="mb-12 md:mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-white">Productos disponibles para entrega inmediata</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-900">Productos disponibles para entrega inmediata</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {destacados.slice(0, 2).length > 0 && <Carousel items={destacados.slice(0, 2)} />}
               {destacados.slice(2, 4).length > 0 && <Carousel items={destacados.slice(2, 4)} />}
             </div>
             <div className="mt-6 text-center">
-              <Link href="/stock" className="inline-block bg-zinc-900 text-white border border-zinc-600 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
+              <Link href="/stock" className="inline-block bg-gray-100 text-gray-900 border border-gray-300 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors">
                 Ver todos los disponibles
               </Link>
             </div>
@@ -356,23 +356,23 @@ export default function HomePage() {
         {/* Diferencia Stock vs Catálogo */}
         <FadeIn>
           <section className="mb-12 md:mb-16">
-            <h2 className="text-2xl font-bold mb-6 text-white">¿Cómo comprás?</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-6 text-gray-900">¿Cómo comprás?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Link href="/stock" className="group bg-green-900/20 border border-green-600/40 rounded-2xl p-6 flex flex-col gap-3 hover:border-green-500 hover:bg-green-900/30 transition-all">
+              <Link href="/stock" className="group bg-green-50 border border-green-200 rounded-2xl p-6 flex flex-col gap-3 hover:border-green-500 hover:bg-green-100/50 transition-all">
                 <div className="flex items-center gap-2">
                   <span className="bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">Entrega inmediata</span>
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-green-400 transition-colors">Stock disponible</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Camisetas que tenemos en mano. Pagás y las enviamos en <strong className="text-white">24 a 72hs</strong>.</p>
-                <span className="text-green-400 text-sm font-semibold mt-auto">Ver stock →</span>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-green-600 transition-colors">Stock disponible</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Camisetas que tenemos en mano. Pagás y las enviamos en <strong className="text-gray-900">24 a 72hs</strong>.</p>
+                <span className="text-green-600 text-sm font-semibold mt-auto">Ver stock →</span>
               </Link>
-              <Link href="/catalogo" className="group bg-orange-500/10 border border-orange-500/40 rounded-2xl p-6 flex flex-col gap-3 hover:border-orange-500 hover:bg-orange-500/20 transition-all">
+              <Link href="/catalogo" className="group bg-orange-50 border border-orange-200 rounded-2xl p-6 flex flex-col gap-3 hover:border-orange-500 hover:bg-orange-100/50 transition-all">
                 <div className="flex items-center gap-2">
                   <span className="bg-orange-500 text-black text-xs font-bold px-2.5 py-1 rounded-full">Por encargo</span>
                 </div>
-                <h3 className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors">Catálogo completo</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Más de 50 modelos para pedir. Se producen a pedido y llegan en <strong className="text-white">20 a 40 días</strong>.</p>
-                <span className="text-orange-400 text-sm font-semibold mt-auto">Ver catálogo →</span>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-500 transition-colors">Catálogo completo</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">Más de 50 modelos para pedir. Se producen a pedido y llegan en <strong className="text-gray-900">20 a 40 días</strong>.</p>
+                <span className="text-orange-500 text-sm font-semibold mt-auto">Ver catálogo →</span>
               </Link>
             </div>
           </section>

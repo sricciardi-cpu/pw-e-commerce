@@ -63,28 +63,28 @@ export default function GriptecSprayPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
       <FadeIn>
-        <h1 className="text-3xl font-extrabold mb-2 text-white">{data.nombre}</h1>
-        <p className="text-gray-300 mb-6">{data.descripcion}</p>
+        <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">{data.nombre}</h1>
+        <p className="text-gray-600 mb-6">{data.descripcion}</p>
       </FadeIn>
 
       <FadeIn delay={100}>
-        <article className="bg-zinc-900 border border-zinc-700 rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+        <article className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
           <div className="md:w-1/2 bg-white flex items-center justify-center p-6">
             <img src={data.imagen} alt={data.nombre} className="w-full object-contain max-h-72 md:max-h-96" />
           </div>
 
-          <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center border-t md:border-t-0 md:border-l border-zinc-700">
+          <div className="md:w-1/2 p-6 flex flex-col gap-5 justify-center border-t md:border-t-0 md:border-l border-gray-200">
             <div>
-              <p className="text-sm font-semibold text-gray-300 mb-3">Seleccioná tu pack:</p>
+              <p className="text-sm font-semibold text-gray-600 mb-3">Seleccioná tu pack:</p>
               <div className="grid grid-cols-2 gap-3">
                 {(data.packs ?? []).map((pack) => (
                   <button
                     key={pack.label}
                     onClick={() => { setPackSeleccionado(pack.label); setEstado("idle"); }}
-                    className={`flex flex-col items-start p-4 rounded-xl border text-left transition-colors ${
+                    className={`flex flex-col items-start p-3 md:p-4 rounded-xl border text-left transition-colors ${
                       packSeleccionado === pack.label
                         ? "bg-orange-500 text-black border-orange-500"
-                        : "bg-zinc-800 text-gray-200 border-zinc-600 hover:border-white"
+                        : "bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-500"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -93,7 +93,7 @@ export default function GriptecSprayPage() {
                         <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-orange-500 text-black">{pack.descuento}</span>
                       )}
                     </div>
-                    <span className="text-lg font-extrabold">{formatearPrecio(pack.precio)}</span>
+                    <span className="text-base md:text-lg font-extrabold">{formatearPrecio(pack.precio)}</span>
                   </button>
                 ))}
               </div>
