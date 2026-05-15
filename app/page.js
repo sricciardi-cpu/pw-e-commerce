@@ -276,7 +276,7 @@ export default function HomePage() {
       {/* Hero + Stats */}
       <section className="relative w-full text-white -mt-16 md:-mt-24 min-h-screen flex flex-col items-center text-center px-6">
         <Image
-          src="/fondo_inicio.png"
+          src="/fondo_inicio.jpg"
           alt=""
           fill
           priority
