@@ -38,6 +38,8 @@ export default function CatalogoPage() {
   const [tipo,  setTipo]  = useState("Todos");
   const [talle, setTalle] = useState("Todos");
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
+  const [visible, setVisible] = useState(12);
 
   useEffect(() => {
     supabase
@@ -53,11 +55,12 @@ export default function CatalogoPage() {
   const productosFiltrados = productos.filter((p) => {
     const matchTipo  = tipo  === "Todos" || p.tipo  === tipoValor[tipo];
     const matchTalle = talle === "Todos" || (p.talle ?? []).includes(talle);
-    return matchTipo && matchTalle;
+    const matchBusqueda = busqueda === "" || p.nombre.toLowerCase().includes(busqueda.toLowerCase());
+    return matchTipo && matchTalle && matchBusqueda;
   });
 
-  const hayFiltrosActivos  = tipo !== "Todos" || talle !== "Todos";
-  const cantFiltrosActivos = (tipo !== "Todos" ? 1 : 0) + (talle !== "Todos" ? 1 : 0);
+  const hayFiltrosActivos  = tipo !== "Todos" || talle !== "Todos" || busqueda !== "";
+  const cantFiltrosActivos = (tipo !== "Todos" ? 1 : 0) + (talle !== "Todos" ? 1 : 0) + (busqueda !== "" ? 1 : 0);
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -90,16 +93,29 @@ export default function CatalogoPage() {
         </button>
 
         <div className={`flex flex-col gap-4 transition-all duration-300 overflow-hidden md:px-5 md:pb-5 md:pt-5 md:max-h-none md:overflow-visible ${filtrosAbiertos ? "max-h-[500px] px-5 pb-5" : "max-h-0"}`}>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold text-gray-500 w-20">Buscar</span>
+            <input
+              type="text"
+              placeholder="Nombre del producto..."
+              value={busqueda}
+              onChange={(e) => { setBusqueda(e.target.value); setVisible(12); }}
+              className="flex-1 bg-white border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors"
+            />
+            {busqueda && (
+              <button onClick={() => { setBusqueda(""); setVisible(12); }} className="text-sm text-gray-400 hover:text-red-500 transition-colors">✕</button>
+            )}
+          </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-gray-500 w-20">Tipo</span>
-            {filtrosTipo.map((f) => <BotonFiltro key={f} label={f} activo={tipo === f} onClick={() => setTipo(f)} />)}
+            {filtrosTipo.map((f) => <BotonFiltro key={f} label={f} activo={tipo === f} onClick={() => { setTipo(f); setVisible(12); }} />)}
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-gray-500 w-20">Talle</span>
-            {filtrosTalle.map((f) => <BotonFiltro key={f} label={f} activo={talle === f} onClick={() => setTalle(f)} />)}
+            {filtrosTalle.map((f) => <BotonFiltro key={f} label={f} activo={talle === f} onClick={() => { setTalle(f); setVisible(12); }} />)}
           </div>
           {hayFiltrosActivos && (
-            <button onClick={() => { setTipo("Todos"); setTalle("Todos"); }} className="self-start text-sm text-gray-400 underline hover:text-red-600 transition-colors">
+            <button onClick={() => { setTipo("Todos"); setTalle("Todos"); setBusqueda(""); setVisible(12); }} className="self-start text-sm text-gray-400 underline hover:text-red-600 transition-colors">
               Limpiar filtros
             </button>
           )}
@@ -120,7 +136,7 @@ export default function CatalogoPage() {
             key={`${tipo}-${talle}`}
             className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-[fadeScaleIn_0.35s_ease-out]"
           >
-            {productosFiltrados.map((producto, i) => (
+            {productosFiltrados.slice(0, visible).map((producto, i) => (
               <FadeIn key={producto.id} delay={i * 20}>
                 <Link href={`/catalogo/${producto.id}`} className="block h-full">
                   <article className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
@@ -162,6 +178,17 @@ export default function CatalogoPage() {
               </FadeIn>
             ))}
           </section>
+
+          {productosFiltrados.length > visible && (
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={() => setVisible(v => v + 12)}
+                className="bg-white border border-gray-300 text-gray-700 font-semibold px-8 py-3 rounded-full hover:bg-orange-500 hover:text-black hover:border-orange-500 transition-colors"
+              >
+                Cargar más ({productosFiltrados.length - visible} restantes)
+              </button>
+            </div>
+          )}
 
           {productosFiltrados.length === 0 && (
             <p className="text-center text-gray-400 py-16">No hay productos que coincidan con los filtros seleccionados.</p>

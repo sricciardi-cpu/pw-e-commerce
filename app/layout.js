@@ -8,12 +8,19 @@ import MetaPixel from "@/components/MetaPixel";
 import { CartProvider } from "@/context/CartContext";
 
 export const metadata = {
-  title: "Camisetas Zeus",
-  description: "Las mejores camisetas de rugby de Argentina",
+  title: "Camisetas Zeus | Camisetas de Rugby Argentina",
+  description: "Las mejores camisetas de rugby de Argentina. Stock disponible y pedidos por encargo. Envíos a todo el país.",
   manifest: "/manifest.json",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
+  },
+  openGraph: {
+    title: "Camisetas Zeus | Camisetas de Rugby Argentina",
+    description: "Las mejores camisetas de rugby de Argentina. Stock disponible y pedidos por encargo.",
+    siteName: "Camisetas Zeus",
+    locale: "es_AR",
+    type: "website",
   },
 };
 
