@@ -93,12 +93,12 @@ export default function Footer() {
         <div className="border-t border-orange-500 mt-12 pt-6 flex flex-col items-center gap-1 text-center">
           <p className="text-sm text-gray-500">© 2026 Camisetas Zeus</p>
           <a
-            href="https://instagram.com/alphasitess"
+            href="https://instagram.com/koda.git"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block text-xs text-gray-400 hover:text-orange-400 transition-colors"
           >
-            Sitio web desarrollado por AlphaSites
+            Sitio web desarrollado por koda
           </a>
         </div>
 
