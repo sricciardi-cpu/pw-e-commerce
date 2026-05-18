@@ -164,12 +164,12 @@ function Carousel({ items }) {
       >
         {extItems.map((producto, i) => (
           <div key={i} style={{ width: `${100 / extTotal}%` }} className="shrink-0">
-            <div className="relative h-64 md:h-80 w-full bg-white">
+            <div className="relative h-64 md:h-80 w-full bg-[#f5f5f0]">
               <Image
                 src={producto.imagen}
                 alt={producto.nombre}
                 fill
-                className="object-contain pointer-events-none"
+                className="object-contain mix-blend-multiply pointer-events-none"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 loading="lazy"
               />

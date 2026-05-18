@@ -125,22 +125,22 @@ export default function ProductoDetalleClient({ params }) {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Galería */}
         <div className="w-full md:w-2/5 flex flex-col gap-2">
-          <div className="h-64 md:h-80 w-full rounded-xl overflow-hidden bg-gray-100 relative">
+          <div className="h-64 md:h-80 w-full rounded-xl overflow-hidden bg-[#f5f5f0] relative">
             <Image
               key={imagenActiva}
               src={imagenes[imagenActiva]}
               alt={producto.nombre}
               fill
               priority
-              className="object-contain animate-[fadeIn_0.3s_ease-out]"
+              className="object-contain mix-blend-multiply animate-[fadeIn_0.3s_ease-out]"
               sizes="(max-width: 768px) 100vw, 40vw"
             />
           </div>
           {imagenes.length > 1 && (
             <div className="flex gap-2 overflow-x-auto pb-1">
               {imagenes.map((src, i) => (
-                <button key={i} onClick={() => setImagenActiva(i)} className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-gray-100 relative ${imagenActiva === i ? "border-orange-500" : "border-gray-200 hover:border-gray-400"}`}>
-                  <Image src={src} alt={`Vista ${i + 1}`} fill className="object-contain" sizes="64px" />
+                <button key={i} onClick={() => setImagenActiva(i)} className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-[#f5f5f0] relative ${imagenActiva === i ? "border-orange-500" : "border-gray-200 hover:border-gray-400"}`}>
+                  <Image src={src} alt={`Vista ${i + 1}`} fill className="object-contain mix-blend-multiply" sizes="64px" />
                 </button>
               ))}
             </div>
