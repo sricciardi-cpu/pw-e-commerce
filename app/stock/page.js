@@ -162,7 +162,7 @@ export default function StockPage() {
                         src={producto.imagen}
                         alt={producto.nombre}
                         fill
-                        className="object-cover object-center mix-blend-multiply"
+                        className="object-contain mix-blend-multiply"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                         loading="lazy"
                       />
