@@ -158,16 +158,14 @@ export default function StockPage() {
                 <Link href={`/stock/${producto.id}`} className="block h-full">
                   <article className="bg-[#f5f5f0] rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
                     <div className="relative h-40 sm:h-52 bg-[#f5f5f0] overflow-hidden">
-                      <div className="absolute inset-3 sm:inset-4">
-                        <Image
-                          src={producto.imagen}
-                          alt={producto.nombre}
-                          fill
-                          className="object-contain mix-blend-multiply"
-                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                          loading="lazy"
-                        />
-                      </div>
+                      <Image
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        fill
+                        className="object-cover object-center mix-blend-multiply"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                        loading="lazy"
+                      />
                       <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                         Stock: {producto.stock}
                       </span>
