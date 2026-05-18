@@ -141,14 +141,16 @@ export default function CatalogoPage() {
                 <Link href={`/catalogo/${producto.id}`} className="block h-full">
                   <article className="bg-[#f5f5f0] rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg h-full cursor-pointer">
                     <div className="h-40 sm:h-52 bg-[#f5f5f0] relative overflow-hidden">
-                      <Image
-                        src={producto.imagen}
-                        alt={producto.nombre}
-                        fill
-                        className="object-contain mix-blend-multiply"
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                        loading="lazy"
-                      />
+                      <div className="absolute inset-3 sm:inset-4">
+                        <Image
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          fill
+                          className="object-contain mix-blend-multiply"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                          loading="lazy"
+                        />
+                      </div>
                     </div>
                     <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
                       <span className={`text-xs font-medium px-2 py-1 rounded-full self-start ${badgeTipo[producto.tipo]}`}>
