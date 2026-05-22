@@ -44,6 +44,7 @@ export default function CheckoutPage() {
   const [precioEnvio,      setPrecioEnvio]      = useState(0);
   const [precioEstampa,    setPrecioEstampa]    = useState(0);
   const [parcheEstampado,  setParcheEstampado]  = useState(false);
+  const [detalleEstampa,   setDetalleEstampa]   = useState("");
   const [cargando,         setCargando]         = useState(false);
   const [cargandoTransf,   setCargandoTransf]   = useState(false);
   const [error,            setError]            = useState(null);
@@ -105,6 +106,10 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (parcheEstampado && !detalleEstampa.trim()) {
+      setError("Escribí qué querés en el estampado antes de continuar.");
+      return;
+    }
     setCargando(true);
     setError(null);
 
@@ -112,7 +117,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/create-preference", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form, parcheEstampado }),
+        body: JSON.stringify({ items, comprador: form, parcheEstampado, detalleEstampa }),
       });
 
       const data = await res.json();
@@ -142,6 +147,10 @@ export default function CheckoutPage() {
       setError("Completá todos los campos obligatorios antes de continuar.");
       return;
     }
+    if (parcheEstampado && !detalleEstampa.trim()) {
+      setError("Escribí qué querés en el estampado antes de continuar.");
+      return;
+    }
     setCargandoTransf(true);
     setError(null);
 
@@ -149,7 +158,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/pedidos/transferencia", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form, precioEnvio, parcheEstampado, precioEstampa }),
+        body: JSON.stringify({ items, comprador: form, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa }),
       });
 
       const data = await res.json();
@@ -163,7 +172,7 @@ export default function CheckoutPage() {
       const msg =
         `Hola! Quiero pagar por transferencia.\n\n` +
         `*Pedido #${data.id}*\n${resumen}\n` +
-        (parcheEstampado ? `Parche estampado: ${formatearPrecio(precioEstampa)}\n` : "") +
+        (parcheEstampado ? `Parche estampado: ${formatearPrecio(precioEstampa)}\n_Estampado: ${detalleEstampa}_\n` : "") +
         `Envío: ${formatearPrecio(precioEnvio)}\n` +
         `*Total: ${formatearPrecio(totalFinal)}*\n\n` +
         `Nombre: ${form.nombre}\n` +
@@ -315,7 +324,7 @@ export default function CheckoutPage() {
 
           {/* Parche estampado */}
           {precioEstampa > 0 && (
-            <section className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+            <section className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col gap-4">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -333,6 +342,18 @@ export default function CheckoutPage() {
                   </p>
                 </div>
               </label>
+
+              {parcheEstampado && (
+                <Campo label="¿Qué querés en el estampado? *">
+                  <textarea
+                    value={detalleEstampa}
+                    onChange={(e) => setDetalleEstampa(e.target.value)}
+                    placeholder="Ej: nombre 'GARCÍA', número 10, escudo del club..."
+                    rows={3}
+                    className={`${inputClass} resize-none`}
+                  />
+                </Campo>
+              )}
             </section>
           )}
 

@@ -27,7 +27,7 @@ export async function POST(request) {
   }
 
   try {
-    const { items, comprador, parcheEstampado } = await request.json();
+    const { items, comprador, parcheEstampado, detalleEstampa } = await request.json();
 
     const precioEnvio = await getPrecioConfig("precio_envio");
     const precioEstampa = parcheEstampado ? await getPrecioConfig("precio_estampa") : 0;
@@ -50,7 +50,7 @@ export async function POST(request) {
           piso:          comprador.piso ?? "",
           departamento:  comprador.departamento ?? "",
           codigo_postal: comprador.codigoPostal ?? "",
-          observaciones: `${parcheEstampado ? "[CON PARCHE ESTAMPADO] " : ""}${comprador.observaciones ?? ""}`.trim(),
+          observaciones: `${parcheEstampado ? `[PARCHE ESTAMPADO: ${detalleEstampa ?? ""}] ` : ""}${comprador.observaciones ?? ""}`.trim(),
           items,
           total,
           estado: "pendiente",
