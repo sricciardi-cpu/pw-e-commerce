@@ -6,10 +6,11 @@ export const dynamic = "force-dynamic";
 export async function POST(request) {
   noStore();
   try {
-    const { items, comprador, precioEnvio } = await request.json();
+    const { items, comprador, precioEnvio, parcheEstampado, precioEstampa } = await request.json();
 
-    const subtotal = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0);
-    const total    = subtotal + (parseInt(precioEnvio) || 0);
+    const subtotal     = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0);
+    const costoEstampa = parcheEstampado ? (parseInt(precioEstampa) || 0) : 0;
+    const total        = subtotal + (parseInt(precioEnvio) || 0) + costoEstampa;
 
     const fila = {
       nombre:        comprador.nombre,
@@ -22,7 +23,7 @@ export async function POST(request) {
       piso:          comprador.piso ?? "",
       departamento:  comprador.departamento ?? "",
       codigo_postal: comprador.codigoPostal ?? "",
-      observaciones: `[TRANSFERENCIA] ${comprador.observaciones ?? ""}`.trim(),
+      observaciones: `[TRANSFERENCIA]${parcheEstampado ? " [CON PARCHE ESTAMPADO]" : ""} ${comprador.observaciones ?? ""}`.trim(),
       items,
       total,
       estado:        "pendiente_transferencia",

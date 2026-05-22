@@ -4,12 +4,12 @@ import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
-async function getPrecioEnvio() {
+async function getPrecioConfig(clave) {
   try {
     const { data } = await supabaseAdmin()
       .from("configuracion")
       .select("valor")
-      .eq("clave", "precio_envio")
+      .eq("clave", clave)
       .single();
     return data ? parseInt(data.valor) || 0 : 0;
   } catch {
@@ -27,11 +27,12 @@ export async function POST(request) {
   }
 
   try {
-    const { items, comprador } = await request.json();
+    const { items, comprador, parcheEstampado } = await request.json();
 
-    const precioEnvio = await getPrecioEnvio();
-    console.log("[create-preference] precioEnvio:", precioEnvio, "| items:", JSON.stringify(items.map(i => ({ nombre: i.nombre, precio: i.precio, tipo: typeof i.precio }))));
-    const total = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0) + precioEnvio;
+    const precioEnvio = await getPrecioConfig("precio_envio");
+    const precioEstampa = parcheEstampado ? await getPrecioConfig("precio_estampa") : 0;
+    console.log("[create-preference] precioEnvio:", precioEnvio, "| precioEstampa:", precioEstampa, "| items:", JSON.stringify(items.map(i => ({ nombre: i.nombre, precio: i.precio, tipo: typeof i.precio }))));
+    const total = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0) + precioEnvio + precioEstampa;
 
     // Guardar pedido en Supabase antes de redirigir a MP
     let pedidoId = null;
@@ -49,7 +50,7 @@ export async function POST(request) {
           piso:          comprador.piso ?? "",
           departamento:  comprador.departamento ?? "",
           codigo_postal: comprador.codigoPostal ?? "",
-          observaciones: comprador.observaciones ?? "",
+          observaciones: `${parcheEstampado ? "[CON PARCHE ESTAMPADO] " : ""}${comprador.observaciones ?? ""}`.trim(),
           items,
           total,
           estado: "pendiente",
@@ -82,6 +83,13 @@ export async function POST(request) {
             unit_price: Number(precioEnvio),
             currency_id: "ARS",
           },
+          ...(precioEstampa > 0 ? [{
+            id: "estampa",
+            title: "Parche estampado",
+            quantity: 1,
+            unit_price: Number(precioEstampa),
+            currency_id: "ARS",
+          }] : []),
         ],
         payer: {
           name: comprador.nombre,

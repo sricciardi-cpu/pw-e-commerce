@@ -42,6 +42,8 @@ export default function CheckoutPage() {
     observaciones: "",
   });
   const [precioEnvio,      setPrecioEnvio]      = useState(0);
+  const [precioEstampa,    setPrecioEstampa]    = useState(0);
+  const [parcheEstampado,  setParcheEstampado]  = useState(false);
   const [cargando,         setCargando]         = useState(false);
   const [cargandoTransf,   setCargandoTransf]   = useState(false);
   const [error,            setError]            = useState(null);
@@ -49,16 +51,21 @@ export default function CheckoutPage() {
   useEffect(() => {
     fetch("/api/config", { cache: "no-store" })
       .then((r) => r.json())
-      .then((d) => setPrecioEnvio(parseInt(d.precio_envio) || 0))
+      .then((d) => {
+        setPrecioEnvio(parseInt(d.precio_envio) || 0);
+        setPrecioEstampa(parseInt(d.precio_estampa) || 0);
+      })
       .catch(() => {});
   }, []);
+
+  const costoEstampa = parcheEstampado ? precioEstampa : 0;
 
   // Disparar InitiateCheckout cuando hay items y el componente está listo.
   useEffect(() => {
     if (items.length === 0) return;
-    trackInitiateCheckout({ items, total: total + precioEnvio });
+    trackInitiateCheckout({ items, total: total + precioEnvio + costoEstampa });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items.length, precioEnvio]);
+  }, [items.length, precioEnvio, costoEstampa]);
 
   // Cuando el usuario vuelve con "atrás" desde MP, el bfcache restaura la
   // página con cargando=true. El evento pageshow la resetea.
@@ -105,7 +112,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/create-preference", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form }),
+        body: JSON.stringify({ items, comprador: form, parcheEstampado }),
       });
 
       const data = await res.json();
@@ -115,7 +122,7 @@ export default function CheckoutPage() {
       // Guardar resumen para disparar Purchase en /checkout/exito al volver de MP
       try {
         localStorage.setItem("pendingPurchase", JSON.stringify({
-          items, total: total + precioEnvio, ts: Date.now(),
+          items, total: total + precioEnvio + costoEstampa, ts: Date.now(),
         }));
       } catch {}
 
@@ -142,7 +149,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/pedidos/transferencia", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form, precioEnvio }),
+        body: JSON.stringify({ items, comprador: form, precioEnvio, parcheEstampado, precioEstampa }),
       });
 
       const data = await res.json();
@@ -152,16 +159,17 @@ export default function CheckoutPage() {
       const resumen = items
         .map((i) => `• ${i.nombre} T.${i.talle} x${i.cantidad} = ${formatearPrecio(i.precio * i.cantidad)}`)
         .join("\n");
-      const totalConEnvio = total + precioEnvio;
+      const totalFinal = total + precioEnvio + costoEstampa;
       const msg =
         `Hola! Quiero pagar por transferencia.\n\n` +
         `*Pedido #${data.id}*\n${resumen}\n` +
+        (parcheEstampado ? `Parche estampado: ${formatearPrecio(precioEstampa)}\n` : "") +
         `Envío: ${formatearPrecio(precioEnvio)}\n` +
-        `*Total: ${formatearPrecio(totalConEnvio)}*\n\n` +
+        `*Total: ${formatearPrecio(totalFinal)}*\n\n` +
         `Nombre: ${form.nombre}\n` +
         `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
 
-      trackPurchase({ items, total: totalConEnvio, pedidoId: data.id });
+      trackPurchase({ items, total: totalFinal, pedidoId: data.id });
       vaciarCarrito();
       window.location.href = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(msg)}`;
     } catch (err) {
@@ -170,7 +178,7 @@ export default function CheckoutPage() {
     }
   }
 
-  const totalConEnvio = total + precioEnvio;
+  const totalConEnvio = total + precioEnvio + costoEstampa;
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -305,6 +313,29 @@ export default function CheckoutPage() {
             </Campo>
           </section>
 
+          {/* Parche estampado */}
+          {precioEstampa > 0 && (
+            <section className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={parcheEstampado}
+                  onChange={(e) => setParcheEstampado(e.target.checked)}
+                  className="mt-1 w-5 h-5 accent-orange-500 shrink-0"
+                />
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    Agregar parche estampado
+                    <span className="text-orange-500 ml-2">+{formatearPrecio(precioEstampa)}</span>
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Sumá el parche estampado a tu pedido.
+                  </p>
+                </div>
+              </label>
+            </section>
+          )}
+
           {error && (
             <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-3">
               {error}
@@ -371,6 +402,12 @@ export default function CheckoutPage() {
                 <span>Envío</span>
                 <span>{precioEnvio > 0 ? formatearPrecio(precioEnvio) : "—"}</span>
               </div>
+              {parcheEstampado && (
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>Parche estampado</span>
+                  <span>{formatearPrecio(precioEstampa)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-900 font-bold text-base border-t border-gray-200 pt-2 mt-1">
                 <span>Total</span>
                 <span className="text-orange-500">{formatearPrecio(totalConEnvio)}</span>
