@@ -133,8 +133,16 @@ export default function CheckoutPage() {
 
       // Abrir en nueva pestaña para evitar que iOS redirija a la app de MP
       // (los Universal Links solo se disparan en navegación de misma pestaña)
-      window.open(data.url, "_blank", "noopener,noreferrer");
-      setCargando(false);
+      const popup = window.open(data.url, "_blank", "noopener,noreferrer");
+
+      // Si el navegador bloqueó la pop-up (ej: Instagram, Facebook, TikTok
+      // in-app browsers, popup blockers), redirigir en la misma pestaña como
+      // fallback para que igual pueda pagar.
+      if (!popup || popup.closed || typeof popup.closed === "undefined") {
+        window.location.href = data.url;
+      } else {
+        setCargando(false);
+      }
     } catch (err) {
       setError(err.message);
       setCargando(false);
