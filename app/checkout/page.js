@@ -163,20 +163,28 @@ export default function CheckoutPage() {
     setError(null);
 
     try {
+      // Calcular precios con descuento por transferencia por item
+      const itemsTransf = items.map((i) => {
+        const desc = Number(i.descuentoTransferencia) || 0;
+        const precioTransf = Math.round(i.precio * (1 - desc / 100));
+        return { ...i, precioTransf, descuentoTransferencia: desc };
+      });
+      const subtotalTransf = itemsTransf.reduce((s, i) => s + i.precioTransf * i.cantidad, 0);
+      const totalFinal     = subtotalTransf + precioEnvio + costoEstampa;
+
       const res = await fetch("/api/pedidos/transferencia", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa }),
+        body: JSON.stringify({ items: itemsTransf, comprador: form, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa }),
       });
 
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Error al registrar el pedido");
 
-      const resumen = items
-        .map((i) => `• ${i.nombre} T.${i.talle} x${i.cantidad} = ${formatearPrecio(i.precio * i.cantidad)}`)
+      const resumen = itemsTransf
+        .map((i) => `• ${i.nombre} T.${i.talle} x${i.cantidad} = ${formatearPrecio(i.precioTransf * i.cantidad)}${i.descuentoTransferencia > 0 ? ` _(−${i.descuentoTransferencia}% transf.)_` : ""}`)
         .join("\n");
-      const totalFinal = total + precioEnvio + costoEstampa;
       const msg =
         `Hola! Quiero pagar por transferencia.\n\n` +
         `*Pedido #${data.id}*\n${resumen}\n` +
@@ -186,7 +194,7 @@ export default function CheckoutPage() {
         `Nombre: ${form.nombre}\n` +
         `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
 
-      trackPurchase({ items, total: totalFinal, pedidoId: data.id });
+      trackPurchase({ items: itemsTransf, total: totalFinal, pedidoId: data.id });
       vaciarCarrito();
       window.location.href = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(msg)}`;
     } catch (err) {

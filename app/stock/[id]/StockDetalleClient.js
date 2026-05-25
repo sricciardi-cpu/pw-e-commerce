@@ -108,6 +108,7 @@ export default function StockDetalleClient({ params }) {
       id: producto.id, nombre: producto.nombre, talle: talleSeleccionado,
       precio: producto.precio, cantidad, imagen: producto.imagen,
       stock: stockTalle, tabla: "productos_stock",
+      descuentoTransferencia: producto.descuento_transferencia ?? 0,
     });
     trackAddToCart({
       id: producto.id, nombre: producto.nombre, precio: producto.precio,

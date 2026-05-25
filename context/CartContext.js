@@ -25,17 +25,17 @@ export function CartProvider({ children }) {
     } catch {}
   }, [items, hidratado]);
 
-  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null, stock = Infinity, tabla = null }) {
+  function agregarAlCarrito({ id, nombre, talle, precio, cantidad = 1, imagen = null, stock = Infinity, tabla = null, descuentoTransferencia = 0 }) {
     setItems((prev) => {
       const existe = prev.find((i) => i.id === id && i.talle === talle);
       if (existe) {
         const nuevaCantidad = Math.min(existe.cantidad + cantidad, stock);
         if (nuevaCantidad === existe.cantidad) return prev;
         return prev.map((i) =>
-          i.id === id && i.talle === talle ? { ...i, cantidad: nuevaCantidad, stock } : i
+          i.id === id && i.talle === talle ? { ...i, cantidad: nuevaCantidad, stock, descuentoTransferencia } : i
         );
       }
-      return [...prev, { id, nombre, talle, precio, cantidad: Math.min(cantidad, stock), imagen, stock, tabla }];
+      return [...prev, { id, nombre, talle, precio, cantidad: Math.min(cantidad, stock), imagen, stock, tabla, descuentoTransferencia }];
     });
   }
 

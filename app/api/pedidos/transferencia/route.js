@@ -8,7 +8,8 @@ export async function POST(request) {
   try {
     const { items, comprador, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa } = await request.json();
 
-    const subtotal     = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0);
+    // Usar precio con descuento por transferencia si vino, sino el regular
+    const subtotal     = items.reduce((sum, i) => sum + Number(i.precioTransf ?? i.precio) * Number(i.cantidad), 0);
     const costoEstampa = parcheEstampado ? (parseInt(precioEstampa) || 0) : 0;
     const total        = subtotal + (parseInt(precioEnvio) || 0) + costoEstampa;
 
