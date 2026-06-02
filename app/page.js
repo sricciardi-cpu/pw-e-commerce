@@ -169,6 +169,7 @@ function Carousel({ items }) {
                 src={producto.imagen}
                 alt={producto.nombre}
                 fill
+                unoptimized
                 className="object-contain mix-blend-multiply pointer-events-none"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 loading="lazy"

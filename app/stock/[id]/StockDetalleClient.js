@@ -138,6 +138,7 @@ export default function StockDetalleClient({ params }) {
               alt={producto.nombre}
               fill
               priority
+              unoptimized
               className="object-contain mix-blend-multiply animate-[fadeIn_0.3s_ease-out]"
               sizes="(max-width: 768px) 100vw, 40vw"
             />
@@ -146,7 +147,7 @@ export default function StockDetalleClient({ params }) {
             <div className="flex gap-2 overflow-x-auto pb-1">
               {imagenes.map((src, i) => (
                 <button key={i} onClick={() => setImagenActiva(i)} className={`shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors bg-[#f5f5f0] relative ${imagenActiva === i ? "border-orange-500" : "border-gray-200 hover:border-gray-400"}`}>
-                  <Image src={src} alt={`Vista ${i + 1}`} fill className="object-contain mix-blend-multiply" sizes="64px" />
+                  <Image src={src} alt={`Vista ${i + 1}`} fill unoptimized className="object-contain mix-blend-multiply" sizes="64px" />
                 </button>
               ))}
             </div>
