@@ -13,12 +13,19 @@ function formatearPrecio(precio) {
 }
 
 function stockTotal(p) {
-  const global = Number(p.stock) || 0;
+  const tallesActivos = p.talle ?? [];
   const porTalle = p.stock_por_talle ?? {};
-  const sumaTalles = Object.values(porTalle).reduce((s, n) => s + (Number(n) || 0), 0);
-  // Si hay stock por talle definido, usamos esa suma (es el dato real).
-  // Sino, caemos al stock global.
-  return sumaTalles > 0 ? sumaTalles : global;
+
+  // Si hay al menos un talle activo con stock por talle definido,
+  // consideramos que el producto se maneja por talle. Sumamos solo
+  // los talles activos (ignorando datos huerfanos de talles eliminados).
+  const hayPerTalle = tallesActivos.some((t) => porTalle[t] !== undefined);
+  if (hayPerTalle && tallesActivos.length > 0) {
+    return tallesActivos.reduce((s, t) => s + (Number(porTalle[t]) || 0), 0);
+  }
+
+  // Caso contrario: se maneja con stock global
+  return Number(p.stock) || 0;
 }
 
 function tieneStock(p) {
