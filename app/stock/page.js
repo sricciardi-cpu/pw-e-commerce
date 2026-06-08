@@ -12,11 +12,17 @@ function formatearPrecio(precio) {
   return "$" + precio.toLocaleString("es-AR");
 }
 
-function tieneStock(p) {
-  if ((p.stock ?? 0) > 0) return true;
+function stockTotal(p) {
+  const global = Number(p.stock) || 0;
   const porTalle = p.stock_por_talle ?? {};
-  const total = Object.values(porTalle).reduce((s, n) => s + (Number(n) || 0), 0);
-  return total > 0;
+  const sumaTalles = Object.values(porTalle).reduce((s, n) => s + (Number(n) || 0), 0);
+  // Si hay stock por talle definido, usamos esa suma (es el dato real).
+  // Sino, caemos al stock global.
+  return sumaTalles > 0 ? sumaTalles : global;
+}
+
+function tieneStock(p) {
+  return stockTotal(p) > 0;
 }
 
 const filtrosTipo  = ["Todos", "Naciones", "Clubes"];
@@ -168,7 +174,7 @@ export default function StockPage() {
                         loading="lazy"
                       />
                       <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                        Stock: {producto.stock}
+                        Stock: {stockTotal(producto)}
                       </span>
                     </div>
                     <div className="p-3 md:p-4 flex flex-col flex-1 gap-2">
