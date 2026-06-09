@@ -23,6 +23,9 @@ export async function POST(request) {
       .upload(nombreArchivo, buffer, {
         contentType: file.type,
         upsert: false,
+        // Cache de 1 año (immutable). El nombre lleva timestamp + random,
+        // así que el archivo nunca cambia bajo la misma URL.
+        cacheControl: "31536000",
       });
 
     if (error) throw error;

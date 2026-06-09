@@ -22,16 +22,57 @@ function ImageUploader({ label, value, onChange }) {
   const [subiendo, setSubiendo] = useState(false);
   const inputRef = useRef();
 
+  async function comprimirImagen(file) {
+    const MAX_WIDTH = 1200;
+    const QUALITY   = 0.8;
+
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+
+        const ratio = img.width > MAX_WIDTH ? MAX_WIDTH / img.width : 1;
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) { reject(new Error("toBlob fallo")); return; }
+            resolve(new File([blob], `${Date.now()}.webp`, { type: "image/webp" }));
+          },
+          "image/webp",
+          QUALITY,
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("img load fallo")); };
+      img.src = url;
+    });
+  }
+
   async function handleFile(e) {
     const file = e.target.files[0];
     if (!file) return;
     setSubiendo(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    onChange(data.url ?? "");
-    setSubiendo(false);
+    try {
+      const comprimida = await comprimirImagen(file);
+      const fd = new FormData();
+      fd.append("file", comprimida);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      onChange(data.url ?? "");
+    } catch (err) {
+      console.error("Error procesando imagen:", err);
+      alert("Error procesando la imagen. Intentá de nuevo.");
+    } finally {
+      setSubiendo(false);
+    }
   }
 
   return (
