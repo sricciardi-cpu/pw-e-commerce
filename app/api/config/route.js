@@ -1,21 +1,20 @@
 import { supabaseAdmin } from "@/lib/supabase";
-import { unstable_noStore as noStore } from "next/cache";
 
-export const dynamic = "force-dynamic";
-
-const NO_CACHE = { "Cache-Control": "no-store, no-cache, must-revalidate" };
+// Cacheamos 5 minutos en el edge + browser. La config (precio de envio,
+// precio de estampa) casi nunca cambia, asi que evitamos miles de hits
+// por dia a Supabase y reducimos Edge Requests.
+const CACHE = { "Cache-Control": "public, s-maxage=300, max-age=300, stale-while-revalidate=600" };
 
 export async function GET() {
-  noStore();
   const { data, error } = await supabaseAdmin()
     .from("configuracion")
     .select("clave, valor");
 
   if (error) {
     console.error("[config público] Error:", error.message);
-    return Response.json({ precio_envio: "0" }, { headers: NO_CACHE });
+    return Response.json({ precio_envio: "0" }, { headers: { "Cache-Control": "no-store" } });
   }
 
   const config = Object.fromEntries((data ?? []).map(({ clave, valor }) => [clave, valor]));
-  return Response.json(config, { headers: NO_CACHE });
+  return Response.json(config, { headers: CACHE });
 }
