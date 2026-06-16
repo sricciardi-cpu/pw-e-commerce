@@ -6,6 +6,7 @@ const nextConfig = {
       { protocol: "https", hostname: "via.placeholder.com" },
       { protocol: "https", hostname: "tqpsuwbktcdoohzxjgdw.supabase.co" },
       { protocol: "https", hostname: "**.supabase.co" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
     ],
     // Desactivar totalmente la optimización de Vercel para no consumir
     // transformaciones (free tier: 5K/mes). Las imagenes ya estan
