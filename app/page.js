@@ -297,6 +297,32 @@ export default function HomePage() {
           >
             Ver catálogo
           </Link>
+
+          {/* Cartel promo: regalo paquete Mundial 2019 */}
+          <div className="mt-8 w-full max-w-md md:max-w-lg">
+            <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md border border-orange-500/50 rounded-2xl p-3 md:p-4 shadow-lg shadow-black/30">
+              <div className="relative shrink-0 w-16 h-20 md:w-20 md:h-24 rounded-lg overflow-hidden bg-white">
+                <Image
+                  src="/promo/figuritas-mundial-2019.jpg"
+                  alt="Paquete de figuritas Rugby World Cup Japan 2019"
+                  fill
+                  unoptimized
+                  className="object-contain"
+                />
+              </div>
+              <div className="text-left">
+                <span className="inline-block bg-orange-500 text-black text-[10px] md:text-xs font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1">
+                  ¡Regalo!
+                </span>
+                <p className="text-sm md:text-base font-bold leading-snug text-white">
+                  Con tu próxima compra te llevás de regalo un paquete sellado del Mundial 2019.
+                </p>
+                <p className="text-xs md:text-sm text-orange-400 font-semibold mt-1">
+                  Aprovechá que vuelan 🔥
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats — pegados al fondo del hero */}
