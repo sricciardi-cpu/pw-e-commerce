@@ -27,12 +27,14 @@ export async function POST(request) {
   }
 
   try {
-    const { items, comprador, parcheEstampado, detalleEstampa } = await request.json();
+    const { items, comprador, parches } = await request.json();
+    const parchesArr = Array.isArray(parches) ? parches : [];
 
     const precioEnvio = await getPrecioConfig("precio_envio");
-    const precioEstampa = parcheEstampado ? await getPrecioConfig("precio_estampa") : 0;
-    console.log("[create-preference] precioEnvio:", precioEnvio, "| precioEstampa:", precioEstampa, "| items:", JSON.stringify(items.map(i => ({ nombre: i.nombre, precio: i.precio, tipo: typeof i.precio }))));
-    const total = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0) + precioEnvio + precioEstampa;
+    const precioEstampaUnit = parchesArr.length ? await getPrecioConfig("precio_estampa") : 0;
+    const costoEstampa = parchesArr.length * precioEstampaUnit;
+    const total = items.reduce((sum, i) => sum + Number(i.precio) * Number(i.cantidad), 0) + precioEnvio + costoEstampa;
+    const parchesTxt = parchesArr.map((p) => `${p.nombre} T.${p.talle}: ${p.detalle}`).join(" | ");
 
     // Guardar pedido en Supabase antes de redirigir a MP
     let pedidoId = null;
@@ -50,7 +52,7 @@ export async function POST(request) {
           piso:          comprador.piso ?? "",
           departamento:  comprador.departamento ?? "",
           codigo_postal: comprador.codigoPostal ?? "",
-          observaciones: `${parcheEstampado ? `[PARCHE ESTAMPADO: ${detalleEstampa ?? ""}] ` : ""}${comprador.observaciones ?? ""}`.trim(),
+          observaciones: `${parchesArr.length ? `[PARCHES ESTAMPADOS → ${parchesTxt}] ` : ""}${comprador.observaciones ?? ""}`.trim(),
           items,
           total,
           estado: "pendiente",
@@ -83,11 +85,11 @@ export async function POST(request) {
             unit_price: Number(precioEnvio),
             currency_id: "ARS",
           },
-          ...(precioEstampa > 0 ? [{
+          ...(parchesArr.length > 0 ? [{
             id: "estampa",
-            title: "Parche estampado",
-            quantity: 1,
-            unit_price: Number(precioEstampa),
+            title: `Parche estampado (x${parchesArr.length})`,
+            quantity: parchesArr.length,
+            unit_price: Number(precioEstampaUnit),
             currency_id: "ARS",
           }] : []),
         ],

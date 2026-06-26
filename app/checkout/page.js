@@ -43,8 +43,8 @@ export default function CheckoutPage() {
   });
   const [precioEnvio,      setPrecioEnvio]      = useState(0);
   const [precioEstampa,    setPrecioEstampa]    = useState(0);
-  const [parcheEstampado,  setParcheEstampado]  = useState(false);
-  const [detalleEstampa,   setDetalleEstampa]   = useState("");
+  // Parche por item: map keyed por `${id}-${talle}` → { activo, detalle }
+  const [parches,          setParches]          = useState({});
   const [cargando,         setCargando]         = useState(false);
   const [cargandoTransf,   setCargandoTransf]   = useState(false);
   const [error,            setError]            = useState(null);
@@ -59,7 +59,19 @@ export default function CheckoutPage() {
       .catch(() => {});
   }, []);
 
-  const costoEstampa = parcheEstampado ? precioEstampa : 0;
+  // El parche estampado solo aplica a camisetas (no a bucales).
+  const itemKey      = (it) => `${it.id}-${it.talle}`;
+  const elegibles    = items.filter((it) => it.seccion !== "bucal");
+  const seleccionados = elegibles.filter((it) => parches[itemKey(it)]?.activo);
+  const costoEstampa  = seleccionados.length * precioEstampa;
+
+  // Lista de parches con detalle, lista para enviar al backend / WhatsApp
+  const parchesPayload = seleccionados.map((it) => ({
+    nombre: it.nombre,
+    talle: it.talle,
+    detalle: (parches[itemKey(it)]?.detalle ?? "").trim(),
+  }));
+  const parchesIncompletos = seleccionados.some((it) => !(parches[itemKey(it)]?.detalle ?? "").trim());
 
   // Disparar InitiateCheckout cuando hay items y el componente está listo.
   useEffect(() => {
@@ -106,8 +118,8 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (parcheEstampado && !detalleEstampa.trim()) {
-      setError("Escribí qué querés en el estampado antes de continuar.");
+    if (parchesIncompletos) {
+      setError("Escribí qué querés estampar en cada camiseta con parche seleccionado.");
       return;
     }
     setCargando(true);
@@ -117,7 +129,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/create-preference", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, comprador: form, parcheEstampado, detalleEstampa }),
+        body: JSON.stringify({ items, comprador: form, parches: parchesPayload }),
       });
 
       const data = await res.json();
@@ -155,8 +167,8 @@ export default function CheckoutPage() {
       setError("Completá todos los campos obligatorios antes de continuar.");
       return;
     }
-    if (parcheEstampado && !detalleEstampa.trim()) {
-      setError("Escribí qué querés en el estampado antes de continuar.");
+    if (parchesIncompletos) {
+      setError("Escribí qué querés estampar en cada camiseta con parche seleccionado.");
       return;
     }
     setCargandoTransf(true);
@@ -175,7 +187,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/pedidos/transferencia", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: itemsTransf, comprador: form, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa }),
+        body: JSON.stringify({ items: itemsTransf, comprador: form, precioEnvio, parches: parchesPayload, precioEstampa }),
       });
 
       const data = await res.json();
@@ -185,11 +197,14 @@ export default function CheckoutPage() {
       const resumen = itemsTransf
         .map((i) => `• ${i.nombre} T.${i.talle} x${i.cantidad} = ${formatearPrecio(i.precioTransf * i.cantidad)}${i.descuentoTransferencia > 0 ? ` _(−${i.descuentoTransferencia}% transf.)_` : ""}`)
         .join("\n");
+      const parchesTxt = parchesPayload
+        .map((p) => `Parche en ${p.nombre} T.${p.talle}: ${p.detalle} (+${formatearPrecio(precioEstampa)})`)
+        .join("\n");
       const msg =
         `Hola! Quiero pagar por transferencia.\n\n` +
         `*Pedido #${data.id}*\n${resumen}\n` +
-        (parcheEstampado ? `Parche estampado: ${formatearPrecio(precioEstampa)}\n_Estampado: ${detalleEstampa}_\n` : "") +
-        `Envío: ${formatearPrecio(precioEnvio)}\n` +
+        (parchesPayload.length ? `\n*Parches estampados:*\n${parchesTxt}\n` : "") +
+        `\nEnvío: ${formatearPrecio(precioEnvio)}\n` +
         `*Total: ${formatearPrecio(totalFinal)}*\n\n` +
         `Nombre: ${form.nombre}\n` +
         `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
@@ -338,38 +353,45 @@ export default function CheckoutPage() {
             </Campo>
           </section>
 
-          {/* Parche estampado */}
-          {precioEstampa > 0 && (
+          {/* Parche estampado — uno por camiseta */}
+          {precioEstampa > 0 && elegibles.length > 0 && (
             <section className="bg-gray-50 border border-gray-200 rounded-xl p-5 flex flex-col gap-4">
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={parcheEstampado}
-                  onChange={(e) => setParcheEstampado(e.target.checked)}
-                  className="mt-1 w-5 h-5 accent-orange-500 shrink-0"
-                />
-                <div>
-                  <p className="font-semibold text-gray-900">
-                    Agregar parche estampado
-                    <span className="text-orange-500 ml-2">+{formatearPrecio(precioEstampa)}</span>
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Sumá el parche estampado a tu pedido.
-                  </p>
-                </div>
-              </label>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">Parche estampado</h2>
+                <p className="text-sm text-gray-500">Agregá un parche estampado a las camisetas que quieras ({formatearPrecio(precioEstampa)} c/u).</p>
+              </div>
 
-              {parcheEstampado && (
-                <Campo label="¿Qué querés en el estampado? *">
-                  <textarea
-                    value={detalleEstampa}
-                    onChange={(e) => setDetalleEstampa(e.target.value)}
-                    placeholder="Ej: nombre 'GARCÍA', número 10, escudo del club..."
-                    rows={3}
-                    className={`${inputClass} resize-none`}
-                  />
-                </Campo>
-              )}
+              {elegibles.map((it) => {
+                const k = itemKey(it);
+                const p = parches[k] ?? { activo: false, detalle: "" };
+                return (
+                  <div key={k} className="border border-gray-200 rounded-lg p-3 bg-white flex flex-col gap-3">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={p.activo}
+                        onChange={(e) => setParches((prev) => ({ ...prev, [k]: { ...p, activo: e.target.checked } }))}
+                        className="mt-1 w-5 h-5 accent-orange-500 shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <p className="font-semibold text-gray-900 text-sm">
+                          {it.nombre} <span className="text-gray-500 font-normal">· Talle {it.talle}</span>
+                        </p>
+                        <p className="text-xs text-orange-500 font-semibold">+{formatearPrecio(precioEstampa)}</p>
+                      </div>
+                    </label>
+                    {p.activo && (
+                      <textarea
+                        value={p.detalle}
+                        onChange={(e) => setParches((prev) => ({ ...prev, [k]: { ...p, detalle: e.target.value } }))}
+                        placeholder="¿Qué querés estampar? Ej: nombre 'GARCÍA', número 10..."
+                        rows={2}
+                        className={`${inputClass} resize-none`}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </section>
           )}
 
@@ -439,10 +461,10 @@ export default function CheckoutPage() {
                 <span>Envío</span>
                 <span>{precioEnvio > 0 ? formatearPrecio(precioEnvio) : "—"}</span>
               </div>
-              {parcheEstampado && (
+              {costoEstampa > 0 && (
                 <div className="flex justify-between text-sm text-gray-500">
-                  <span>Parche estampado</span>
-                  <span>{formatearPrecio(precioEstampa)}</span>
+                  <span>Parche estampado x{seleccionados.length}</span>
+                  <span>{formatearPrecio(costoEstampa)}</span>
                 </div>
               )}
               <div className="flex justify-between text-gray-900 font-bold text-base border-t border-gray-200 pt-2 mt-1">

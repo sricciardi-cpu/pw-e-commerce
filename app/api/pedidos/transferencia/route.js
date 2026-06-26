@@ -6,12 +6,14 @@ export const dynamic = "force-dynamic";
 export async function POST(request) {
   noStore();
   try {
-    const { items, comprador, precioEnvio, parcheEstampado, precioEstampa, detalleEstampa } = await request.json();
+    const { items, comprador, precioEnvio, parches, precioEstampa } = await request.json();
+    const parchesArr = Array.isArray(parches) ? parches : [];
 
     // Usar precio con descuento por transferencia si vino, sino el regular
     const subtotal     = items.reduce((sum, i) => sum + Number(i.precioTransf ?? i.precio) * Number(i.cantidad), 0);
-    const costoEstampa = parcheEstampado ? (parseInt(precioEstampa) || 0) : 0;
+    const costoEstampa = parchesArr.length * (parseInt(precioEstampa) || 0);
     const total        = subtotal + (parseInt(precioEnvio) || 0) + costoEstampa;
+    const parchesTxt   = parchesArr.map((p) => `${p.nombre} T.${p.talle}: ${p.detalle}`).join(" | ");
 
     const fila = {
       nombre:        comprador.nombre,
@@ -24,7 +26,7 @@ export async function POST(request) {
       piso:          comprador.piso ?? "",
       departamento:  comprador.departamento ?? "",
       codigo_postal: comprador.codigoPostal ?? "",
-      observaciones: `[TRANSFERENCIA]${parcheEstampado ? ` [PARCHE ESTAMPADO: ${detalleEstampa ?? ""}]` : ""} ${comprador.observaciones ?? ""}`.trim(),
+      observaciones: `[TRANSFERENCIA]${parchesArr.length ? ` [PARCHES ESTAMPADOS → ${parchesTxt}]` : ""} ${comprador.observaciones ?? ""}`.trim(),
       items,
       total,
       estado:        "pendiente_transferencia",
