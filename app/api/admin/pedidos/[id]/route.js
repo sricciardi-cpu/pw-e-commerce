@@ -5,6 +5,44 @@ export const dynamic = "force-dynamic";
 
 const ESTADOS_VALIDOS = ["pendiente", "pagado", "enviado", "entregado", "cancelado"];
 
+// Descuenta el stock de cada item del pedido (global y por talle/color).
+// Misma lógica que el webhook de MercadoPago.
+async function descontarStock(items) {
+  for (const item of items ?? []) {
+    if (!item.id || item.id === "envio" || item.id === "estampa") continue;
+    const cantidad = Number(item.cantidad ?? 1);
+
+    const tablas = item.tabla
+      ? [item.tabla]
+      : ["productos_stock", "productos_catalogo"];
+
+    for (const tabla of tablas) {
+      const { data: prod } = await supabaseAdmin()
+        .from(tabla)
+        .select("stock, stock_por_talle")
+        .eq("id", String(item.id))
+        .single();
+
+      if (!prod) continue;
+
+      const updates = {
+        stock: Math.max(0, (prod.stock ?? 0) - cantidad),
+      };
+
+      const talle = item.talle ?? "";
+      if (talle && prod.stock_por_talle?.[talle] !== undefined) {
+        updates.stock_por_talle = {
+          ...prod.stock_por_talle,
+          [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
+        };
+      }
+
+      await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
+      break; // encontró el producto, no buscar en la otra tabla
+    }
+  }
+}
+
 export async function PATCH(request, { params }) {
   try {
     const { estado } = await request.json();
@@ -12,9 +50,27 @@ export async function PATCH(request, { params }) {
       return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
     }
 
+    // Traer el pedido actual para conocer sus items y si ya se descontó stock.
+    const { data: pedidoActual, error: errGet } = await supabaseAdmin()
+      .from("pedidos")
+      .select("*")
+      .eq("id", params.id)
+      .single();
+    if (errGet) throw errGet;
+
+    const updates = { estado };
+
+    // Descontar stock SOLO la primera vez que el pedido pasa a "pagado".
+    // El flag stock_descontado evita descontar dos veces (ej: pagado→enviado→pagado,
+    // o pedidos de MercadoPago que ya descontaron vía webhook).
+    if (estado === "pagado" && !pedidoActual.stock_descontado) {
+      await descontarStock(pedidoActual.items ?? []);
+      updates.stock_descontado = true;
+    }
+
     const { data, error } = await supabaseAdmin()
       .from("pedidos")
-      .update({ estado })
+      .update(updates)
       .eq("id", params.id)
       .select()
       .single();

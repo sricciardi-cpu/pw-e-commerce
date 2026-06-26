@@ -34,10 +34,11 @@ export async function POST(request) {
         .single();
       pedido = p;
 
-      // Actualizar estado del pedido
+      // Actualizar estado del pedido. Marcamos stock_descontado para que un
+      // cambio manual posterior en el admin no vuelva a descontar el stock.
       await supabaseAdmin()
         .from("pedidos")
-        .update({ estado: "pagado", payment_id: String(paymentId) })
+        .update({ estado: "pagado", payment_id: String(paymentId), stock_descontado: true })
         .eq("id", pedidoId);
     }
 
