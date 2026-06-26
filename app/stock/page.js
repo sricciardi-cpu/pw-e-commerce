@@ -67,7 +67,9 @@ export default function StockPage() {
       .select("*")
       .order("creado_at", { ascending: false })
       .then(({ data }) => {
-        setProductos(data ?? []);
+        // Excluir bucales (tienen su propia sección)
+        const camisetas = (data ?? []).filter((p) => (p.seccion ?? "camiseta") !== "bucal");
+        setProductos(camisetas);
         setCargando(false);
       });
   }, []);

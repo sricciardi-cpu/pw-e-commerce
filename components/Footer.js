@@ -6,7 +6,7 @@ const enlaces = [
   { href: "/", label: "Inicio" },
   { href: "/catalogo", label: "Catálogo" },
   { href: "/stock", label: "Stock" },
-  { href: "/griptec-spray", label: "Griptec Spray" },
+  { href: "/bucales", label: "Bucales" },
   { href: "/guia-de-talles", label: "Guía de Talles" },
   { href: "/contacto", label: "Contacto" },
 ];

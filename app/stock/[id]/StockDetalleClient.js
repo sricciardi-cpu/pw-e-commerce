@@ -94,6 +94,8 @@ export default function StockDetalleClient({ params }) {
 
   const imagenes = [producto.imagen, producto.imagen_espalda, ...(producto.imagenes_extra ?? [])].filter(Boolean);
 
+  const esColor = producto.tipo_variante === "color" || producto.seccion === "bucal";
+
   const stockTalle = talleSeleccionado && producto.stock_por_talle?.[talleSeleccionado] !== undefined
     ? producto.stock_por_talle[talleSeleccionado]
     : producto.stock ?? 0;
@@ -123,7 +125,7 @@ export default function StockDetalleClient({ params }) {
       <nav className="flex items-center gap-1.5 text-sm text-gray-400 mb-3">
         <Link href="/" className="hover:text-orange-500 transition-colors">Inicio</Link>
         <FaChevronRight className="text-xs" />
-        <Link href="/stock" className="hover:text-orange-500 transition-colors">Stock</Link>
+        <Link href={esColor ? "/bucales" : "/stock"} className="hover:text-orange-500 transition-colors">{esColor ? "Bucales" : "Stock"}</Link>
         <FaChevronRight className="text-xs" />
         <span className="text-gray-900 font-medium truncate max-w-[180px]">{producto.nombre}</span>
       </nav>
@@ -157,13 +159,17 @@ export default function StockDetalleClient({ params }) {
         {/* Info */}
         <div className="w-full md:w-3/5 flex flex-col gap-3">
           <div className="flex gap-2 flex-wrap items-center">
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeTipo[producto.tipo]}`}>
-              {producto.tipo === "nacion" ? "Nación" : "Club"}
-            </span>
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize">{producto.categoria}</span>
-            <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-600 text-white">
-              En stock · {producto.stock} disponible{producto.stock !== 1 ? "s" : ""}
-            </span>
+            {esColor ? (
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black">Protector bucal</span>
+            ) : (
+              <>
+                <span className={`text-xs font-medium px-2 py-1 rounded-full ${badgeTipo[producto.tipo]}`}>
+                  {producto.tipo === "nacion" ? "Nación" : "Club"}
+                </span>
+                <span className="text-xs font-medium px-2 py-1 rounded-full bg-orange-500 text-black capitalize">{producto.categoria}</span>
+              </>
+            )}
+            <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-600 text-white">En stock</span>
             <div className="ml-auto">
               <ShareButton nombre={producto.nombre} />
             </div>
@@ -193,14 +199,14 @@ export default function StockDetalleClient({ params }) {
           <p className="text-gray-600 text-sm leading-relaxed">{producto.descripcion}</p>
 
           <div>
-            <p className="text-sm font-semibold text-gray-600 mb-2">Seleccioná tu talle:</p>
+            <p className="text-sm font-semibold text-gray-600 mb-2">{esColor ? "Seleccioná tu color:" : "Seleccioná tu talle:"}</p>
             <div className="flex gap-2 flex-wrap">
               {(producto.talle ?? []).map((t) => {
                 const stockT  = producto.stock_por_talle?.[t] !== undefined ? producto.stock_por_talle[t] : null;
                 const sinStock = stockT !== null && stockT === 0;
                 return (
                   <button key={t} onClick={() => { if (!sinStock) { setTalleSeleccionado(t); setCantidad(1); setEstado("idle"); } }}
-                    className={`w-12 h-12 rounded-xl border-2 text-sm font-bold transition-colors active:scale-95 ${
+                    className={`rounded-xl border-2 text-sm font-bold transition-colors active:scale-95 ${esColor ? "px-4 h-12" : "w-12 h-12"} ${
                       sinStock
                         ? "opacity-40 cursor-not-allowed bg-gray-100 text-gray-400 border-gray-200"
                         : talleSeleccionado === t
@@ -224,14 +230,14 @@ export default function StockDetalleClient({ params }) {
             {yaEnCarrito > 0 && <p className="text-xs text-gray-400 mt-1">Ya tenés {yaEnCarrito} en el carrito</p>}
           </div>
 
-          {estado === "warning" && <p className="text-red-600 text-sm">Seleccioná un talle primero.</p>}
+          {estado === "warning" && <p className="text-red-600 text-sm">Seleccioná un {esColor ? "color" : "talle"} primero.</p>}
 
           <button onClick={handleAgregar} disabled={disponible === 0} className={`w-full font-semibold py-3 rounded-xl text-base active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${estado === "success" ? "bg-green-600 text-white scale-95" : "bg-orange-500 text-black hover:bg-orange-400"}`}>
-            {disponible === 0 ? "Sin stock para este talle" : estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
+            {disponible === 0 ? `Sin stock para este ${esColor ? "color" : "talle"}` : estado === "success" ? "✓ Agregado al carrito" : "Agregar al carrito"}
           </button>
 
           <a
-            href={`https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(`Hola! Me interesa la camiseta *${producto.nombre}*. ¿Podés darme más info?`)}`}
+            href={`https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(`Hola! Me interesa ${esColor ? "el protector bucal" : "la camiseta"} *${producto.nombre}*. ¿Podés darme más info?`)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 border border-green-600 text-green-700 font-semibold py-3 rounded-xl text-base hover:bg-green-50 transition-colors"
@@ -240,7 +246,9 @@ export default function StockDetalleClient({ params }) {
             Preguntar por WhatsApp
           </a>
 
-          <Link href="/guia-de-talles" className="text-sm text-gray-400 hover:text-orange-500 transition-colors">Ver guía de talles →</Link>
+          {!esColor && (
+            <Link href="/guia-de-talles" className="text-sm text-gray-400 hover:text-orange-500 transition-colors">Ver guía de talles →</Link>
+          )}
         </div>
       </div>
     </main>

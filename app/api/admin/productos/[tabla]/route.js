@@ -45,6 +45,8 @@ export async function POST(request, { params }) {
       stock: parseInt(body.stock) || 0,
       stock_por_talle: body.stockPorTalle ?? {},
       descuento_transferencia: parseInt(body.descuentoTransferencia) || 0,
+      seccion: body.seccion ?? "camiseta",
+      tipo_variante: body.tipoVariante ?? "talle",
     };
 
     const { data, error } = await supabaseAdmin()

@@ -1,150 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaSpinner, FaUpload, FaSave } from "react-icons/fa";
-
-const inputClass =
-  "bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-orange-500 transition-colors w-full";
-
-function Campo({ label, children }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm text-gray-600">{label}</label>
-      {children}
-    </div>
-  );
-}
-
-function ImageUploader({ value, onChange }) {
-  const [subiendo, setSubiendo] = useState(false);
-
-  async function handleFile(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setSubiendo(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    if (data.url) onChange(data.url);
-    setSubiendo(false);
-  }
-
-  return (
-    <div className="flex flex-col gap-2">
-      {value && (
-        <img src={value} alt="preview" className="h-32 object-contain rounded-lg bg-gray-100 border border-gray-200" />
-      )}
-      <label className="flex items-center gap-2 cursor-pointer bg-gray-100 border border-gray-300 rounded-lg px-4 py-2.5 text-gray-600 hover:border-orange-500 transition-colors w-fit">
-        {subiendo ? <FaSpinner className="animate-spin text-orange-500" /> : <FaUpload />}
-        {subiendo ? "Subiendo..." : "Subir foto"}
-        <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={subiendo} />
-      </label>
-    </div>
-  );
-}
-
-function EspecialForm({ id, titulo }) {
-  const [form,     setForm]     = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [guardando, setGuardando] = useState(false);
-  const [ok,       setOk]       = useState(false);
-
-  useEffect(() => {
-    fetch(`/api/admin/especiales/${id}`)
-      .then((r) => r.json())
-      .then((data) => { setForm(data); setCargando(false); });
-  }, [id]);
-
-  function set(key, value) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
-  function setPack(i, key, value) {
-    const packs = [...(form.packs ?? [])];
-    packs[i] = { ...packs[i], [key]: key === "precio" ? parseInt(value) || 0 : value };
-    setForm((prev) => ({ ...prev, packs }));
-  }
-
-  async function handleGuardar() {
-    setGuardando(true);
-    await fetch(`/api/admin/especiales/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    setGuardando(false);
-    setOk(true);
-    setTimeout(() => setOk(false), 2000);
-  }
-
-  if (cargando) return <div className="flex justify-center py-8"><FaSpinner className="text-orange-500 text-2xl animate-spin" /></div>;
-
-  return (
-    <section className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-5">
-      <h2 className="text-xl font-bold text-gray-900">{titulo}</h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Campo label="Nombre">
-          <input className={inputClass} value={form.nombre ?? ""} onChange={(e) => set("nombre", e.target.value)} />
-        </Campo>
-
-        <Campo label="Precio ($)">
-          <input type="number" className={inputClass} value={form.precio ?? ""} onChange={(e) => set("precio", parseInt(e.target.value) || 0)} />
-        </Campo>
-
-        {id === "mystery_futbox" && (
-          <>
-            <Campo label="Precio original (tachado)">
-              <input type="number" className={inputClass} value={form.precio_original ?? ""} onChange={(e) => set("precio_original", parseInt(e.target.value) || null)} />
-            </Campo>
-            <Campo label="Etiqueta descuento (ej: 27% OFF)">
-              <input className={inputClass} value={form.descuento_label ?? ""} onChange={(e) => set("descuento_label", e.target.value)} />
-            </Campo>
-          </>
-        )}
-      </div>
-
-      <Campo label="Descripción">
-        <textarea className={`${inputClass} resize-none`} rows={3} value={form.descripcion ?? ""} onChange={(e) => set("descripcion", e.target.value)} />
-      </Campo>
-
-      <Campo label="Foto">
-        <ImageUploader value={form.imagen} onChange={(url) => set("imagen", url)} />
-      </Campo>
-
-      {id === "griptec_spray" && form.packs && (
-        <div>
-          <p className="text-sm text-gray-600 mb-3">Packs</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {form.packs.map((pack, i) => (
-              <div key={i} className="bg-gray-100 border border-gray-200 rounded-xl p-4 flex flex-col gap-2">
-                <p className="text-gray-900 font-semibold text-sm">{pack.label}</p>
-                <Campo label="Precio ($)">
-                  <input type="number" className={inputClass} value={pack.precio ?? ""} onChange={(e) => setPack(i, "precio", e.target.value)} />
-                </Campo>
-                <Campo label="Descuento (ej: 5% OFF)">
-                  <input className={inputClass} value={pack.descuento ?? ""} onChange={(e) => setPack(i, "descuento", e.target.value || null)} placeholder="Opcional" />
-                </Campo>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <button
-        onClick={handleGuardar}
-        disabled={guardando}
-        className={`flex items-center justify-center gap-2 w-full sm:w-fit px-8 py-3 rounded-xl font-semibold transition-all ${ok ? "bg-green-600 text-white" : "bg-orange-500 text-black hover:bg-orange-400"} disabled:opacity-50`}
-      >
-        {guardando ? <FaSpinner className="animate-spin" /> : <FaSave />}
-        {ok ? "¡Guardado!" : guardando ? "Guardando..." : "Guardar cambios"}
-      </button>
-    </section>
-  );
-}
-
-// ── Destacados ─────────────────────────────────────────────────────────────────
+import { FaSpinner } from "react-icons/fa";
 import { supabase } from "@/lib/supabase";
 
 function DestacadosPanel() {
@@ -155,9 +12,14 @@ function DestacadosPanel() {
   useEffect(() => {
     supabase
       .from("productos_stock")
-      .select("id, nombre, imagen, destacado")
+      .select("id, nombre, imagen, destacado, seccion")
       .order("nombre")
-      .then(({ data }) => { setProductos(data ?? []); setCargando(false); });
+      .then(({ data }) => {
+        // Solo camisetas pueden ser destacadas en el carrusel del inicio
+        const camisetas = (data ?? []).filter((p) => (p.seccion ?? "camiseta") !== "bucal");
+        setProductos(camisetas);
+        setCargando(false);
+      });
   }, []);
 
   async function toggleDestacado(id, actual) {
@@ -221,9 +83,8 @@ function DestacadosPanel() {
 export default function EspecialesPage() {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-extrabold text-gray-900">Páginas especiales</h1>
+      <h1 className="text-2xl font-extrabold text-gray-900">Productos destacados</h1>
       <DestacadosPanel />
-      <EspecialForm id="griptec_spray" titulo="Griptec Spray 200ml" />
     </div>
   );
 }

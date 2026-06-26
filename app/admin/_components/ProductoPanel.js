@@ -11,7 +11,7 @@ const FORM_INICIAL = {
   nombre: "", precio: "", stock: "0", categoria: "local",
   tipo: "nacion", talle: [], descripcion: "",
   imagen: "", imagenEspalda: "", imagenesExtra: ["", "", "", ""],
-  stockPorTalle: {}, descuentoTransferencia: "0",
+  stockPorTalle: {}, descuentoTransferencia: "0", tipoVariante: "talle",
 };
 
 function formatearPrecio(precio) {
@@ -109,12 +109,16 @@ function ImageUploader({ label, value, onChange }) {
   );
 }
 
-export default function ProductoPanel({ tabla, titulo }) {
+export default function ProductoPanel({ tabla, titulo, seccion = "camiseta", variante = "talle" }) {
+  const esColor = variante === "color";
+  const labelVariante = esColor ? "color" : "talle";
+
   const [productos,  setProductos]  = useState([]);
   const [cargando,   setCargando]   = useState(true);
   const [form,       setForm]       = useState(FORM_INICIAL);
   const [editandoId, setEditandoId] = useState(null);
   const [formVisible, setFormVisible] = useState(false);
+  const [nuevoColor, setNuevoColor] = useState("");
   const [busqueda,       setBusqueda]       = useState("");
   const [visible,        setVisible]        = useState(15);
   const [guardando,      setGuardando]      = useState(false);
@@ -131,13 +135,22 @@ export default function ProductoPanel({ tabla, titulo }) {
     setCargando(true);
     const res = await fetch(`/api/admin/productos/${tabla}`);
     const data = await res.json();
-    setProductos(Array.isArray(data) ? data : []);
+    // Cada panel muestra solo su sección (camisetas vs bucales)
+    const filtrados = Array.isArray(data)
+      ? data.filter((p) => (p.seccion ?? "camiseta") === seccion)
+      : [];
+    setProductos(filtrados);
     setCargando(false);
   }
 
   function abrirNuevo() {
-    setForm(FORM_INICIAL);
+    setForm({
+      ...FORM_INICIAL,
+      tipoVariante: variante,
+      categoria: esColor ? "bucal" : "local",
+    });
     setEditandoId(null);
+    setNuevoColor("");
     setFormVisible(true);
     setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
   }
@@ -156,10 +169,27 @@ export default function ProductoPanel({ tabla, titulo }) {
       imagenesExtra:          [...(p.imagenes_extra ?? []), "", "", "", ""].slice(0, 4),
       stockPorTalle:          p.stock_por_talle ?? {},
       descuentoTransferencia: String(p.descuento_transferencia ?? 0),
+      tipoVariante:           p.tipo_variante ?? variante,
     });
     setEditandoId(p.id);
+    setNuevoColor("");
     setFormVisible(true);
     setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+  }
+
+  function agregarColor() {
+    const c = nuevoColor.trim();
+    if (!c || form.talle.includes(c)) { setNuevoColor(""); return; }
+    setForm((p) => ({ ...p, talle: [...p.talle, c] }));
+    setNuevoColor("");
+  }
+
+  function quitarVariante(v) {
+    setForm((p) => {
+      const sp = { ...p.stockPorTalle };
+      delete sp[v];
+      return { ...p, talle: p.talle.filter((x) => x !== v), stockPorTalle: sp };
+    });
   }
 
   function cerrarForm() {
@@ -213,6 +243,8 @@ export default function ProductoPanel({ tabla, titulo }) {
       stockPorTalle: form.stockPorTalle,
       descuentoTransferencia: parseInt(form.descuentoTransferencia) || 0,
       imagenesExtra: form.imagenesExtra.filter(Boolean),
+      seccion,
+      tipoVariante: variante,
     };
     const url  = editandoId
       ? `/api/admin/productos/${tabla}/${editandoId}`
@@ -348,61 +380,91 @@ export default function ProductoPanel({ tabla, titulo }) {
               />
             </div>
 
-            {/* Categoría y tipo */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Categoría *</label>
-                <select
-                  value={form.categoria}
-                  onChange={e => setForm(p => ({ ...p, categoria: e.target.value }))}
-                  className={inputClass}
-                >
-                  {CATEGORIAS.map(c => (
-                    <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-xs text-gray-600">Tipo *</label>
-                <select
-                  value={form.tipo}
-                  onChange={e => setForm(p => ({ ...p, tipo: e.target.value }))}
-                  className={inputClass}
-                >
-                  {TIPOS.map(t => (
-                    <option key={t} value={t}>{t === "nacion" ? "Nación" : "Club"}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Talles */}
-            <div className="flex flex-col gap-2">
-              <label className="text-xs text-gray-600">Talles disponibles</label>
-              <div className="flex gap-2 flex-wrap">
-                {TALLES.map(t => (
-                  <button
-                    key={t} type="button" onClick={() => toggleTalle(t)}
-                    className={`w-12 h-10 rounded-lg border-2 text-sm font-bold transition-colors ${
-                      form.talle.includes(t)
-                        ? "bg-orange-500 text-black border-orange-500"
-                        : "bg-gray-100 text-gray-600 border-gray-300 hover:border-gray-900"
-                    }`}
+            {/* Categoría y tipo — solo para camisetas */}
+            {!esColor && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-gray-600">Categoría *</label>
+                  <select
+                    value={form.categoria}
+                    onChange={e => setForm(p => ({ ...p, categoria: e.target.value }))}
+                    className={inputClass}
                   >
-                    {t}
-                  </button>
-                ))}
+                    {CATEGORIAS.map(c => (
+                      <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs text-gray-600">Tipo *</label>
+                  <select
+                    value={form.tipo}
+                    onChange={e => setForm(p => ({ ...p, tipo: e.target.value }))}
+                    className={inputClass}
+                  >
+                    {TIPOS.map(t => (
+                      <option key={t} value={t}>{t === "nacion" ? "Nación" : "Club"}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Stock por talle */}
+            {/* Variantes: talles fijos (camisetas) o colores libres (bucales) */}
+            {esColor ? (
+              <div className="flex flex-col gap-2">
+                <label className="text-xs text-gray-600">Colores disponibles</label>
+                <div className="flex gap-2">
+                  <input
+                    value={nuevoColor}
+                    onChange={(e) => setNuevoColor(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); agregarColor(); } }}
+                    placeholder="Ej: Negro, Azul, Transparente..."
+                    className={inputClass}
+                  />
+                  <button
+                    type="button" onClick={agregarColor}
+                    className="shrink-0 bg-gray-200 text-gray-900 font-semibold px-4 rounded-lg hover:bg-gray-300 transition-colors text-sm"
+                  >
+                    Agregar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <label className="text-xs text-gray-600">Talles disponibles</label>
+                <div className="flex gap-2 flex-wrap">
+                  {TALLES.map(t => (
+                    <button
+                      key={t} type="button" onClick={() => toggleTalle(t)}
+                      className={`w-12 h-10 rounded-lg border-2 text-sm font-bold transition-colors ${
+                        form.talle.includes(t)
+                          ? "bg-orange-500 text-black border-orange-500"
+                          : "bg-gray-100 text-gray-600 border-gray-300 hover:border-gray-900"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Stock por variante */}
             {form.talle.length > 0 && (
               <div className="flex flex-col gap-2">
-                <label className="text-xs text-gray-600">Stock por talle</label>
-                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                <label className="text-xs text-gray-600">Stock por {labelVariante}</label>
+                <div className={`grid gap-2 ${esColor ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-3 sm:grid-cols-6"}`}>
                   {form.talle.map((t) => (
                     <div key={t} className="flex flex-col gap-1 items-center">
-                      <span className="text-xs text-gray-500">{t}</span>
+                      <span className="text-xs text-gray-500 flex items-center gap-1 max-w-full truncate">
+                        {t}
+                        {esColor && (
+                          <button type="button" onClick={() => quitarVariante(t)} className="text-red-500 hover:text-red-600 shrink-0" title="Quitar">
+                            <FaTimes className="text-[10px]" />
+                          </button>
+                        )}
+                      </span>
                       <input
                         type="number" min="0"
                         value={form.stockPorTalle[t] ?? 0}
@@ -500,7 +562,9 @@ export default function ProductoPanel({ tabla, titulo }) {
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 truncate">{p.nombre}</p>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {p.categoria} · {p.tipo === "nacion" ? "Nación" : "Club"} · Talles: {(p.talle ?? []).join(", ") || "—"}
+                  {esColor
+                    ? `Colores: ${(p.talle ?? []).join(", ") || "—"}`
+                    : `${p.categoria} · ${p.tipo === "nacion" ? "Nación" : "Club"} · Talles: ${(p.talle ?? []).join(", ") || "—"}`}
                 </p>
                 <div className="flex items-center gap-3 mt-1 flex-wrap">
                   <span className="text-orange-500 font-bold text-sm">{formatearPrecio(p.precio)}</span>
