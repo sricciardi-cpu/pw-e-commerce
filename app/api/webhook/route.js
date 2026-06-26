@@ -54,17 +54,15 @@ export async function POST(request) {
         }));
 
     for (const item of itemsParaStock) {
-      if (!item.id || item.id === "envio") continue;
+      if (!item.id || item.id === "envio" || item.id === "estampa") continue;
+      // Solo se descuenta stock de la sección "Stock". El catálogo es por
+      // encargo (sin stock real), así que esos items se ignoran.
+      if (item.tabla && item.tabla !== "productos_stock") continue;
       const cantidad = Number(item.cantidad ?? item.quantity ?? 1);
 
-      // Si sabemos la tabla, actualizamos solo esa. Si no, intentamos ambas.
-      const tablas = item.tabla
-        ? [item.tabla]
-        : ["productos_stock", "productos_catalogo"];
-
-      for (const tabla of tablas) {
+      {
         const { data: prod } = await supabaseAdmin()
-          .from(tabla)
+          .from("productos_stock")
           .select("stock, stock_por_talle")
           .eq("id", String(item.id))
           .single();
@@ -83,8 +81,7 @@ export async function POST(request) {
           };
         }
 
-        await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
-        break; // encontró el producto, no buscar en la otra tabla
+        await supabaseAdmin().from("productos_stock").update(updates).eq("id", String(item.id));
       }
     }
 

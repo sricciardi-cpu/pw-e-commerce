@@ -10,36 +10,32 @@ const ESTADOS_VALIDOS = ["pendiente", "pagado", "enviado", "entregado", "cancela
 async function descontarStock(items) {
   for (const item of items ?? []) {
     if (!item.id || item.id === "envio" || item.id === "estampa") continue;
+    // Solo se descuenta stock de la sección "Stock". El catálogo es por
+    // encargo (sin stock real), así que esos items se ignoran.
+    if (item.tabla && item.tabla !== "productos_stock") continue;
     const cantidad = Number(item.cantidad ?? 1);
 
-    const tablas = item.tabla
-      ? [item.tabla]
-      : ["productos_stock", "productos_catalogo"];
+    const { data: prod } = await supabaseAdmin()
+      .from("productos_stock")
+      .select("stock, stock_por_talle")
+      .eq("id", String(item.id))
+      .single();
 
-    for (const tabla of tablas) {
-      const { data: prod } = await supabaseAdmin()
-        .from(tabla)
-        .select("stock, stock_por_talle")
-        .eq("id", String(item.id))
-        .single();
+    if (!prod) continue;
 
-      if (!prod) continue;
+    const updates = {
+      stock: Math.max(0, (prod.stock ?? 0) - cantidad),
+    };
 
-      const updates = {
-        stock: Math.max(0, (prod.stock ?? 0) - cantidad),
+    const talle = item.talle ?? "";
+    if (talle && prod.stock_por_talle?.[talle] !== undefined) {
+      updates.stock_por_talle = {
+        ...prod.stock_por_talle,
+        [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
       };
-
-      const talle = item.talle ?? "";
-      if (talle && prod.stock_por_talle?.[talle] !== undefined) {
-        updates.stock_por_talle = {
-          ...prod.stock_por_talle,
-          [talle]: Math.max(0, prod.stock_por_talle[talle] - cantidad),
-        };
-      }
-
-      await supabaseAdmin().from(tabla).update(updates).eq("id", String(item.id));
-      break; // encontró el producto, no buscar en la otra tabla
     }
+
+    await supabaseAdmin().from("productos_stock").update(updates).eq("id", String(item.id));
   }
 }
 
