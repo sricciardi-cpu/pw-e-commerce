@@ -34,7 +34,7 @@ export default function Footer() {
               La Plata, Buenos Aires
             </a>
             <p className="text-sm text-gray-500">Envíos a todo el país</p>
-            <p className="text-sm text-gray-500">Transferencia · Efectivo · Mercado Pago</p>
+            <p className="text-sm text-gray-500">Transferencia · Tarjeta de credito y debito · Mercado Pago</p>
           </div>
 
           {/* Middle column: links */}

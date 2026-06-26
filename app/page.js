@@ -318,7 +318,7 @@ export default function HomePage() {
                   Con tu próxima compra te llevás de regalo un paquete sellado del Mundial 2019.
                 </p>
                 <p className="text-xs md:text-sm text-orange-400 font-semibold mt-1">
-                  Aprovechá que vuelan 🔥
+                  Aprovechá que vuelan 
                 </p>
               </div>
             </div>
