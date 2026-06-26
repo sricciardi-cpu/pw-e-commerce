@@ -147,7 +147,9 @@ export default function ProductoPanel({ tabla, titulo, seccion = "camiseta", var
     setForm({
       ...FORM_INICIAL,
       tipoVariante: variante,
-      categoria: esColor ? "bucal" : "local",
+      // categoria queda "local" (valor permitido por el check constraint);
+      // para bucales no se muestra en la web, solo cumple la restriccion.
+      categoria: "local",
     });
     setEditandoId(null);
     setNuevoColor("");
