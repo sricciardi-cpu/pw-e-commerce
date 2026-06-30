@@ -12,8 +12,8 @@ export const metadata = {
   description: "Las mejores camisetas de rugby de Argentina. Stock disponible y pedidos por encargo. Envíos a todo el país.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo-negro.png",
-    apple: "/logo-negro.png",
+    icon: "/logo-negro-cuadrado.png",
+    apple: "/logo-negro-cuadrado.png",
   },
   openGraph: {
     title: "Camisetas Zeus | Camisetas de Rugby Argentina",
