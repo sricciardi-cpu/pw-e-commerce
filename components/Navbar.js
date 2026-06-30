@@ -75,19 +75,25 @@ export default function Navbar() {
     setMenuAbierto(false);
   }, [pathname]);
 
+  // Navbar sólido (beige) al scrollear, con menú abierto, o fuera del inicio.
+  // En ese caso el fondo es claro → logo negro. Sobre el hero transparente
+  // del inicio el fondo es oscuro → logo blanco.
+  const navbarSolido = scrolled || menuAbierto || pathname !== "/";
+
   return (
-    <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled || menuAbierto || pathname !== "/" ? "bg-[#d6d3cd] border-b border-[#c4c0b9] text-gray-900" : "bg-transparent text-white"}`} ref={menuRef}>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${navbarSolido ? "bg-[#d6d3cd] border-b border-[#c4c0b9] text-gray-900" : "bg-transparent text-white"}`} ref={menuRef}>
       <div className="px-4 md:px-8 py-4 md:py-6 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
           className="flex items-center gap-2 text-xl md:text-2xl font-bold tracking-wide hover:text-orange-400 transition-colors"
         >
-          {/* Logo: negro en modo claro, el actual en modo oscuro del navegador */}
-          <picture>
-            <source srcSet="/logo.png" media="(prefers-color-scheme: dark)" />
-            <img src="/logo-negro.png" alt="Camisetas Zeus" className="h-9 md:h-10 w-auto" />
-          </picture>
+          {/* Logo: negro sobre el navbar beige, blanco sobre el hero oscuro */}
+          <img
+            src={navbarSolido ? "/logo-negro.png" : "/logo.png"}
+            alt="Camisetas Zeus"
+            className="h-9 md:h-10 w-auto"
+          />
           <span className="hidden sm:inline">Camisetas Zeus</span>
         </Link>
 

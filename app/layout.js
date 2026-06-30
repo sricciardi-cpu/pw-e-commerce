@@ -12,7 +12,12 @@ export const metadata = {
   description: "Las mejores camisetas de rugby de Argentina. Stock disponible y pedidos por encargo. Envíos a todo el país.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/logo-negro-cuadrado.png",
+    icon: [
+      // Favicon adaptativo: negro para fondo claro, blanco para modo oscuro
+      { url: "/logo-negro-cuadrado.png" },
+      { url: "/logo-negro-cuadrado.png", media: "(prefers-color-scheme: light)" },
+      { url: "/logo-blanco-cuadrado.png", media: "(prefers-color-scheme: dark)" },
+    ],
     apple: "/logo-negro-cuadrado.png",
   },
   openGraph: {
