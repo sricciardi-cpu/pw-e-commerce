@@ -30,6 +30,12 @@ export async function POST(request) {
     const { items, comprador, parches } = await request.json();
     const parchesArr = Array.isArray(parches) ? parches : [];
 
+    // Dominio canónico (sin www). Si NEXT_PUBLIC_URL quedó con www, MercadoPago
+    // recibe un redirect 307 en el webhook y NO lo sigue → el pago nunca se
+    // registra. Normalizamos para que el notification_url siempre apunte al
+    // dominio que responde 200.
+    const baseUrl = (process.env.NEXT_PUBLIC_URL ?? "").replace("://www.", "://").replace(/\/$/, "");
+
     const precioEnvio = await getPrecioConfig("precio_envio");
     const precioEstampaUnit = parchesArr.length ? await getPrecioConfig("precio_estampa") : 0;
     const costoEstampa = parchesArr.length * precioEstampaUnit;
@@ -104,9 +110,9 @@ export async function POST(request) {
           },
         },
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_URL}/checkout/exito`,
-          failure: `${process.env.NEXT_PUBLIC_URL}/checkout/error`,
-          pending: `${process.env.NEXT_PUBLIC_URL}/checkout/exito`,
+          success: `${baseUrl}/checkout/exito`,
+          failure: `${baseUrl}/checkout/error`,
+          pending: `${baseUrl}/checkout/exito`,
         },
         payment_methods: {
           excluded_payment_types: [
@@ -116,7 +122,7 @@ export async function POST(request) {
           installments: 1,
         },
         auto_return: "approved",
-        notification_url: `${process.env.NEXT_PUBLIC_URL}/api/webhook`,
+        notification_url: `${baseUrl}/api/webhook`,
         ...(pedidoId ? { external_reference: pedidoId } : {}),
       },
     });
