@@ -13,7 +13,7 @@ function formatearPrecio(precio) {
 }
 
 const filtrosTipo  = ["Todos", "Naciones", "Clubes"];
-const filtrosTalle = ["Todos", "S", "M", "L", "XL", "2XL", "3XL"];
+const filtrosTalle = ["Todos", "16", "18", "20", "22", "24", "26"];
 const tipoValor    = { Naciones: "nacion", Clubes: "club" };
 const badgeTipo    = { nacion: "bg-zinc-700 text-white", club: "bg-orange-500/20 text-orange-400" };
 
@@ -32,7 +32,7 @@ function BotonFiltro({ label, activo, onClick }) {
   );
 }
 
-export default function CatalogoPage() {
+export default function KidsPage() {
   const [productos, setProductos] = useState([]);
   const [cargando,  setCargando]  = useState(true);
   const [tipo,  setTipo]  = useState("Todos");
@@ -47,9 +47,8 @@ export default function CatalogoPage() {
       .select("*")
       .order("creado_at", { ascending: false })
       .then(({ data }) => {
-        // Excluir productos Kids (tienen su propia sección)
-        const adultos = (data ?? []).filter((p) => (p.seccion ?? "catalogo") !== "kids");
-        setProductos(adultos);
+        const kids = (data ?? []).filter((p) => (p.seccion ?? "catalogo") === "kids");
+        setProductos(kids);
         setCargando(false);
       });
   }, []);
@@ -66,12 +65,12 @@ export default function CatalogoPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Catálogo Rugby</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Camisetas Kids</h1>
       <div className="bg-orange-500/10 border border-orange-500/40 rounded-xl px-4 py-3 mb-6 flex items-start gap-3">
         <span className="text-orange-500 text-xl shrink-0">📦</span>
         <div>
           <p className="text-orange-500 font-semibold text-sm">Productos por encargo</p>
-          <p className="text-gray-600 text-sm">Estas camisetas se producen a pedido. Tiempo estimado de entrega: <strong className="text-gray-900">20 a 40 días</strong> desde la confirmación del pago.</p>
+          <p className="text-gray-600 text-sm">Camisetas para los más chicos, se producen a pedido. Tiempo estimado de entrega: <strong className="text-gray-900">20 a 40 días</strong> desde la confirmación del pago.</p>
         </div>
       </div>
 
@@ -194,7 +193,7 @@ export default function CatalogoPage() {
           )}
 
           {productosFiltrados.length === 0 && (
-            <p className="text-center text-gray-400 py-16">No hay productos que coincidan con los filtros seleccionados.</p>
+            <p className="text-center text-gray-400 py-16">No hay productos Kids que coincidan con los filtros seleccionados.</p>
           )}
         </>
       )}

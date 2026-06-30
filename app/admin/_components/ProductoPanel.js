@@ -109,7 +109,7 @@ function ImageUploader({ label, value, onChange }) {
   );
 }
 
-export default function ProductoPanel({ tabla, titulo, seccion = "camiseta", variante = "talle" }) {
+export default function ProductoPanel({ tabla, titulo, seccion = "camiseta", variante = "talle", talles = TALLES }) {
   const esColor = variante === "color";
   const labelVariante = esColor ? "color" : "talle";
 
@@ -436,7 +436,7 @@ export default function ProductoPanel({ tabla, titulo, seccion = "camiseta", var
               <div className="flex flex-col gap-2">
                 <label className="text-xs text-gray-600">Talles disponibles</label>
                 <div className="flex gap-2 flex-wrap">
-                  {TALLES.map(t => (
+                  {talles.map(t => (
                     <button
                       key={t} type="button" onClick={() => toggleTalle(t)}
                       className={`w-12 h-10 rounded-lg border-2 text-sm font-bold transition-colors ${

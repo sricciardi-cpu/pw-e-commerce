@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { FaBoxOpen, FaTshirt, FaSignOutAlt, FaStar, FaClipboardList, FaCog, FaShieldAlt } from "react-icons/fa";
+import { FaBoxOpen, FaTshirt, FaSignOutAlt, FaStar, FaClipboardList, FaCog, FaShieldAlt, FaChild } from "react-icons/fa";
 
 // Script síncrono que se ejecuta al parsear el HTML, ANTES de que React
 // hidrate y antes de que el navegador muestre el prompt de "instalar app".
@@ -51,6 +51,7 @@ function usePwaAdminCleanup() {
 const secciones = [
   { href: "/admin/stock",          label: "Stock",      icon: FaBoxOpen       },
   { href: "/admin/catalogo",       label: "Catálogo",   icon: FaTshirt        },
+  { href: "/admin/kids",           label: "Kids",       icon: FaChild         },
   { href: "/admin/bucales",        label: "Bucales",    icon: FaShieldAlt     },
   { href: "/admin/especiales",     label: "Destacados", icon: FaStar          },
   { href: "/admin/pedidos",        label: "Pedidos",    icon: FaClipboardList },

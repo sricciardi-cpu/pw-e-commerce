@@ -94,6 +94,8 @@ export default function ProductoDetalleClient({ params }) {
 
   const imagenes = [producto.imagen, producto.imagen_espalda, ...(producto.imagenes_extra ?? [])].filter(Boolean);
 
+  const esKids = producto.seccion === "kids";
+
   // Catálogo = por encargo, sin restricción de stock
   const MAX_CANTIDAD = 10;
 
@@ -118,7 +120,7 @@ export default function ProductoDetalleClient({ params }) {
       <nav className="flex items-center gap-1.5 text-sm text-gray-400 mb-3">
         <Link href="/" className="hover:text-orange-500 transition-colors">Inicio</Link>
         <FaChevronRight className="text-xs" />
-        <Link href="/catalogo" className="hover:text-orange-500 transition-colors">Catálogo</Link>
+        <Link href={esKids ? "/kids" : "/catalogo"} className="hover:text-orange-500 transition-colors">{esKids ? "Kids" : "Catálogo"}</Link>
         <FaChevronRight className="text-xs" />
         <span className="text-gray-900 font-medium truncate max-w-[180px]">{producto.nombre}</span>
       </nav>

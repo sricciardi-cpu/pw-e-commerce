@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -15,11 +14,13 @@ import {
   FaBars,
   FaTimes,
   FaStore,
+  FaChild,
 } from "react-icons/fa";
 
 const links = [
   { href: "/",               label: "Inicio",          icon: FaHome },
   { href: "/catalogo",       label: "Catálogo",        icon: FaTshirt },
+  { href: "/kids",           label: "Kids",            icon: FaChild },
   { href: "/stock",          label: "Stock",           icon: FaStore },
   { href: "/bucales",        label: "Bucales",         icon: FaShieldAlt },
   { href: "/guia-de-talles", label: "Guía de Talles",  icon: FaRuler },
@@ -82,7 +83,11 @@ export default function Navbar() {
           href="/"
           className="flex items-center gap-2 text-xl md:text-2xl font-bold tracking-wide hover:text-orange-400 transition-colors"
         >
-          <Image src="/logo.png" alt="Camisetas Zeus" width={40} height={40} className="h-9 md:h-10 w-auto" priority />
+          {/* Logo: negro en modo claro, el actual en modo oscuro del navegador */}
+          <picture>
+            <source srcSet="/logo.png" media="(prefers-color-scheme: dark)" />
+            <img src="/logo-negro.png" alt="Camisetas Zeus" className="h-9 md:h-10 w-auto" />
+          </picture>
           <span className="hidden sm:inline">Camisetas Zeus</span>
         </Link>
 
