@@ -120,7 +120,7 @@ export default function ProductoDetalleClient({ params }) {
       <nav className="flex items-center gap-1.5 text-sm text-gray-400 mb-3">
         <Link href="/" className="hover:text-orange-500 transition-colors">Inicio</Link>
         <FaChevronRight className="text-xs" />
-        <Link href={esKids ? "/kids" : "/catalogo"} className="hover:text-orange-500 transition-colors">{esKids ? "Kids" : "Catálogo"}</Link>
+        <Link href={esKids ? "/kids" : "/catalogo"} className="hover:text-orange-500 transition-colors">{esKids ? "Niños" : "Catálogo"}</Link>
         <FaChevronRight className="text-xs" />
         <span className="text-gray-900 font-medium truncate max-w-[180px]">{producto.nombre}</span>
       </nav>

@@ -13,20 +13,14 @@ const nextConfig = {
     // pre-optimizadas en origen (WebP/JPG comprimido).
     unoptimized: true,
   },
-  // Cache de 1 ano para imagenes estaticas. Las URLs son inmutables (los
-  // archivos no cambian bajo el mismo nombre), asi que el browser puede
-  // cachearlas para siempre y no volver a pedirlas. Esto reduce los Edge
-  // Requests de Vercel drasticamente.
+  // Cache de 1 año SOLO para archivos de imagen (por extensión). Sus URLs
+  // son inmutables (nombre único), así que el browser las cachea sin volver
+  // a pedirlas, reduciendo Edge Requests. NO cacheamos rutas como
+  // /catalogo/[id] (eso congelaba páginas viejas).
   async headers() {
     return [
       {
-        source: "/catalogo/:path*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
-      {
-        source: "/:all*(jpg|jpeg|png|webp|svg|ico|gif)",
+        source: "/:all*(jpg|jpeg|png|webp|svg|ico|gif|avif)",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],

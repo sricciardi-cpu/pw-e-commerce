@@ -6,7 +6,7 @@ export default function AdminKidsPage() {
   return (
     <ProductoPanel
       tabla="catalogo"
-      titulo="Kids (por encargo)"
+      titulo="Niños (por encargo)"
       seccion="kids"
       talles={TALLES_KIDS}
     />

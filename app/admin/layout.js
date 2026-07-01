@@ -51,7 +51,7 @@ function usePwaAdminCleanup() {
 const secciones = [
   { href: "/admin/stock",          label: "Stock",      icon: FaBoxOpen       },
   { href: "/admin/catalogo",       label: "Catálogo",   icon: FaTshirt        },
-  { href: "/admin/kids",           label: "Kids",       icon: FaChild         },
+  { href: "/admin/kids",           label: "Niños",      icon: FaChild         },
   { href: "/admin/bucales",        label: "Bucales",    icon: FaShieldAlt     },
   { href: "/admin/especiales",     label: "Destacados", icon: FaStar          },
   { href: "/admin/pedidos",        label: "Pedidos",    icon: FaClipboardList },

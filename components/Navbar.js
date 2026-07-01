@@ -20,7 +20,7 @@ import {
 const links = [
   { href: "/",               label: "Inicio",          icon: FaHome },
   { href: "/catalogo",       label: "Catálogo",        icon: FaTshirt },
-  { href: "/kids",           label: "Kids",            icon: FaChild },
+  { href: "/kids",           label: "Niños",           icon: FaChild },
   { href: "/stock",          label: "Stock",           icon: FaStore },
   { href: "/bucales",        label: "Bucales",         icon: FaShieldAlt },
   { href: "/guia-de-talles", label: "Guía de Talles",  icon: FaRuler },

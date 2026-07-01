@@ -65,7 +65,7 @@ export default function KidsPage() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Camisetas Kids</h1>
+      <h1 className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900">Camisetas Niños</h1>
       <div className="bg-orange-500/10 border border-orange-500/40 rounded-xl px-4 py-3 mb-6 flex items-start gap-3">
         <span className="text-orange-500 text-xl shrink-0">📦</span>
         <div>
@@ -193,7 +193,7 @@ export default function KidsPage() {
           )}
 
           {productosFiltrados.length === 0 && (
-            <p className="text-center text-gray-400 py-16">No hay productos Kids que coincidan con los filtros seleccionados.</p>
+            <p className="text-center text-gray-400 py-16">No hay productos de niños que coincidan con los filtros seleccionados.</p>
           )}
         </>
       )}

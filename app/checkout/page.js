@@ -59,9 +59,10 @@ export default function CheckoutPage() {
       .catch(() => {});
   }, []);
 
-  // El parche estampado solo aplica a camisetas (no a bucales).
+  // El parche estampado solo aplica a camisetas por encargo (catálogo y niños,
+  // que están en productos_catalogo). No aplica a stock ni a bucales.
   const itemKey      = (it) => `${it.id}-${it.talle}`;
-  const elegibles    = items.filter((it) => it.seccion !== "bucal");
+  const elegibles    = items.filter((it) => it.tabla === "productos_catalogo");
   const seleccionados = elegibles.filter((it) => parches[itemKey(it)]?.activo);
   const costoEstampa  = seleccionados.length * precioEstampa;
 
