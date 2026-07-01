@@ -16,6 +16,15 @@ const rugby = [
   { talle: "5XL", hombros: 59, pecho: 66, largo: 85, manga: 50.5 },
 ];
 
+const ninos = [
+  { talle: "16", largo: 51, ancho: 35.5, cuello: 18, manga: 23, puno: 13,   anchoManga: 14 },
+  { talle: "18", largo: 54, ancho: 38,   cuello: 18, manga: 25, puno: 13.5, anchoManga: 15 },
+  { talle: "20", largo: 57, ancho: 40.5, cuello: 18, manga: 27, puno: 14,   anchoManga: 16 },
+  { talle: "22", largo: 60, ancho: 43,   cuello: 19, manga: 29, puno: 14.5, anchoManga: 17 },
+  { talle: "24", largo: 63, ancho: 45.5, cuello: 19, manga: 31, puno: 15,   anchoManga: 18 },
+  { talle: "26", largo: 66, ancho: 48,   cuello: 19, manga: 32, puno: 15.5, anchoManga: 19 },
+];
+
 export default function GuiaDeTallesPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8">
@@ -65,12 +74,33 @@ export default function GuiaDeTallesPage() {
         <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-gray-900">
           Camisetas de Rugby — Niños
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-2">
-          <img
-            src="/guia-talles-ninos.jpeg"
-            alt="Tabla de talles para niños, del 16 al 26"
-            className="w-full min-w-[560px] h-auto rounded"
-          />
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className={thClass}>Talle</th>
+                <th className={thClass}>Largo (cm)</th>
+                <th className={thClass}>Ancho (cm)</th>
+                <th className={thClass}>Ancho cuello (cm)</th>
+                <th className={thClass}>Largo manga (cm)</th>
+                <th className={thClass}>Puño manga (cm)</th>
+                <th className={thClass}>Ancho manga (cm)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ninos.map((row, i) => (
+                <tr key={row.talle} className={i % 2 === 0 ? trEven : trOdd}>
+                  <td className={`${tdClass} font-semibold text-gray-900 text-left`}>{row.talle}</td>
+                  <td className={tdClass}>{row.largo}</td>
+                  <td className={tdClass}>{row.ancho}</td>
+                  <td className={tdClass}>{row.cuello}</td>
+                  <td className={tdClass}>{row.manga}</td>
+                  <td className={tdClass}>{row.puno}</td>
+                  <td className={tdClass}>{row.anchoManga}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <p className="text-xs text-gray-400 mt-2">Medidas en centímetros · Talles 16 a 26.</p>
       </section>
