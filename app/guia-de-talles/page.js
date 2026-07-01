@@ -26,11 +26,11 @@ export default function GuiaDeTallesPage() {
         </p>
       </FadeIn>
 
-      {/* Sección 1: Rugby */}
+      {/* Sección 1: Rugby adultos */}
       <FadeIn delay={80}>
       <section className="mb-12">
         <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-gray-900">
-          Camisetas de Rugby
+          Camisetas de Rugby — Adultos
         </h2>
         <div className="overflow-x-auto rounded-xl border border-gray-200">
           <table className="w-full border-collapse">
@@ -56,6 +56,23 @@ export default function GuiaDeTallesPage() {
             </tbody>
           </table>
         </div>
+      </section>
+      </FadeIn>
+
+      {/* Sección 2: Niños */}
+      <FadeIn delay={160}>
+      <section className="mb-12">
+        <h2 className="text-xl font-bold mb-4 border-l-4 border-orange-500 pl-3 text-gray-900">
+          Camisetas de Rugby — Niños
+        </h2>
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-2">
+          <img
+            src="/guia-talles-ninos.jpeg"
+            alt="Tabla de talles para niños, del 16 al 26"
+            className="w-full min-w-[560px] h-auto rounded"
+          />
+        </div>
+        <p className="text-xs text-gray-400 mt-2">Medidas en centímetros · Talles 16 a 26.</p>
       </section>
       </FadeIn>
     </main>
