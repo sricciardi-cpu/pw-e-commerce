@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase";
 import { Resend } from "resend";
+import { sendPurchaseEvent } from "@/lib/metaConversions";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,10 @@ export async function POST(request) {
         .from("pedidos")
         .update({ estado: "pagado", payment_id: String(paymentId), stock_descontado: true })
         .eq("id", pedidoId);
+
+      // Purchase server-side a Meta (deduplica con el pixel del navegador
+      // por event_id = pedido.id).
+      await sendPurchaseEvent(pedido);
     }
 
     // Descontar stock usando updates directos (no depende de RPCs)

@@ -1,4 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase";
+import { sendPurchaseEvent } from "@/lib/metaConversions";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +63,9 @@ export async function PATCH(request, { params }) {
     if (estado === "pagado" && !pedidoActual.stock_descontado) {
       await descontarStock(pedidoActual.items ?? []);
       updates.stock_descontado = true;
+      // Purchase a Meta (Conversions API) al confirmar el pago — así las
+      // transferencias marcadas como pagadas también cuentan en las métricas.
+      await sendPurchaseEvent(pedidoActual);
     }
 
     const { data, error } = await supabaseAdmin()

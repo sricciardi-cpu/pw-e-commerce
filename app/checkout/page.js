@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { FaChevronRight, FaCreditCard, FaWhatsapp } from "react-icons/fa";
-import { trackInitiateCheckout, trackPurchase } from "@/lib/fbpixel";
+import { trackInitiateCheckout } from "@/lib/fbpixel";
 
 const WHATSAPP_ADMIN = "5492216220145";
 
@@ -210,7 +210,9 @@ export default function CheckoutPage() {
         `Nombre: ${form.nombre}\n` +
         `Dir: ${form.calle} ${form.numero}, ${form.localidad}, ${form.provincia}`;
 
-      trackPurchase({ items: itemsTransf, total: totalFinal, pedidoId: data.id });
+      // El Purchase de transferencia NO se dispara acá (el pago aún no está
+      // confirmado). Se dispara server-side cuando marcás el pedido como
+      // "pagado" en el admin (Conversions API), para métricas correctas.
       vaciarCarrito();
       window.location.href = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodeURIComponent(msg)}`;
     } catch (err) {
