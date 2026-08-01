@@ -7,7 +7,6 @@ import { useCart } from "@/context/CartContext";
 import {
   FaHome,
   FaTshirt,
-  FaShieldAlt,
   FaRuler,
   FaEnvelope,
   FaShoppingCart,
@@ -22,7 +21,6 @@ const links = [
   { href: "/catalogo",       label: "Catálogo",        icon: FaTshirt },
   { href: "/kids",           label: "Niños",           icon: FaChild },
   { href: "/stock",          label: "Stock",           icon: FaStore },
-  { href: "/bucales",        label: "Bucales",         icon: FaShieldAlt },
   { href: "/guia-de-talles", label: "Guía de Talles",  icon: FaRuler },
   { href: "/contacto",       label: "Contacto",        icon: FaEnvelope },
 ];
