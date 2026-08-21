@@ -1,5 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase";
 import { sendPurchaseEvent } from "@/lib/metaConversions";
+import { enviarConfirmacionPago } from "@/lib/emailConfirmacion";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +67,8 @@ export async function PATCH(request, { params }) {
       // Purchase a Meta (Conversions API) al confirmar el pago — así las
       // transferencias marcadas como pagadas también cuentan en las métricas.
       await sendPurchaseEvent(pedidoActual);
+      // Email de confirmación al comprador (mismo que reciben los de MP).
+      await enviarConfirmacionPago(pedidoActual);
     }
 
     const { data, error } = await supabaseAdmin()
